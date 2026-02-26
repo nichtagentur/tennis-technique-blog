@@ -1,0 +1,845 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stop Volley: Die Kunst des weichen Netzspiels | AI Tennis Lab</title>
+    <meta name="description" content="Stop Volley: Die Kunst des weichen Netzspiels">
+    <link rel="canonical" href="https://nichtagentur.github.io/tennis-technique-blog/artikel/stop-volley.html">
+    <meta property="og:locale" content="de_DE">
+    <meta property="og:type" content="article">
+    <meta property="og:title" content="Stop Volley: Die Kunst des weichen Netzspiels">
+    <meta property="og:description" content="Stop Volley: Die Kunst des weichen Netzspiels">
+    <meta property="og:url" content="https://nichtagentur.github.io/tennis-technique-blog/artikel/stop-volley.html">
+    <meta property="og:site_name" content="AI Tennis Lab">
+    
+
+<meta property="og:image" content="https://nichtagentur.github.io/tennis-technique-blog/images/stop-volley.jpg">
+
+
+    <link rel="alternate" hreflang="de" href="https://nichtagentur.github.io/tennis-technique-blog/artikel/stop-volley.html">
+    
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Stop Volley: Die Kunst des weichen Netzspiels",
+    "description": "Stop Volley: Die Kunst des weichen Netzspiels",
+    "author": {
+        "@type": "Organization",
+        "name": "AI Tennis Lab"
+    },
+    "publisher": {
+        "@type": "Organization",
+        "name": "AI Tennis Lab"
+    },
+    "datePublished": "2026-02-26",
+    "dateModified": "2026-02-26",
+    "mainEntityOfPage": "https://nichtagentur.github.io/tennis-technique-blog/artikel/stop-volley.html",
+    "inLanguage": "de",
+    "keywords": "Stop Volley, Drop Volley, Touch am Netz"
+}
+</script>
+
+
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg: #fafaf8;
+            --bg-warm: #f4f3ef;
+            --bg-card: #ffffff;
+            --bg-dark: #1a1a1a;
+            --border: #e5e3de;
+            --border-hover: #d0cdc6;
+
+            --accent: #d4f73f;
+            --accent-dark: #4a5a10;
+            --accent-bg: #f0f7d4;
+            --clay: #e05a4a;
+
+            --text: #1a1a1a;
+            --text-secondary: #555555;
+            --text-light: #888888;
+            --text-white: #ffffff;
+
+            --serif: 'DM Serif Display', Georgia, serif;
+            --sans: 'DM Sans', system-ui, -apple-system, sans-serif;
+            --mono: 'JetBrains Mono', 'SF Mono', monospace;
+
+            --radius: 12px;
+            --radius-lg: 16px;
+            --ease: cubic-bezier(0.23, 1, 0.32, 1);
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.06), 0 2px 6px rgba(0,0,0,0.04);
+            --shadow-lg: 0 12px 40px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04);
+        }
+
+        html { scroll-behavior: smooth; }
+
+        body {
+            font-family: var(--sans);
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a { color: var(--accent-dark); text-decoration: none; transition: all 0.3s var(--ease); }
+        a:hover { color: var(--clay); }
+
+        /* === NAV === */
+        nav {
+            background: var(--bg);
+            padding: 0 clamp(1.5rem, 5vw, 4rem);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+            height: 72px;
+            display: flex;
+            align-items: center;
+            border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(12px);
+            background: rgba(250, 250, 248, 0.9);
+        }
+        .nav-inner {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .nav-brand {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            color: var(--text);
+            transition: all 0.3s var(--ease);
+        }
+        .nav-brand:hover { color: var(--accent-dark); }
+        .nav-ball {
+            width: 28px;
+            height: 28px;
+            border-radius: 50%;
+            background: var(--accent);
+            position: relative;
+            flex-shrink: 0;
+            box-shadow: 0 2px 8px rgba(212, 247, 63, 0.3);
+            transition: all 0.3s var(--ease);
+        }
+        .nav-brand:hover .nav-ball {
+            transform: scale(1.1);
+            box-shadow: 0 4px 16px rgba(212, 247, 63, 0.4);
+        }
+        .nav-ball::before {
+            content: '';
+            position: absolute;
+            inset: 4px;
+            border-radius: 50%;
+            border: 1.5px solid rgba(0,0,0,0.15);
+            clip-path: ellipse(35% 50% at 50% 50%);
+        }
+        .nav-title {
+            font-family: var(--serif);
+            font-size: 1.25rem;
+            font-weight: 400;
+            letter-spacing: -0.01em;
+        }
+        .nav-links { display: flex; gap: 2rem; list-style: none; align-items: center; }
+        .nav-links a {
+            color: var(--text-light);
+            font-size: 0.88rem;
+            font-weight: 500;
+            padding: 0.4rem 0;
+            position: relative;
+            transition: color 0.3s var(--ease);
+        }
+        .nav-links a::after {
+            content: '';
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            height: 2px;
+            background: var(--accent);
+            border-radius: 1px;
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.4s var(--ease);
+        }
+        .nav-links a:hover { color: var(--text); }
+        .nav-links a:hover::after { transform: scaleX(1); transform-origin: left; }
+
+        /* === MAIN === */
+        main {
+            flex: 1;
+            width: 100%;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 0 clamp(1.5rem, 5vw, 4rem);
+        }
+
+        /* === FOOTER === */
+        footer {
+            margin-top: auto;
+            background: var(--bg-dark);
+            color: var(--text-white);
+        }
+        .footer-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 3.5rem clamp(1.5rem, 5vw, 4rem) 2rem;
+            display: grid;
+            grid-template-columns: 1.5fr 1fr 1fr;
+            gap: 3rem;
+        }
+        .footer-brand {
+            font-family: var(--serif);
+            font-size: 1.5rem;
+            color: var(--text-white);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+        }
+        .footer-brand-ball {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--accent);
+            flex-shrink: 0;
+        }
+        .footer-col h4 {
+            font-size: 0.72rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: rgba(255,255,255,0.4);
+            margin-bottom: 1rem;
+        }
+        .footer-col a, .footer-col p {
+            display: block;
+            font-size: 0.88rem;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
+        }
+        .footer-col a:hover { color: var(--accent); }
+        .footer-disclosure {
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.35);
+            line-height: 1.7;
+            max-width: 380px;
+        }
+        .footer-bottom {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 1.5rem clamp(1.5rem, 5vw, 4rem);
+            border-top: 1px solid rgba(255,255,255,0.08);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .footer-copy {
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.3);
+        }
+        .footer-copy a { color: rgba(255,255,255,0.3); }
+        .footer-copy a:hover { color: var(--accent); }
+
+        /* === SHARED === */
+        .tag {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0.3rem 0.75rem;
+            border-radius: 100px;
+            background: var(--accent-bg);
+            color: var(--accent-dark);
+            transition: all 0.3s var(--ease);
+        }
+        .tag:hover {
+            background: var(--accent);
+            color: var(--bg-dark);
+        }
+
+        /* Animations */
+        @keyframes rise {
+            from { opacity: 0; transform: translateY(24px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        /* === RESPONSIVE === */
+        @media (max-width: 768px) {
+            nav { height: 60px; }
+            .nav-title { font-size: 1.1rem; }
+            .nav-links { gap: 1.25rem; }
+            .nav-links a { font-size: 0.82rem; }
+            .footer-inner { grid-template-columns: 1fr; gap: 2rem; }
+        }
+        @media (max-width: 480px) {
+            .nav-links a { font-size: 0.78rem; }
+        }
+
+        
+/* === ARTICLE HERO === */
+.a-hero {
+    position: relative;
+    overflow: hidden;
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+    margin: 0 clamp(0.75rem, 2vw, 1.5rem);
+}
+.a-hero-img-wrap {
+    position: relative;
+    height: clamp(280px, 45vw, 420px);
+    overflow: hidden;
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+}
+.a-hero-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 15s linear;
+}
+.a-hero-img-wrap:hover .a-hero-img { transform: scale(1.03); }
+.a-hero-overlay {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(180deg, rgba(0,0,0,0) 30%, rgba(0,0,0,0.6) 100%);
+    border-radius: 0 0 var(--radius-lg) var(--radius-lg);
+}
+
+/* === ARTICLE HEADER === */
+.a-header {
+    max-width: 780px;
+    margin: -3rem auto 0;
+    position: relative;
+    z-index: 2;
+    padding: 0 clamp(1.5rem, 5vw, 2rem);
+    text-align: center;
+    animation: rise 0.6s var(--ease) both;
+}
+.a-breadcrumb {
+    font-size: 0.78rem;
+    color: rgba(255,255,255,0.7);
+    margin-bottom: 1.5rem;
+}
+.a-breadcrumb a { color: rgba(255,255,255,0.7); }
+.a-breadcrumb a:hover { color: var(--accent); }
+.a-breadcrumb span { margin: 0 0.5rem; opacity: 0.4; }
+.a-header h1 {
+    font-family: var(--serif);
+    font-size: clamp(1.8rem, 4.5vw, 2.8rem);
+    font-weight: 400;
+    line-height: 1.2;
+    color: var(--text);
+    margin: 1.5rem 0 1rem;
+    letter-spacing: -0.01em;
+}
+.a-header-meta {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+    margin-bottom: 0.5rem;
+}
+.a-header-date {
+    font-size: 0.82rem;
+    color: var(--text-light);
+}
+.a-header-sep {
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--border);
+}
+
+/* === ARTICLE LAYOUT === */
+.a-layout {
+    display: grid;
+    grid-template-columns: 1fr 280px;
+    gap: 3rem;
+    align-items: start;
+    max-width: 1200px;
+    margin: 2.5rem auto 0;
+    padding: 0 clamp(1.5rem, 5vw, 4rem) 4rem;
+}
+
+/* === ARTICLE PROSE === */
+.a-prose {
+    font-size: 1.05rem;
+    line-height: 1.85;
+    color: var(--text-secondary);
+    animation: fadeIn 0.6s ease 0.15s both;
+}
+.a-prose h2 {
+    font-family: var(--serif);
+    font-size: 1.45rem;
+    font-weight: 400;
+    color: var(--text);
+    margin: 2.5rem 0 1rem;
+    line-height: 1.3;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--accent);
+}
+.a-prose h3 {
+    font-size: 1.05rem;
+    font-weight: 600;
+    color: var(--text);
+    margin: 2rem 0 0.6rem;
+}
+.a-prose p { margin-bottom: 1.25rem; }
+.a-prose ul, .a-prose ol {
+    margin: 0.5rem 0 1.5rem 1.25rem;
+}
+.a-prose li {
+    margin-bottom: 0.5rem;
+    padding-left: 0.25rem;
+}
+.a-prose li::marker { color: var(--accent-dark); }
+.a-prose strong { color: var(--text); font-weight: 600; }
+.a-prose em { color: var(--accent-dark); font-style: italic; }
+.a-prose a {
+    color: var(--accent-dark);
+    text-decoration: underline;
+    text-underline-offset: 2px;
+}
+.a-prose a:hover { color: var(--clay); }
+
+/* === SIDEBAR === */
+.a-sidebar {
+    position: sticky;
+    top: 90px;
+    animation: fadeIn 0.6s ease 0.25s both;
+}
+.a-sidebar-card {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    overflow: hidden;
+    margin-bottom: 1.25rem;
+    box-shadow: var(--shadow-sm);
+}
+.a-sidebar-header {
+    padding: 0.85rem 1.25rem;
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: var(--text-light);
+    border-bottom: 1px solid var(--border);
+    background: var(--bg-warm);
+}
+.a-sidebar-body { padding: 0; }
+.a-sidebar-link {
+    display: block;
+    padding: 0.75rem 1.25rem;
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    border-bottom: 1px solid var(--border);
+    transition: all 0.3s var(--ease);
+    line-height: 1.4;
+}
+.a-sidebar-link:last-child { border-bottom: none; }
+.a-sidebar-link:hover {
+    color: var(--accent-dark);
+    background: var(--accent-bg);
+    padding-left: 1.5rem;
+}
+.a-sidebar-row {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.65rem 1.25rem;
+    border-bottom: 1px solid var(--border);
+    font-size: 0.85rem;
+}
+.a-sidebar-row:last-child { border-bottom: none; }
+.a-sidebar-row-label {
+    font-size: 0.72rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: var(--text-light);
+}
+.a-sidebar-row-val { color: var(--text-secondary); font-weight: 500; }
+
+/* === AUTHOR === */
+.a-author {
+    margin-top: 3rem;
+    padding: 1.5rem;
+    background: var(--bg-warm);
+    border-radius: var(--radius);
+    display: flex;
+    gap: 1.25rem;
+    align-items: center;
+}
+.a-author-avatar {
+    width: 48px;
+    height: 48px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    font-family: var(--serif);
+    font-size: 1rem;
+    color: var(--bg-dark);
+}
+.a-author-name {
+    font-family: var(--serif);
+    font-size: 1rem;
+    color: var(--text);
+    margin-bottom: 0.15rem;
+}
+.a-author-bio { font-size: 0.82rem; color: var(--text-light); line-height: 1.5; }
+
+/* === DISCLOSURE === */
+.a-disclosure {
+    margin-top: 1rem;
+    padding: 1rem 1.25rem;
+    border-radius: var(--radius);
+    border-left: 3px solid var(--clay);
+    background: #fef5f4;
+    font-size: 0.8rem;
+    color: var(--text-secondary);
+    line-height: 1.65;
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 900px) {
+    .a-hero-img-wrap { height: 250px; }
+    .a-layout { grid-template-columns: 1fr; gap: 2rem; }
+    .a-sidebar { position: static; }
+}
+@media (max-width: 480px) {
+    .a-hero { margin: 0; border-radius: 0; }
+    .a-hero-img-wrap { border-radius: 0; height: 200px; }
+}
+
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-inner">
+            <a href="https://nichtagentur.github.io/tennis-technique-blog/" class="nav-brand">
+                <div class="nav-ball"></div>
+                <span class="nav-title">AI Tennis Lab</span>
+            </a>
+            <ul class="nav-links">
+                <li><a href="https://nichtagentur.github.io/tennis-technique-blog/">Blog</a></li>
+                <li><a href="https://nichtagentur.github.io/tennis-technique-blog/ueber-uns.html">Ueber uns</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        
+<div class="a-hero">
+    
+    <div class="a-hero-img-wrap">
+        <img class="a-hero-img" src="https://nichtagentur.github.io/tennis-technique-blog/images/stop-volley.jpg" alt="Stop Volley: Die Kunst des weichen Netzspiels">
+        <div class="a-hero-overlay"></div>
+    </div>
+    
+</div>
+
+<div class="a-header">
+    <div class="a-header-meta">
+        <span class="tag">Netzspiel</span>
+        <div class="a-header-sep"></div>
+        <span class="a-header-date">26.02.2026</span>
+        <div class="a-header-sep"></div>
+        <span class="card-difficulty" style="font-size:0.72rem;font-weight:500;color:var(--text-light);background:var(--bg-warm);padding:0.2rem 0.6rem;border-radius:4px;">Fortgeschrittene</span>
+    </div>
+    <h1>Stop Volley: Die Kunst des weichen Netzspiels</h1>
+</div>
+
+<div class="a-layout">
+    <div>
+        <div class="a-prose">
+            <h2>Stop Volley: Die Kunst des weichen Netzspiels</h2>
+
+<h3>Einführung ins Finesse-Volley</h3>
+
+<p>Der Stop Volley, auch als <strong>Drop Volley</strong> oder <strong>Finesse-Volley</strong> bekannt, gehört zu den anspruchsvollsten Schlägen im modernen Tennissport. Im Gegensatz zum kraftvollen Punch Volley steht hier die <em>Ballkontrolle und das Feingefühl</em> im Mittelpunkt. Die ITF klassifiziert diese Technik als essenzielle Finesse-Variante für Spieler, die ihr Netzspiel perfektionieren möchten.</p>
+
+<p>Besonders im Doppelspiel und bei Netzangriffen nach dem Aufschlag wird der Stop Volley zur Waffe gegen aggressive Gegner. Der Ball wird mit minimaler Kraft abgebremst und landete kurz hinter dem Netz – ein psychologisches Spiel, das Geduld, Timing und präzise Biomechanik erfordert. Fortgeschrittene Spieler nutzen diese Technik nicht nur defensiv zur Ballabwehr, sondern auch <em>offensiv als Überraschungsmoment</em> gegen schnelle Returns und hohe Volleybälle.</p>
+
+<h2>Biomechanische Grundlagen des Stop Volleys</h2>
+
+<h3>Die kinematische Kette im Detail</h3>
+
+<p>Der Stop Volley folgt einer spezifischen biomechanischen Logik, die sich fundamental vom Punch Volley unterscheidet. Die <strong>kinematische Kette</strong> verläuft nach folgendem Muster:</p>
+
+<ol>
+<li><strong>Stabilisierung des Rumpfes:</strong> Der Schultergürtel bleibt stabil und zeigt minimale Rotation (maximal 20-30°). Dies unterscheidet sich grundlegend von Grundschlägen, wo die Rotation das Schlagzentrum bildet.</li>
+<li><strong>Unterarmführung:</strong> Die Bewegung erfolgt isoliert im distalen Unterarm (Bereich zwischen Ellbogen und Handgelenk). Der Unterarm führt den Schläger, nicht die Schulter.</li>
+<li><strong>Handgelenksstabilität:</strong> Das Handgelenk bleibt in <em>flexibler Stabilität</em> – weder vollständig fixiert noch locker, sondern in neutraler bis leicht dorsal flektierter Position.</li>
+</ol>
+
+<h3>Gelenkwinkel und Racketposition</h3>
+
+<p>Die optimalen Gelenkwinkel beim Stop Volley sind präzise definiert:</p>
+
+<ul>
+<li><strong>Ellbogenwinkel:</strong> 90-110° während des Ballkontakts. Ein Winkel unter 90° führt zu zu steifen Bewegungen; über 110° resultiert in Kontrollverlust.</li>
+<li><strong>Handgelenksposition:</strong> Neutral bis leicht dorsal flektiert (5-10° Extension). Dies ermöglicht die nötige Flexibilität für die Pufferbewegung.</li>
+<li><strong>Racketface:</strong> Senkrecht zur Bodenebene (90°), mit minimaler Winkeländerung während des gesamten Schlagablaufs. Eine Öffnung von mehr als 5-10° führt zu unkontrolliertem Ballflug.</li>
+</ul>
+
+<h3>Die aktive Pufferbewegung</h3>
+
+<p>Ein häufiger Fehler ist die Annahme, der Stop Volley sei ein passives "Abblocken". <strong>Das Gegenteil ist der Fall:</strong> Die Pufferbewegung ist eine aktive, kontrollierte Bremsbewegung mit einer Amplitude von 5-10 cm. Nach dem Ballkontakt erfolgt eine kleine, elastische Rückwärtsbewegung des Unterarms, die die Ballenergie absorbiert und gleichzeitig Kontrolle bewahrt. Diese Bewegung muss trainiert werden – sie ist nicht instinktiv.</p>
+
+<h2>DTB- und ITF-Methodik</h2>
+
+<h3>Offizielle Klassifizierung</h3>
+
+<p>Sowohl der Deutsche Tennisbund (DTB) als auch die International Tennis Federation (ITF) klassifizieren den Stop Volley als <strong>Finesse-Schlag mit Schwerpunkt Ballkontrolle</strong>. Die ITF empfiehlt die Trainingsmethodik <em>"Touch through the ball"</em> – eine sanfte, kontinuierliche Bewegung, die den Ball begleitet, statt ihn zu treffen.</p>
+
+<p>Dies bedeutet konkret: Der Schläger führt den Ball über eine kurze Strecke mit, anstatt ihn zu beschleunigen. Die Ballkontaktzeit ist länger als beim Punch Volley (ca. 0,004-0,006 Sekunden vs. 0,002-0,003 Sekunden), was präzisere Kontrolle ermöglicht.</p>
+
+<h3>Trainerschwerpunkt: Feingefühl vor Kraft</h3>
+
+<p>Das DTB-Trainingskonzept betont: <strong>Feingefühl geht vor Kraft</strong>. Dies ist das fundamentale Prinzip beim Stop Volley-Training. Trainer sollten folgende Priorität setzen:</p>
+
+<ol>
+<li>Ballgefühl und Timing (Grundlage)</li>
+<li>Positionierung und Beinarbeit (Stabilität)</li>
+<li>Präzision der Racketposition (Kontrolle)</li>
+<li>Erst dann: kraftvolle Varianten</li>
+</ol>
+
+<h2>Häufige Mythen und deren Wirklichkeit</h2>
+
+<h3>Mythos 1: Das Handgelenk muss vollständig fixiert sein</h3>
+
+<p><strong>Realität:</strong> Ein starr fixiertes Handgelenk führt zu unnötiger Spannung und schlechterem Feingefühl. Das optimale Konzept heißt <em>flexible Stabilität</em> – das Handgelenk sollte stabil, aber nicht steif sein. Dies ermöglicht die nötige Mikroflexibilität für die Pufferbewegung.</p>
+
+<h3>Mythos 2: Stop Volley ist nur eine defensive Technik</h3>
+
+<p><strong>Realität:</strong> Während der Stop Volley defensiv gegen schnelle Bälle eingesetzt wird, gibt es auch eine <strong>offensive Variante</strong>. Gegen sehr schnelle Returns oder hohe Volleybälle kann ein gut platzierter Stop Volley zum offensiven Punkt führen. Die Überraschung und die kurze Distanz zur Grundlinie des Gegners machen dies möglich.</p>
+
+<h2>Häufige Fehlerbilder und Korrekturstrategien</h2>
+
+<h3>Fehler 1: Netzfehler durch zu aggressive Ausführung</h3>
+
+<p><strong>Ursache:</strong> Der Racket fällt nach unten ab, weil die Armelevation nicht ausreicht oder zu spät einsetzt.</p>
+
+<p><strong>Korrektur:</strong></p>
+<ul>
+<li>Early Preparation: Der Racket sollte bereits auf Schulterhöhe sein, bevor der Gegner den Ball schlägt</li>
+<li>Armelevation trainieren: Aktiv den Ellbogen auf Schulterhöhe halten</li>
+<li>Finish-Position überprüfen: Nach dem Kontakt sollte der Racket weiter oben sein, nicht hängen</li>
+</ul>
+
+<h3>Fehler 2: Lange Bälle durch zu passive Ausführung</h3>
+
+<p><strong>Ursache:</strong> Das Handgelenk ist zu locker, die Pufferbewegung fehlt oder ist zu groß.</p>
+
+<p><strong>Korrektur:</strong></p>
+<ul>
+<li>Aktive Pufferbewegung trainieren: 5-10 cm Rückwärtsbewegung bewusst durchführen</li>
+<li>Ballkontakt vor dem Körper: Der Ball muss 40-50 cm vor dem Körper getroffen werden</li>
+<li>Racketface-Kontrolle: Überprüfen, dass das Racketface nicht nach oben öffnet</li>
+</ul>
+
+<h3>Fehler 3: Ballkontrollverlust durch steife Bewegung</h3>
+
+<p><strong>Ursache:</strong> Der Unterarm ist zu angespannt, die Mikroflexibilität im Ellbogen fehlt.</p>
+
+<p><strong>Korrektur:</strong></p>
+<ul>
+<li>Ellbogenflexibilität trainieren: Aktiv zwischen 90-110° pendeln</li>
+<li>Entspannungsübungen: Lockere Schultermuskeln reduzieren Spannung im Unterarm</li>
+<li>Tempobälle nutzen: Mit langsameren Bällen beginnen, um das Feingefühl zu entwickeln</li>
+</ul>
+
+<h2>Praktische Trainingsübungen</h2>
+
+<h3>Übung 1: Touch-Übung an der Wand (Anfänger)</h3>
+
+<p><strong>Ziel:</strong> Ballgefühl und Pufferbewegung entwickeln</p>
+
+<p><strong>Ausführung:</strong></p>
+<ol>
+<li>30-40 cm vor einer Wand positionieren</li>
+<li>Ball mit weichem Volley gegen die Wand spielen</li>
+<li>Ball zurückkommen lassen und mit Stop Volley abbremsen</li>
+<li>Bewusstes 5 cm zurücktreten bei Ballkontakt</li>
+</ol>
+
+<p><strong>Wiederholungen:</strong> 3 Sätze à 20 Ballkontakte. Tempo: 1 Ball pro 2 Sekunden.</p>
+
+<p><strong>Progression:</strong> Distanz zur Wand reduzieren (auf 20 cm), Tempo erhöhen.</p>
+
+<h3>Übung 2: Netztraining mit Partner – Soft Hands</h3>
+
+<p><strong>Ziel:</strong> Stop Volley in Spielsituation trainieren</p>
+
+<p><strong>Ausführung:</strong></p>
+<ol>
+<li>Beide Spieler am Netz positionieren (1-1,5 m vor dem Netz)</li>
+<li>Ein Spieler spielt weiche Bälle zu (Tempo: 30-40 km/h)</li>
+<li>Anderer Spieler spielt nur Stop Volleys zurück</li>
+<li>Ziel: Ball muss vor der Aufschlaglinie landen</li>
+</ol>
+
+<p><strong>Wiederholungen:</strong> 5 Sätze à 15 Ballwechsel pro Seite. 30 Sekunden Pause zwischen Sätzen.</p>
+
+<p><strong>Progression:</strong> Tempo erhöhen auf 50-60 km/h, Ballrichtung variieren.</p>
+
+<h3>Übung 3: Reaktionstraining – Schnelle Volleys abbremsen</h3>
+
+<p><strong>Ziel:</strong> Stop Volley gegen schnelle Bälle trainieren</p>
+
+<p><strong>Ausführung:</strong></p>
+<ol>
+<li>Trainer schlägt schnelle Volleys zu (60-80 km/h)</li>
+<li>Spieler steht 1 m vor dem Netz</li>
+<li>Aufgabe: Jeden Ball mit Stop Volley abbremsen und kurz nach Netz spielen</li>
+<li>Reflexzeit liegt unter 0,4 Sekunden – maximale Konzentration nötig</li>
+</ol>
+
+<p><strong>Wiederholungen:</strong> 4 Sätze à 10-12 Ballkontakte. 45 Sekunden Pause.</p>
+
+<p><strong>Progression:</strong> Tempo auf 90-100 km/h erhöhen, verschiedene Höhen (Brust-, Kopfhöhe).</p>
+
+<h3>Übung 4: Platzierungstraining – Zielfelder</h3>
+
+<p><strong>Ziel:</strong> Präzision und Platzierung entwickeln</p>
+
+<p><strong>Ausführung:</strong></p>
+<ol>
+<li>Netzfeld in 4 Quadranten unterteilen (jeweils 4x2 m)</li>
+<li>Partner spielt Tempobälle zu, Spieler muss gezielt in Zielfeld spielen</li>
+<li>Abwechselnd rechtes und linkes Zielfeld</li>
+<li>Nur Stop Volleys zählen – keine Punch Volleys</li>
+</ol>
+
+<p><strong>Wiederholungen:</strong> 6 Sätze à 12 Versuche (je 6 pro Seite). 3 Punkte für Treffer im Zielfeld, 1 Punkt für Netzfeld, 0 Punkte für Fehler.</p>
+
+<p><strong>Progression:</strong> Zielfelder verkleinern (3x1,5 m), Ballgeschwindigkeit erhöhen.</p>
+
+<h3>Übung 5: Kombinationstraining – Stop Volley in Ballwechsel</h3>
+
+<p><strong>Ziel:</strong> Stop Volley in komplexe Spielsituationen integrieren</p>
+
+<p><strong>Ausführung:</strong></p>
+<ol>
+<li>Spieler A serviert, Spieler B returnt</li>
+<li>Spieler A rückt ans Netz vor</li>
+<li>Spieler B versucht Passierball zu spielen</li>
+<li>Spieler A muss entscheiden: Punch oder Stop Volley</li>
+<li>Maximal 1 Stop Volley pro Rally erlaubt</li>
+</ol>
+
+<p><strong>Wiederholungen:</strong> 5 Sätze à 8 Aufschlag-Angriffsserien. Trainer beobachtet Entscheidungsfindung.</p>
+
+<p><strong>Progression:</strong> Keine Beschränkung auf 1 Stop Volley, höhere Ballgeschwindigkeit.</p>
+
+<h2>Sicherheits- und Präventionsaspekte</h2>
+
+<h3>Überlastungsverletzungen vermeiden</h3>
+
+<p>Der Stop Volley wirkt auf den ersten Blick verletzungsarm, da weniger Kraft eingesetzt wird. Allerdings können <em>wiederholte Pufferbewegungen</em> zu Überlastungssyndromen führen:</p>
+
+<ul>
+<li><strong>Tennisellbogen (Lateral Epicondylitis):</strong> Durch wiederholte Pufferung. Prävention: Ausreichende Erholung, Dehnung der Unterarmextensoren.</li>
+<li><strong>Schulterimpingement:</strong> Durch mangelnde Schulterrotation (kompensatorische Bewegung). Prävention: Regelmäßiges Schultertr
+        </div>
+
+        <div class="a-author">
+            <div class="a-author-avatar">TL</div>
+            <div>
+                <div class="a-author-name">AI Tennis Lab</div>
+                <div class="a-author-bio">KI-gestuetzte Analyse -- Biomechanisch fundiert, praxisnah aufbereitet fuer Tennistrainer.</div>
+            </div>
+        </div>
+
+        <div class="a-disclosure">
+            Dieser Inhalt wurde mit KI erstellt und dient als Trainingsressource. Fuer individuelles Training wenden Sie sich an einen zertifizierten Tennistrainer.
+        </div>
+    </div>
+
+    <aside class="a-sidebar">
+        
+        <div class="a-sidebar-card">
+            <div class="a-sidebar-header">Verwandte Artikel</div>
+            <div class="a-sidebar-body">
+                
+                <a class="a-sidebar-link" href="https://nichtagentur.github.io/tennis-technique-blog/artikel/volley-grundtechnik.html">Volley Grundtechnik: Kontaktpunkt, Griff und Koerperposition</a>
+                
+                <a class="a-sidebar-link" href="https://nichtagentur.github.io/tennis-technique-blog/artikel/vorhand-topspin-technik.html">Vorhand Topspin: Technik, Fehlerbilder und Uebungen</a>
+                
+                <a class="a-sidebar-link" href="https://nichtagentur.github.io/tennis-technique-blog/artikel/rueckhand-beidhaendig.html">Beidhaendige Rueckhand: Griffhaltung, Schwungbahn und Drills</a>
+                
+            </div>
+        </div>
+        
+        <div class="a-sidebar-card">
+            <div class="a-sidebar-header">Details</div>
+            <div class="a-sidebar-body">
+                <div class="a-sidebar-row">
+                    <span class="a-sidebar-row-label">Kategorie</span>
+                    <span class="a-sidebar-row-val">Netzspiel</span>
+                </div>
+                <div class="a-sidebar-row">
+                    <span class="a-sidebar-row-label">Niveau</span>
+                    <span class="a-sidebar-row-val">Fortgeschrittene</span>
+                </div>
+                <div class="a-sidebar-row">
+                    <span class="a-sidebar-row-label">Datum</span>
+                    <span class="a-sidebar-row-val">26.02.2026</span>
+                </div>
+            </div>
+        </div>
+    </aside>
+</div>
+
+    </main>
+
+    <footer>
+        <div class="footer-inner">
+            <div class="footer-col">
+                <div class="footer-brand">
+                    <div class="footer-brand-ball"></div>
+                    AI Tennis Lab
+                </div>
+                <p class="footer-disclosure">Dieser Inhalt wurde mit KI erstellt und dient als Trainingsressource. Fuer individuelles Training wenden Sie sich an einen zertifizierten Tennistrainer.</p>
+            </div>
+            <div class="footer-col">
+                <h4>Navigation</h4>
+                <a href="https://nichtagentur.github.io/tennis-technique-blog/">Blog</a>
+                <a href="https://nichtagentur.github.io/tennis-technique-blog/ueber-uns.html">Ueber uns</a>
+                <a href="https://nichtagentur.github.io/tennis-technique-blog/sitemap.xml">Sitemap</a>
+            </div>
+            <div class="footer-col">
+                <h4>Hinweis</h4>
+                <p class="footer-disclosure">Dieser Inhalt wurde mit KI erstellt und dient als Trainingsressource. Fuer individuelles Training wenden Sie sich an einen zertifizierten Tennistrainer.</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span class="footer-copy">&copy; 2026 AI Tennis Lab</span>
+            <span class="footer-copy">Ein Projekt von <a href="https://cybertime.at">cybertime</a></span>
+        </div>
+    </footer>
+</body>
+</html>
