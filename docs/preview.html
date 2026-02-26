@@ -1,0 +1,1063 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Tennis Lab — KI-gestuetzte Technikanalyse</title>
+<style>
+@import url('https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,700;1,9..40,400&display=swap');
+
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+  --black: #0a0a0a;
+  --card: #111111;
+  --card-border: #1a1a1a;
+  --green: #00ff88;
+  --green-dim: #00cc6a;
+  --green-glow: rgba(0, 255, 136, 0.15);
+  --green-subtle: rgba(0, 255, 136, 0.05);
+  --white: #f0f0f0;
+  --gray: #666;
+  --light-gray: #999;
+  --font-display: 'Bebas Neue', sans-serif;
+  --font-body: 'DM Sans', sans-serif;
+}
+
+html { scroll-behavior: smooth; }
+
+body {
+  background: var(--black);
+  color: var(--white);
+  font-family: var(--font-body);
+  line-height: 1.6;
+  overflow-x: hidden;
+}
+
+/* ═══════════════════════════════════════
+   GRAIN OVERLAY
+   ═══════════════════════════════════════ */
+body::before {
+  content: '';
+  position: fixed;
+  inset: 0;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)' opacity='0.03'/%3E%3C/svg%3E");
+  pointer-events: none;
+  z-index: 9999;
+}
+
+/* ═══════════════════════════════════════
+   NAVIGATION
+   ═══════════════════════════════════════ */
+nav {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+  background: rgba(10, 10, 10, 0.85);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border-bottom: 1px solid var(--card-border);
+  transition: all 0.3s ease;
+}
+
+nav.scrolled {
+  border-bottom-color: var(--green);
+  box-shadow: 0 1px 30px rgba(0, 255, 136, 0.08);
+}
+
+.nav-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  height: 64px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.nav-brand {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  text-decoration: none;
+}
+
+.nav-logo {
+  width: 32px;
+  height: 32px;
+  background: var(--green);
+  border-radius: 4px;
+  display: grid;
+  place-items: center;
+  position: relative;
+  overflow: hidden;
+}
+
+.nav-logo::after {
+  content: '';
+  width: 14px;
+  height: 2px;
+  background: var(--black);
+  transform: rotate(-45deg);
+  box-shadow: 0 5px 0 var(--black), 0 -5px 0 var(--black);
+}
+
+.nav-title {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  letter-spacing: 3px;
+  color: var(--white);
+}
+
+.nav-title span { color: var(--green); }
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 2rem;
+  list-style: none;
+}
+
+.nav-links a {
+  color: var(--gray);
+  text-decoration: none;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  transition: color 0.2s;
+  position: relative;
+}
+
+.nav-links a::after {
+  content: '';
+  position: absolute;
+  bottom: -4px;
+  left: 0;
+  width: 0;
+  height: 1px;
+  background: var(--green);
+  transition: width 0.3s ease;
+}
+
+.nav-links a:hover { color: var(--green); }
+.nav-links a:hover::after { width: 100%; }
+
+.nav-indicator {
+  width: 6px;
+  height: 6px;
+  background: var(--green);
+  border-radius: 50%;
+  animation: pulse-dot 2s infinite;
+}
+
+@keyframes pulse-dot {
+  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 var(--green-glow); }
+  50% { opacity: 0.7; box-shadow: 0 0 0 8px transparent; }
+}
+
+/* ═══════════════════════════════════════
+   HERO SECTION
+   ═══════════════════════════════════════ */
+.hero {
+  position: relative;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  overflow: hidden;
+}
+
+.hero-bg {
+  position: absolute;
+  inset: 0;
+  background:
+    radial-gradient(ellipse 80% 60% at 70% 40%, rgba(0, 255, 136, 0.06) 0%, transparent 60%),
+    radial-gradient(ellipse 50% 80% at 20% 80%, rgba(0, 255, 136, 0.03) 0%, transparent 50%);
+}
+
+/* Diagonal slash */
+.hero-slash {
+  position: absolute;
+  top: -20%;
+  right: -5%;
+  width: 45%;
+  height: 140%;
+  background: linear-gradient(
+    135deg,
+    transparent 0%,
+    rgba(0, 255, 136, 0.02) 30%,
+    rgba(0, 255, 136, 0.06) 50%,
+    rgba(0, 255, 136, 0.02) 70%,
+    transparent 100%
+  );
+  transform: skewX(-12deg);
+  border-left: 1px solid rgba(0, 255, 136, 0.08);
+  border-right: 1px solid rgba(0, 255, 136, 0.04);
+}
+
+.hero-slash::before {
+  content: '';
+  position: absolute;
+  left: -80px;
+  top: 0;
+  width: 1px;
+  height: 100%;
+  background: linear-gradient(to bottom, transparent, rgba(0,255,136,0.1), transparent);
+}
+
+/* Grid lines background */
+.hero-grid {
+  position: absolute;
+  inset: 0;
+  background-image:
+    linear-gradient(rgba(0,255,136,0.03) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(0,255,136,0.03) 1px, transparent 1px);
+  background-size: 60px 60px;
+  mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 20%, transparent 70%);
+  -webkit-mask-image: radial-gradient(ellipse 70% 70% at 50% 50%, black 20%, transparent 70%);
+}
+
+.hero-content {
+  position: relative;
+  z-index: 2;
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 8rem 2rem 4rem;
+  width: 100%;
+}
+
+.hero-eyebrow {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--green);
+  margin-bottom: 1.5rem;
+  opacity: 0;
+  animation: fadeUp 0.6s ease forwards 0.2s;
+}
+
+.hero-eyebrow::before {
+  content: '';
+  width: 24px;
+  height: 1px;
+  background: var(--green);
+}
+
+.hero-title {
+  font-family: var(--font-display);
+  font-size: clamp(4rem, 12vw, 10rem);
+  line-height: 0.9;
+  letter-spacing: -2px;
+  margin-bottom: 0.5rem;
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards 0.4s;
+}
+
+.hero-title .line-2 {
+  color: var(--green);
+  display: block;
+  text-shadow: 0 0 80px rgba(0, 255, 136, 0.3);
+}
+
+.hero-tagline {
+  font-size: 1.1rem;
+  color: var(--light-gray);
+  max-width: 480px;
+  margin: 1.5rem 0 2.5rem;
+  line-height: 1.7;
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards 0.6s;
+}
+
+.hero-actions {
+  display: flex;
+  align-items: center;
+  gap: 1.5rem;
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards 0.8s;
+}
+
+.btn-primary {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.9rem 2rem;
+  background: var(--green);
+  color: var(--black);
+  font-family: var(--font-body);
+  font-size: 0.8rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  text-decoration: none;
+  border: none;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+.btn-primary::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
+  transform: translateX(-100%);
+  transition: transform 0.5s ease;
+}
+
+.btn-primary:hover {
+  box-shadow: 0 0 30px var(--green-glow), 0 0 60px rgba(0,255,136,0.1);
+  transform: translateY(-1px);
+}
+
+.btn-primary:hover::before { transform: translateX(100%); }
+
+.btn-secondary {
+  color: var(--light-gray);
+  text-decoration: none;
+  font-size: 0.8rem;
+  font-weight: 500;
+  letter-spacing: 1px;
+  transition: color 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.btn-secondary:hover { color: var(--green); }
+
+.hero-stats {
+  display: flex;
+  gap: 3rem;
+  margin-top: 5rem;
+  padding-top: 2rem;
+  border-top: 1px solid var(--card-border);
+  opacity: 0;
+  animation: fadeUp 0.8s ease forwards 1s;
+}
+
+.stat-number {
+  font-family: var(--font-display);
+  font-size: 2.5rem;
+  color: var(--green);
+  line-height: 1;
+}
+
+.stat-label {
+  font-size: 0.75rem;
+  color: var(--gray);
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  margin-top: 0.25rem;
+}
+
+/* Floating tennis ball decoration */
+.hero-ball {
+  position: absolute;
+  right: 12%;
+  top: 35%;
+  width: 300px;
+  height: 300px;
+  border-radius: 50%;
+  background: radial-gradient(circle at 35% 35%, #d4ff00 0%, #8fbc00 40%, #5a7a00 100%);
+  opacity: 0.06;
+  filter: blur(60px);
+  animation: float 8s ease-in-out infinite;
+}
+
+@keyframes float {
+  0%, 100% { transform: translateY(0) scale(1); }
+  50% { transform: translateY(-30px) scale(1.05); }
+}
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* ═══════════════════════════════════════
+   SECTION HEADERS
+   ═══════════════════════════════════════ */
+.section {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 6rem 2rem;
+}
+
+.section-header {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  margin-bottom: 3rem;
+}
+
+.section-label {
+  font-size: 0.65rem;
+  font-weight: 500;
+  letter-spacing: 4px;
+  text-transform: uppercase;
+  color: var(--green);
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  margin-bottom: 0.75rem;
+}
+
+.section-label::before {
+  content: '';
+  width: 32px;
+  height: 1px;
+  background: var(--green);
+}
+
+.section-title {
+  font-family: var(--font-display);
+  font-size: clamp(2.5rem, 5vw, 4rem);
+  letter-spacing: 1px;
+  line-height: 1;
+}
+
+.section-count {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  color: var(--gray);
+  letter-spacing: 2px;
+}
+
+/* ═══════════════════════════════════════
+   ARTICLE CARDS
+   ═══════════════════════════════════════ */
+.card-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1.5rem;
+}
+
+.card {
+  background: var(--card);
+  border: 1px solid var(--card-border);
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.4s cubic-bezier(0.2, 0, 0.2, 1);
+  text-decoration: none;
+  color: inherit;
+  display: flex;
+  flex-direction: column;
+}
+
+.card::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(135deg, var(--green-subtle), transparent 60%);
+  opacity: 0;
+  transition: opacity 0.4s ease;
+}
+
+.card:hover {
+  transform: translateY(-4px) scale(1.01);
+  border-color: rgba(0, 255, 136, 0.3);
+  box-shadow:
+    0 8px 40px rgba(0, 255, 136, 0.12),
+    0 0 0 1px rgba(0, 255, 136, 0.1),
+    inset 0 1px 0 rgba(0, 255, 136, 0.1);
+}
+
+.card:hover::before { opacity: 1; }
+
+.card-image {
+  position: relative;
+  height: 220px;
+  background: #0d0d0d;
+  overflow: hidden;
+}
+
+.card-image-bg {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: transform 0.6s cubic-bezier(0.2, 0, 0.2, 1);
+  filter: saturate(0.8) brightness(0.7);
+}
+
+.card:hover .card-image-bg {
+  transform: scale(1.08);
+  filter: saturate(1) brightness(0.8);
+}
+
+.card-image-overlay {
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, var(--card) 0%, transparent 50%);
+}
+
+.card-number {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  font-family: var(--font-display);
+  font-size: 3rem;
+  color: rgba(255, 255, 255, 0.06);
+  line-height: 1;
+}
+
+.card-category {
+  position: absolute;
+  top: 1rem;
+  left: 1rem;
+  z-index: 2;
+  font-size: 0.6rem;
+  font-weight: 700;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--black);
+  background: var(--green);
+  padding: 0.3rem 0.75rem;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.card-category::before {
+  content: '';
+  width: 4px;
+  height: 4px;
+  background: var(--black);
+  border-radius: 50%;
+}
+
+.card-body {
+  padding: 1.5rem;
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  z-index: 1;
+}
+
+.card-title {
+  font-family: var(--font-display);
+  font-size: 1.6rem;
+  letter-spacing: 0.5px;
+  line-height: 1.1;
+  margin-bottom: 0.75rem;
+  transition: color 0.3s;
+}
+
+.card:hover .card-title { color: var(--green); }
+
+.card-excerpt {
+  font-size: 0.85rem;
+  color: var(--gray);
+  line-height: 1.6;
+  flex: 1;
+}
+
+.card-footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid var(--card-border);
+  position: relative;
+  z-index: 1;
+}
+
+.card-meta {
+  font-size: 0.7rem;
+  color: var(--gray);
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.card-meta span { display: flex; align-items: center; gap: 0.3rem; }
+
+.card-arrow {
+  width: 32px;
+  height: 32px;
+  display: grid;
+  place-items: center;
+  border: 1px solid var(--card-border);
+  transition: all 0.3s ease;
+  color: var(--gray);
+  font-size: 0.8rem;
+}
+
+.card:hover .card-arrow {
+  background: var(--green);
+  border-color: var(--green);
+  color: var(--black);
+  transform: translateX(2px);
+}
+
+/* ═══════════════════════════════════════
+   CATEGORIES BAR
+   ═══════════════════════════════════════ */
+.categories-bar {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 2rem;
+  flex-wrap: wrap;
+}
+
+.cat-pill {
+  padding: 0.5rem 1.25rem;
+  font-size: 0.7rem;
+  font-weight: 500;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+  color: var(--gray);
+  background: transparent;
+  border: 1px solid var(--card-border);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  font-family: var(--font-body);
+}
+
+.cat-pill:hover, .cat-pill.active {
+  color: var(--black);
+  background: var(--green);
+  border-color: var(--green);
+}
+
+/* ═══════════════════════════════════════
+   FEATURE STRIP
+   ═══════════════════════════════════════ */
+.feature-strip {
+  background: var(--card);
+  border-top: 1px solid var(--card-border);
+  border-bottom: 1px solid var(--card-border);
+  padding: 3rem 0;
+  overflow: hidden;
+}
+
+.feature-strip-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 2rem;
+}
+
+.feature-item {
+  text-align: center;
+  padding: 1.5rem;
+  position: relative;
+}
+
+.feature-item::after {
+  content: '';
+  position: absolute;
+  right: 0;
+  top: 20%;
+  height: 60%;
+  width: 1px;
+  background: var(--card-border);
+}
+
+.feature-item:last-child::after { display: none; }
+
+.feature-icon {
+  width: 48px;
+  height: 48px;
+  margin: 0 auto 1rem;
+  border: 1px solid rgba(0,255,136,0.2);
+  display: grid;
+  place-items: center;
+  font-size: 1.2rem;
+  color: var(--green);
+  position: relative;
+}
+
+.feature-icon::before {
+  content: '';
+  position: absolute;
+  inset: -1px;
+  background: var(--green-subtle);
+}
+
+.feature-title {
+  font-family: var(--font-display);
+  font-size: 1.1rem;
+  letter-spacing: 1px;
+  margin-bottom: 0.5rem;
+}
+
+.feature-desc {
+  font-size: 0.8rem;
+  color: var(--gray);
+  line-height: 1.5;
+}
+
+/* ═══════════════════════════════════════
+   FOOTER
+   ═══════════════════════════════════════ */
+footer {
+  border-top: 1px solid var(--card-border);
+  padding: 3rem 0;
+}
+
+.footer-inner {
+  max-width: 1280px;
+  margin: 0 auto;
+  padding: 0 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.footer-brand {
+  font-family: var(--font-display);
+  font-size: 1.2rem;
+  letter-spacing: 2px;
+  color: var(--gray);
+}
+
+.footer-brand span { color: var(--green); }
+
+.footer-links {
+  display: flex;
+  gap: 2rem;
+  list-style: none;
+}
+
+.footer-links a {
+  color: var(--gray);
+  text-decoration: none;
+  font-size: 0.75rem;
+  letter-spacing: 1px;
+  text-transform: uppercase;
+  transition: color 0.2s;
+}
+
+.footer-links a:hover { color: var(--green); }
+
+.footer-disclosure {
+  text-align: center;
+  padding: 1.5rem 2rem 0;
+  max-width: 1280px;
+  margin: 0 auto;
+}
+
+.footer-disclosure p {
+  font-size: 0.7rem;
+  color: #444;
+  line-height: 1.6;
+  max-width: 600px;
+  margin: 0 auto;
+  padding-top: 1.5rem;
+  border-top: 1px solid #1a1a1a;
+}
+
+/* ═══════════════════════════════════════
+   RESPONSIVE
+   ═══════════════════════════════════════ */
+@media (max-width: 1024px) {
+  .card-grid { grid-template-columns: repeat(2, 1fr); }
+  .feature-strip-inner { grid-template-columns: repeat(2, 1fr); }
+  .feature-item:nth-child(2)::after { display: none; }
+  .hero-stats { gap: 2rem; }
+}
+
+@media (max-width: 768px) {
+  .card-grid { grid-template-columns: 1fr; }
+  .feature-strip-inner { grid-template-columns: 1fr; }
+  .feature-item::after { display: none; }
+  .hero-content { padding: 7rem 1.5rem 3rem; }
+  .hero-stats { flex-direction: column; gap: 1.5rem; }
+  .hero-slash { width: 80%; right: -20%; opacity: 0.5; }
+  .section { padding: 4rem 1.5rem; }
+  .section-header { flex-direction: column; align-items: flex-start; gap: 0.5rem; }
+  .nav-links { display: none; }
+  .footer-inner { flex-direction: column; gap: 1.5rem; text-align: center; }
+  .hero-ball { width: 200px; height: 200px; right: 5%; top: 20%; }
+}
+
+@media (max-width: 480px) {
+  .hero-title { letter-spacing: -1px; }
+  .categories-bar { gap: 0.35rem; }
+  .cat-pill { padding: 0.4rem 0.8rem; font-size: 0.6rem; }
+}
+</style>
+</head>
+<body>
+
+<!-- ═══ NAVIGATION ═══ -->
+<nav id="navbar">
+  <div class="nav-inner">
+    <a href="#" class="nav-brand">
+      <div class="nav-logo"></div>
+      <div class="nav-title"><span>AI</span> TENNIS LAB</div>
+    </a>
+    <ul class="nav-links">
+      <li><a href="#artikel">Artikel</a></li>
+      <li><a href="#methodik">Methodik</a></li>
+      <li><a href="#">Ueber uns</a></li>
+      <li><div class="nav-indicator"></div></li>
+    </ul>
+  </div>
+</nav>
+
+<!-- ═══ HERO ═══ -->
+<section class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-slash"></div>
+  <div class="hero-grid"></div>
+  <div class="hero-ball"></div>
+
+  <div class="hero-content">
+    <div class="hero-eyebrow">KI-gestuetzte Analyse</div>
+    <h1 class="hero-title">
+      TENNIS
+      <span class="line-2">TECHNIK LAB</span>
+    </h1>
+    <p class="hero-tagline">
+      Biomechanisch fundierte Technikanalysen, Uebungen und Trainingsmethoden
+      fuer Tennistrainer. Automatisch generiert, taeglich aktualisiert.
+    </p>
+    <div class="hero-actions">
+      <a href="#artikel" class="btn-primary">Artikel entdecken &#8594;</a>
+      <a href="#methodik" class="btn-secondary">Methodik erfahren &#8600;</a>
+    </div>
+    <div class="hero-stats">
+      <div>
+        <div class="stat-number">32+</div>
+        <div class="stat-label">Technik-Analysen</div>
+      </div>
+      <div>
+        <div class="stat-number">6</div>
+        <div class="stat-label">Kategorien</div>
+      </div>
+      <div>
+        <div class="stat-number">24/7</div>
+        <div class="stat-label">KI-generiert</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ ARTICLES ═══ -->
+<section class="section" id="artikel">
+  <div class="section-header">
+    <div>
+      <div class="section-label">Neueste Analysen</div>
+      <h2 class="section-title">AKTUELLE ARTIKEL</h2>
+    </div>
+    <div class="section-count">03 / 32</div>
+  </div>
+
+  <div class="categories-bar">
+    <button class="cat-pill active">Alle</button>
+    <button class="cat-pill">Grundschlaege</button>
+    <button class="cat-pill">Aufschlag</button>
+    <button class="cat-pill">Netzspiel</button>
+    <button class="cat-pill">Beinarbeit</button>
+    <button class="cat-pill">Taktik</button>
+  </div>
+
+  <div class="card-grid">
+    <!-- Card 1 -->
+    <a href="#" class="card">
+      <div class="card-image">
+        <svg class="card-image-bg" viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="g1" x1="0%" y1="0%" x2="100%" y2="100%">
+              <stop offset="0%" style="stop-color:#0d1a0f"/>
+              <stop offset="50%" style="stop-color:#0a2a12"/>
+              <stop offset="100%" style="stop-color:#0d0d0d"/>
+            </linearGradient>
+          </defs>
+          <rect width="400" height="220" fill="url(#g1)"/>
+          <line x1="40" y1="180" x2="360" y2="180" stroke="#1a3a1f" stroke-width="2"/>
+          <line x1="40" y1="40" x2="360" y2="40" stroke="#1a3a1f" stroke-width="1"/>
+          <line x1="200" y1="40" x2="200" y2="180" stroke="#1a3a1f" stroke-width="1"/>
+          <circle cx="280" cy="120" r="18" fill="none" stroke="#00ff88" stroke-width="1.5" opacity="0.3"/>
+          <line x1="262" y1="120" x2="220" y2="80" stroke="#00ff88" stroke-width="1" opacity="0.2"/>
+          <path d="M 240 140 Q 260 90 300 100" stroke="#00ff88" stroke-width="2" fill="none" opacity="0.4" stroke-dasharray="4 4"/>
+          <circle cx="280" cy="120" r="6" fill="#00ff88" opacity="0.15"/>
+        </svg>
+        <div class="card-image-overlay"></div>
+        <div class="card-number">01</div>
+        <div class="card-category">Grundschlaege</div>
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">VORHAND TOPSPIN: TECHNIK UND BIOMECHANIK</h3>
+        <p class="card-excerpt">Kinematische Kette, Schlaggeraetkopfbeschleunigung und Pronation im Detail. Mit DTB-konformen Uebungsreihen.</p>
+      </div>
+      <div class="card-footer">
+        <div class="card-meta">
+          <span>26.02.2026</span>
+          <span>8 Min</span>
+        </div>
+        <div class="card-arrow">&#8594;</div>
+      </div>
+    </a>
+
+    <!-- Card 2 -->
+    <a href="#" class="card">
+      <div class="card-image">
+        <svg class="card-image-bg" viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="g2" x1="0%" y1="100%" x2="100%" y2="0%">
+              <stop offset="0%" style="stop-color:#0d0d1a"/>
+              <stop offset="50%" style="stop-color:#0a1a2a"/>
+              <stop offset="100%" style="stop-color:#0d0d0d"/>
+            </linearGradient>
+          </defs>
+          <rect width="400" height="220" fill="url(#g2)"/>
+          <ellipse cx="200" cy="200" rx="160" ry="30" fill="none" stroke="#1a2a3a" stroke-width="1"/>
+          <line x1="200" y1="30" x2="200" y2="170" stroke="#1a3a2f" stroke-width="1.5" opacity="0.3"/>
+          <circle cx="200" cy="30" r="3" fill="#00ff88" opacity="0.4"/>
+          <path d="M 180 170 L 200 30 L 220 170" stroke="#00ff88" stroke-width="1" fill="none" opacity="0.2"/>
+          <path d="M 195 80 Q 230 60 200 30" stroke="#00ff88" stroke-width="2" fill="none" opacity="0.4" stroke-dasharray="3 3"/>
+          <circle cx="200" cy="70" r="10" fill="#00ff88" opacity="0.08"/>
+        </svg>
+        <div class="card-image-overlay"></div>
+        <div class="card-number">02</div>
+        <div class="card-category">Aufschlag</div>
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">KICK AUFSCHLAG: TOPSPIN-MECHANIK ENTSCHLUESSELT</h3>
+        <p class="card-excerpt">Supination, Ballwurf-Positionierung und die optimale Schlaggeraet-Beschleunigung fuer maximalen Spin.</p>
+      </div>
+      <div class="card-footer">
+        <div class="card-meta">
+          <span>25.02.2026</span>
+          <span>10 Min</span>
+        </div>
+        <div class="card-arrow">&#8594;</div>
+      </div>
+    </a>
+
+    <!-- Card 3 -->
+    <a href="#" class="card">
+      <div class="card-image">
+        <svg class="card-image-bg" viewBox="0 0 400 220" preserveAspectRatio="xMidYMid slice" xmlns="http://www.w3.org/2000/svg">
+          <defs>
+            <linearGradient id="g3" x1="100%" y1="0%" x2="0%" y2="100%">
+              <stop offset="0%" style="stop-color:#1a0d0d"/>
+              <stop offset="50%" style="stop-color:#1a1a0a"/>
+              <stop offset="100%" style="stop-color:#0d0d0d"/>
+            </linearGradient>
+          </defs>
+          <rect width="400" height="220" fill="url(#g3)"/>
+          <rect x="100" y="80" width="200" height="100" fill="none" stroke="#2a2a1a" stroke-width="1"/>
+          <line x1="100" y1="80" x2="160" y2="40" stroke="#2a2a1a" stroke-width="1"/>
+          <line x1="300" y1="80" x2="360" y2="40" stroke="#2a2a1a" stroke-width="1"/>
+          <line x1="160" y1="40" x2="360" y2="40" stroke="#2a2a1a" stroke-width="1"/>
+          <circle cx="150" cy="130" r="4" fill="#00ff88" opacity="0.5"/>
+          <circle cx="250" cy="110" r="4" fill="#00ff88" opacity="0.3"/>
+          <path d="M 150 130 Q 200 80 250 110" stroke="#00ff88" stroke-width="2" fill="none" opacity="0.3" stroke-dasharray="5 3"/>
+          <line x1="200" y1="80" x2="200" y2="180" stroke="#2a2a1a" stroke-width="1" stroke-dasharray="3 3"/>
+        </svg>
+        <div class="card-image-overlay"></div>
+        <div class="card-number">03</div>
+        <div class="card-category">Netzspiel</div>
+      </div>
+      <div class="card-body">
+        <h3 class="card-title">VOLLEY GRUNDTECHNIK: KONTAKT UND POSITION</h3>
+        <p class="card-excerpt">Optimaler Kontaktpunkt, Continental-Griff und reaktive Beinarbeit am Netz. Drills nach ITF-Methodik.</p>
+      </div>
+      <div class="card-footer">
+        <div class="card-meta">
+          <span>24.02.2026</span>
+          <span>7 Min</span>
+        </div>
+        <div class="card-arrow">&#8594;</div>
+      </div>
+    </a>
+  </div>
+</section>
+
+<!-- ═══ FEATURE STRIP ═══ -->
+<section class="feature-strip" id="methodik">
+  <div class="feature-strip-inner">
+    <div class="feature-item">
+      <div class="feature-icon">&#9881;</div>
+      <div class="feature-title">BIOMECHANIK</div>
+      <div class="feature-desc">Kinematische Ketten und Gelenkwinkel-Analysen fuer jede Technik</div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon">&#9733;</div>
+      <div class="feature-title">DTB-KONFORM</div>
+      <div class="feature-desc">Orientiert an Deutschen Tennis Bund Lehrplaenen und Methodik</div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon">&#8635;</div>
+      <div class="feature-title">TAEGLICH NEU</div>
+      <div class="feature-desc">Automatisch generierte Artikel mit KI-gestuetzter Qualitaetskontrolle</div>
+    </div>
+    <div class="feature-item">
+      <div class="feature-icon">&#9888;</div>
+      <div class="feature-title">TRANSPARENT</div>
+      <div class="feature-desc">100% KI-generiert, offen kommuniziert, mit Sicherheitshinweisen</div>
+    </div>
+  </div>
+</section>
+
+<!-- ═══ FOOTER ═══ -->
+<footer>
+  <div class="footer-inner">
+    <div class="footer-brand"><span>AI</span> TENNIS LAB</div>
+    <ul class="footer-links">
+      <li><a href="#">Startseite</a></li>
+      <li><a href="#">Ueber uns</a></li>
+      <li><a href="#">Sitemap</a></li>
+      <li><a href="https://cybertime.at">cybertime</a></li>
+    </ul>
+  </div>
+  <div class="footer-disclosure">
+    <p>Alle Inhalte auf AI Tennis Lab werden vollstaendig durch kuenstliche Intelligenz erstellt.
+    Dieser Inhalt ersetzt kein professionelles Tennistraining. Fuer individuelles Coaching wenden
+    Sie sich an einen zertifizierten Tennistrainer (DTB-Lizenz oder vergleichbar).</p>
+  </div>
+</footer>
+
+<script>
+// Nav scroll effect
+const nav = document.getElementById('navbar');
+window.addEventListener('scroll', () => {
+  nav.classList.toggle('scrolled', window.scrollY > 40);
+});
+
+// Category pill toggle
+document.querySelectorAll('.cat-pill').forEach(pill => {
+  pill.addEventListener('click', () => {
+    document.querySelectorAll('.cat-pill').forEach(p => p.classList.remove('active'));
+    pill.classList.add('active');
+  });
+});
+
+// Intersection Observer for cards
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach((entry, i) => {
+    if (entry.isIntersecting) {
+      entry.target.style.opacity = '1';
+      entry.target.style.transform = 'translateY(0)';
+      observer.unobserve(entry.target);
+    }
+  });
+}, { threshold: 0.1 });
+
+document.querySelectorAll('.card').forEach((card, i) => {
+  card.style.opacity = '0';
+  card.style.transform = 'translateY(30px)';
+  card.style.transition = `all 0.6s cubic-bezier(0.2, 0, 0.2, 1) ${i * 0.15}s`;
+  observer.observe(card);
+});
+</script>
+
+</body>
+</html>
