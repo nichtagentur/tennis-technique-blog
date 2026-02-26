@@ -1,0 +1,141 @@
+{% extends "base.html" %}
+
+{% block title %}{{ site.title }} - {{ site.tagline }}{% endblock %}
+{% block meta_description %}{{ site.description }}{% endblock %}
+
+{% block extra_head %}
+<script type="application/ld+json">
+{
+    "@context": "https://schema.org",
+    "@type": "Organization",
+    "name": "{{ site.title }}",
+    "description": "{{ site.description }}",
+    "url": "{{ site.base_url }}",
+    "logo": "{{ site.base_url }}/images/logo.png"
+}
+</script>
+{% endblock %}
+
+{% block extra_css %}
+.hero {
+    background: linear-gradient(135deg, var(--bg) 0%, #0a1a10 50%, var(--bg) 100%);
+    padding: 4rem 2rem;
+    text-align: center;
+    margin: -2rem -2rem 3rem;
+    position: relative;
+    overflow: hidden;
+}
+.hero::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    right: -20%;
+    width: 60%;
+    height: 200%;
+    background: linear-gradient(135deg, transparent 40%, rgba(0,255,136,0.03) 50%, transparent 60%);
+    transform: rotate(-15deg);
+}
+.hero-title {
+    font-size: 3rem;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    color: var(--accent);
+    margin-bottom: 0.5rem;
+}
+.hero-tagline {
+    font-size: 1.1rem;
+    color: var(--muted);
+    max-width: 500px;
+    margin: 0 auto;
+}
+.category-section { margin-bottom: 3rem; }
+.category-title {
+    font-size: 1.2rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--accent);
+    border-bottom: 1px solid #222;
+    padding-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
+}
+.card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+}
+.card {
+    background: var(--card);
+    border: 1px solid #222;
+    border-radius: var(--radius);
+    overflow: hidden;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+.card:hover {
+    transform: scale(1.02);
+    box-shadow: 0 0 20px rgba(0,255,136,0.15);
+    border-color: var(--accent-dim);
+}
+.card-image {
+    width: 100%;
+    height: 180px;
+    object-fit: cover;
+    display: block;
+    background: #1a1a1a;
+}
+.card-body { padding: 1.25rem; }
+.card-title {
+    font-size: 1rem;
+    font-weight: 700;
+    margin-bottom: 0.5rem;
+    line-height: 1.3;
+}
+.card-title a { color: var(--text); }
+.card-title a:hover { color: var(--accent); }
+.card-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 0.75rem;
+    color: var(--muted);
+}
+@media (max-width: 768px) {
+    .hero { padding: 2.5rem 1rem; margin: -1rem -1rem 2rem; }
+    .hero-title { font-size: 2rem; letter-spacing: 2px; }
+    .card-grid { grid-template-columns: 1fr; }
+}
+{% endblock %}
+
+{% block content %}
+<div class="hero">
+    <h1 class="hero-title">{{ site.title }}</h1>
+    <p class="hero-tagline">{{ site.tagline }}</p>
+</div>
+
+{% for category, articles in categories.items() %}
+<section class="category-section">
+    <h2 class="category-title">{{ category }}</h2>
+    <div class="card-grid">
+        {% for article in articles %}
+        <article class="card">
+            {% if article.image %}
+            <a href="{{ site.base_url }}/artikel/{{ article.slug }}.html">
+                <img class="card-image" src="{{ site.base_url }}/images/{{ article.image }}" alt="{{ article.title }}" loading="lazy">
+            </a>
+            {% endif %}
+            <div class="card-body">
+                <h3 class="card-title">
+                    <a href="{{ site.base_url }}/artikel/{{ article.slug }}.html">{{ article.title }}</a>
+                </h3>
+                <div class="card-meta">
+                    <span class="badge">{{ article.category }}</span>
+                    <span>{{ article.date }}</span>
+                </div>
+            </div>
+        </article>
+        {% endfor %}
+    </div>
+</section>
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,237 @@
+{
+  "site": {
+    "title": "AI Tennis Lab",
+    "tagline": "KI-gestuetzte Technikanalyse fuer Tennistrainer",
+    "language": "de",
+    "base_url": "https://nichtagentur.github.io/tennis-technique-blog",
+    "author": "AI Tennis Lab",
+    "description": "KI-gestuetzte Technikanalysen, Uebungen und Trainingsmethoden fuer Tennistrainer. Biomechanisch fundiert, praxisnah aufbereitet.",
+    "ai_disclosure": "Dieser Inhalt wurde mit KI erstellt und dient als Trainingsressource. Fuer individuelles Training wenden Sie sich an einen zertifizierten Tennistrainer."
+  },
+  "topics": [
+    {
+      "slug": "vorhand-topspin-technik",
+      "title": "Vorhand Topspin: Technik, Fehlerbilder und Uebungen",
+      "category": "Grundschlaege",
+      "difficulty": "Anfaenger bis Fortgeschrittene",
+      "keywords": ["Vorhand Topspin", "Tennis Vorhand", "Topspin Technik"]
+    },
+    {
+      "slug": "rueckhand-beidhaendig",
+      "title": "Beidhaendige Rueckhand: Griffhaltung, Schwungbahn und Drills",
+      "category": "Grundschlaege",
+      "difficulty": "Anfaenger bis Fortgeschrittene",
+      "keywords": ["Rueckhand beidhaendig", "Tennis Rueckhand", "Beidhaendige Rueckhand"]
+    },
+    {
+      "slug": "rueckhand-einhaendig",
+      "title": "Einhaendige Rueckhand: Klassische Technik und moderne Varianten",
+      "category": "Grundschlaege",
+      "difficulty": "Fortgeschrittene",
+      "keywords": ["Einhaendige Rueckhand", "Rueckhand Slice", "Klassische Rueckhand"]
+    },
+    {
+      "slug": "vorhand-slice",
+      "title": "Vorhand Slice: Wann und wie den Slice effektiv einsetzen",
+      "category": "Grundschlaege",
+      "difficulty": "Fortgeschrittene",
+      "keywords": ["Vorhand Slice", "Slice Technik", "Defensivschlag"]
+    },
+    {
+      "slug": "rueckhand-slice-technik",
+      "title": "Rueckhand Slice: Technik, Einsatzmoeglichkeiten und Fehlerkorrektur",
+      "category": "Grundschlaege",
+      "difficulty": "Anfaenger bis Fortgeschrittene",
+      "keywords": ["Rueckhand Slice", "Slice Tennis", "Unterschnitt"]
+    },
+    {
+      "slug": "erster-aufschlag-power",
+      "title": "Erster Aufschlag: Maximale Power durch korrekte Biomechanik",
+      "category": "Aufschlag",
+      "difficulty": "Fortgeschrittene",
+      "keywords": ["Erster Aufschlag", "Tennis Aufschlag Power", "Aufschlag Biomechanik"]
+    },
+    {
+      "slug": "zweiter-aufschlag-sicherheit",
+      "title": "Zweiter Aufschlag: Sicherheit und Spin fuer weniger Doppelfehler",
+      "category": "Aufschlag",
+      "difficulty": "Anfaenger bis Fortgeschrittene",
+      "keywords": ["Zweiter Aufschlag", "Kick Aufschlag", "Doppelfehler vermeiden"]
+    },
+    {
+      "slug": "aufschlag-kick-serve",
+      "title": "Kick Aufschlag: Technik des Topspin-Aufschlags im Detail",
+      "category": "Aufschlag",
+      "difficulty": "Fortgeschrittene bis Profis",
+      "keywords": ["Kick Serve", "Topspin Aufschlag", "Aufschlag Spin"]
+    },
+    {
+      "slug": "aufschlag-slice-serve",
+      "title": "Slice Aufschlag: Seitwaerts-Spin fuer taktische Vorteile",
+      "category": "Aufschlag",
+      "difficulty": "Fortgeschrittene",
+      "keywords": ["Slice Aufschlag", "Slice Serve", "Aufschlag Variation"]
+    },
+    {
+      "slug": "aufschlag-ballwurf",
+      "title": "Der perfekte Ballwurf: Grundlage fuer jeden Aufschlag",
+      "category": "Aufschlag",
+      "difficulty": "Anfaenger",
+      "keywords": ["Ballwurf Aufschlag", "Aufschlag Grundlagen", "Toss Tennis"]
+    },
+    {
+      "slug": "volley-grundtechnik",
+      "title": "Volley Grundtechnik: Kontaktpunkt, Griff und Koerperposition",
+      "category": "Netzspiel",
+      "difficulty": "Anfaenger bis Fortgeschrittene",
+      "keywords": ["Volley Tennis", "Volley Technik", "Netzspiel"]
+    },
+    {
+      "slug": "stop-volley",
+      "title": "Stop Volley: Die Kunst des weichen Netzspiels",
+      "category": "Netzspiel",
+      "difficulty": "Fortgeschrittene",
+      "keywords": ["Stop Volley", "Drop Volley", "Touch am Netz"]
+    },
+    {
+      "slug": "ueberkopfball-smash",
+      "title": "Ueberkopfball (Smash): Timing, Positionierung und Ausfuehrung",
+      "category": "Netzspiel",
+      "difficulty": "Anfaenger bis Fortgeschrittene",
+      "keywords": ["Smash Tennis", "Ueberkopfball", "Schmetterball"]
+    },
+    {
+      "slug": "serve-and-volley",
+      "title": "Serve and Volley: Taktik und Technik des Netzsturms",
+      "category": "Netzspiel",
+      "difficulty": "Fortgeschrittene bis Profis",
+      "keywords": ["Serve and Volley", "Netzangriff", "Angriffsspiel"]
+    },
+    {
+      "slug": "lob-topspin-defensiv",
+      "title": "Lob: Topspin-Lob und defensiver Lob im Vergleich",
+      "category": "Netzspiel",
+      "difficulty": "Fortgeschrittene",
+      "keywords": ["Lob Tennis", "Topspin Lob", "Defensiver Lob"]
+    },
+    {
+      "slug": "split-step-grundlagen",
+      "title": "Split Step: Die wichtigste Bewegung im Tennis",
+      "category": "Beinarbeit",
+      "difficulty": "Anfaenger",
+      "keywords": ["Split Step", "Beinarbeit Tennis", "Reaktionsschritt"]
+    },
+    {
+      "slug": "seitliche-beinarbeit",
+      "title": "Seitliche Beinarbeit: Sidesteps, Kreuzschritte und Ausfallschritte",
+      "category": "Beinarbeit",
+      "difficulty": "Anfaenger bis Fortgeschrittene",
+      "keywords": ["Seitliche Beinarbeit", "Footwork Tennis", "Sidesteps"]
+    },
+    {
+      "slug": "recovery-steps",
+      "title": "Recovery Steps: Schnell zurueck in die Ausgangsposition",
+      "category": "Beinarbeit",
+      "difficulty": "Anfaenger bis Fortgeschrittene",
+      "keywords": ["Recovery Tennis", "Ruecklaufschritte", "Positionierung"]
+    },
+    {
+      "slug": "open-stance-vs-closed-stance",
+      "title": "Open Stance vs. Closed Stance: Wann welche Stellung nutzen",
+      "category": "Beinarbeit",
+      "difficulty": "Fortgeschrittene",
+      "keywords": ["Open Stance", "Closed Stance", "Schlagstellung Tennis"]
+    },
+    {
+      "slug": "annaeherung-ans-netz",
+      "title": "Annaeherung ans Netz: Laufwege und Positionierung beim Netzangriff",
+      "category": "Beinarbeit",
+      "difficulty": "Fortgeschrittene",
+      "keywords": ["Netzannaeherung", "Approach Shot", "Laufwege Tennis"]
+    },
+    {
+      "slug": "grundlinien-taktik",
+      "title": "Grundlinien-Taktik: Spielmuster und Ballplatzierung",
+      "category": "Taktik & Spielverstaendnis",
+      "difficulty": "Anfaenger bis Fortgeschrittene",
+      "keywords": ["Grundlinienspiel", "Taktik Tennis", "Ballplatzierung"]
+    },
+    {
+      "slug": "spieleroeffnung-aufschlag",
+      "title": "Spieleroeffnung nach dem Aufschlag: Erste drei Schlaege planen",
+      "category": "Taktik & Spielverstaendnis",
+      "difficulty": "Fortgeschrittene",
+      "keywords": ["Aufschlagtaktik", "Spieleroeffnung", "Erste Schlaege"]
+    },
+    {
+      "slug": "return-taktik",
+      "title": "Return Taktik: Den Aufschlag des Gegners neutralisieren",
+      "category": "Taktik & Spielverstaendnis",
+      "difficulty": "Fortgeschrittene",
+      "keywords": ["Return Tennis", "Aufschlag Return", "Return Taktik"]
+    },
+    {
+      "slug": "spielanalyse-schwaechen",
+      "title": "Spielanalyse: Schwaechen des Gegners erkennen und nutzen",
+      "category": "Taktik & Spielverstaendnis",
+      "difficulty": "Fortgeschrittene bis Profis",
+      "keywords": ["Spielanalyse Tennis", "Gegner analysieren", "Taktische Anpassung"]
+    },
+    {
+      "slug": "doppel-taktik-grundlagen",
+      "title": "Doppel Taktik: Positionierung, Kommunikation und Spielsysteme",
+      "category": "Taktik & Spielverstaendnis",
+      "difficulty": "Anfaenger bis Fortgeschrittene",
+      "keywords": ["Doppel Tennis", "Doppel Taktik", "Doppel Positionierung"]
+    },
+    {
+      "slug": "trainingsplanung-periodisierung",
+      "title": "Trainingsplanung: Periodisierung im Tennissport",
+      "category": "Training & Didaktik",
+      "difficulty": "Trainer",
+      "keywords": ["Trainingsplanung Tennis", "Periodisierung", "Saisonplanung"]
+    },
+    {
+      "slug": "fehlerkorrektur-methoden",
+      "title": "Fehlerkorrektur: Effektive Methoden im Tennistraining",
+      "category": "Training & Didaktik",
+      "difficulty": "Trainer",
+      "keywords": ["Fehlerkorrektur Tennis", "Coaching Methoden", "Technikkorrektur"]
+    },
+    {
+      "slug": "kinder-tennistraining",
+      "title": "Kinder-Tennistraining: Altersgerechte Uebungen und Spielformen",
+      "category": "Training & Didaktik",
+      "difficulty": "Trainer",
+      "keywords": ["Kinder Tennis", "Jugendtraining", "Tennis Anfaenger Kinder"]
+    },
+    {
+      "slug": "mentales-training-tennis",
+      "title": "Mentales Training: Konzentration und Druckresistenz aufbauen",
+      "category": "Training & Didaktik",
+      "difficulty": "Fortgeschrittene bis Profis",
+      "keywords": ["Mentales Training Tennis", "Sportpsychologie", "Konzentration"]
+    },
+    {
+      "slug": "athletiktraining-tennis",
+      "title": "Athletiktraining: Kraft, Schnelligkeit und Ausdauer fuer Tennis",
+      "category": "Training & Didaktik",
+      "difficulty": "Anfaenger bis Profis",
+      "keywords": ["Athletik Tennis", "Fitnesstraining", "Kraft und Ausdauer"]
+    },
+    {
+      "slug": "aufwaermen-cooldown",
+      "title": "Aufwaermen und Cooldown: Verletzungspraevention im Tennis",
+      "category": "Training & Didaktik",
+      "difficulty": "Anfaenger",
+      "keywords": ["Aufwaermen Tennis", "Cooldown", "Verletzungspraevention"]
+    },
+    {
+      "slug": "videoanalyse-training",
+      "title": "Videoanalyse im Training: Technik sichtbar machen",
+      "category": "Training & Didaktik",
+      "difficulty": "Trainer",
+      "keywords": ["Videoanalyse Tennis", "Technikanalyse", "Coaching Tools"]
+    }
+  ]
+}

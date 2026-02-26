@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Ueber uns | AI Tennis Lab</title>
+    <meta name="description" content="Erfahren Sie, wie AI Tennis Lab funktioniert: KI-gestuetzte Technikanalysen fuer Tennistrainer, transparent und biomechanisch fundiert.">
+    <link rel="canonical" href="https://nichtagentur.github.io/tennis-technique-blog/ueber-uns.html">
+    <meta property="og:locale" content="de_DE">
+    <meta property="og:type" content="website">
+    <meta property="og:title" content="AI Tennis Lab">
+    <meta property="og:description" content="KI-gestuetzte Technikanalysen, Uebungen und Trainingsmethoden fuer Tennistrainer. Biomechanisch fundiert, praxisnah aufbereitet.">
+    <meta property="og:url" content="https://nichtagentur.github.io/tennis-technique-blog">
+    <meta property="og:site_name" content="AI Tennis Lab">
+    
+    <link rel="alternate" hreflang="de" href="https://nichtagentur.github.io/tennis-technique-blog/ueber-uns.html">
+    
+    <style>
+        *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --bg: #0a0a0a;
+            --card: #151515;
+            --accent: #00ff88;
+            --accent-dim: #00cc6a;
+            --text: #f0f0f0;
+            --muted: #888;
+            --radius: 8px;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--bg);
+            color: var(--text);
+            line-height: 1.6;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        a { color: var(--accent); text-decoration: none; transition: color 0.2s; }
+        a:hover { color: #33ffaa; }
+        /* NAV */
+        nav {
+            background: #111;
+            border-bottom: 2px solid var(--accent);
+            padding: 0 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .nav-inner {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            height: 60px;
+        }
+        .nav-brand {
+            font-size: 1.3rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: var(--accent);
+        }
+        .nav-links { display: flex; gap: 1.5rem; list-style: none; }
+        .nav-links a {
+            color: var(--muted);
+            font-size: 0.85rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            font-weight: 600;
+            transition: color 0.2s;
+        }
+        .nav-links a:hover, .nav-links a.active { color: var(--accent); }
+        /* MAIN */
+        main { flex: 1; width: 100%; max-width: 1200px; margin: 0 auto; padding: 2rem; }
+        /* FOOTER */
+        footer {
+            background: #111;
+            border-top: 1px solid #222;
+            padding: 2rem;
+            text-align: center;
+            margin-top: auto;
+        }
+        .footer-inner { max-width: 1200px; margin: 0 auto; }
+        .footer-links { display: flex; justify-content: center; gap: 2rem; margin-bottom: 1rem; list-style: none; }
+        .footer-links a { color: var(--muted); font-size: 0.85rem; }
+        .footer-disclosure {
+            font-size: 0.75rem;
+            color: var(--muted);
+            max-width: 600px;
+            margin: 0.5rem auto 0;
+            line-height: 1.5;
+        }
+        .footer-copy { font-size: 0.75rem; color: #555; margin-top: 0.5rem; }
+        /* BADGES */
+        .badge {
+            display: inline-block;
+            background: var(--accent);
+            color: var(--bg);
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            padding: 0.25rem 0.75rem;
+            border-radius: 3px;
+        }
+        /* RESPONSIVE */
+        @media (max-width: 768px) {
+            nav { padding: 0 1rem; }
+            .nav-links { gap: 1rem; }
+            .nav-links a { font-size: 0.75rem; }
+            main { padding: 1rem; }
+        }
+        @media (max-width: 480px) {
+            .nav-inner { flex-direction: column; height: auto; padding: 0.75rem 0; gap: 0.5rem; }
+            .nav-links { gap: 0.75rem; }
+        }
+        
+.about-hero {
+    background: linear-gradient(135deg, var(--bg) 0%, #0a1a10 100%);
+    padding: 3rem 2rem;
+    margin: -2rem -2rem 2rem;
+    border-bottom: 1px solid #222;
+}
+.about-hero h1 {
+    font-size: 2rem;
+    font-weight: 800;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--accent);
+}
+.about-content { max-width: 800px; }
+.about-content h2 {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--accent);
+    margin: 2.5rem 0 1rem;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+}
+.about-content p {
+    margin-bottom: 1rem;
+    line-height: 1.8;
+    color: var(--text);
+}
+.about-content ul {
+    margin: 0.5rem 0 1rem 1.5rem;
+    line-height: 1.8;
+}
+.about-content li { margin-bottom: 0.3rem; }
+.transparency-box {
+    background: var(--card);
+    border: 1px solid #222;
+    border-left: 3px solid var(--accent);
+    border-radius: var(--radius);
+    padding: 1.5rem;
+    margin: 2rem 0;
+}
+.transparency-box h3 {
+    color: var(--accent);
+    font-size: 1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 0.75rem;
+}
+@media (max-width: 768px) {
+    .about-hero { padding: 2rem 1rem; margin: -1rem -1rem 1.5rem; }
+    .about-hero h1 { font-size: 1.5rem; }
+}
+
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-inner">
+            <a href="https://nichtagentur.github.io/tennis-technique-blog/" class="nav-brand">AI Tennis Lab</a>
+            <ul class="nav-links">
+                <li><a href="https://nichtagentur.github.io/tennis-technique-blog/">Startseite</a></li>
+                <li><a href="https://nichtagentur.github.io/tennis-technique-blog/ueber-uns.html">Ueber uns</a></li>
+            </ul>
+        </div>
+    </nav>
+
+    <main>
+        
+<div class="about-hero">
+    <h1>Ueber AI Tennis Lab</h1>
+</div>
+
+<div class="about-content">
+    <h2>Was ist AI Tennis Lab?</h2>
+    <p>
+        AI Tennis Lab ist ein KI-gestuetztes Analysetool, das Tennistrainern biomechanisch fundierte
+        Technikanalysen, Uebungen und Trainingsmethoden bereitstellt. Unsere Inhalte werden automatisch
+        generiert und taeglich aktualisiert.
+    </p>
+    <p>
+        Wir kombinieren aktuelle sportwissenschaftliche Erkenntnisse mit KI-Technologie, um praxisnahe
+        Ressourcen fuer den Trainingsalltag zu schaffen.
+    </p>
+
+    <h2>Unsere Methodik</h2>
+    <p>Jeder Artikel wird nach einem strukturierten Prozess erstellt:</p>
+    <ul>
+        <li>Themenauswahl basierend auf relevanten Trainingsaspekten (Grundschlaege, Aufschlag, Taktik, etc.)</li>
+        <li>KI-gestuetzte Texterstellung mit Fokus auf biomechanische Korrektheit</li>
+        <li>Strukturierung nach bewaehrten Coaching-Frameworks (DTB, ITF)</li>
+        <li>Einbindung von Uebungen mit konkreten Wiederholungszahlen und Progressionen</li>
+    </ul>
+
+    <div class="transparency-box">
+        <h3>Transparenz-Hinweis</h3>
+        <p>
+            Alle Inhalte auf AI Tennis Lab werden vollstaendig durch kuenstliche Intelligenz erstellt.
+            Wir verwenden Claude (Anthropic) fuer die Texterstellung und Gemini (Google) fuer die
+            Bilderstellung. Die Artikel werden automatisch generiert und veroeffentlicht.
+        </p>
+        <p style="margin-bottom:0;">
+            <strong>Wichtig:</strong> Diese Inhalte ersetzen kein professionelles Tennistraining.
+            Fuer individuelles Coaching wenden Sie sich bitte an einen zertifizierten Tennistrainer
+            (DTB-Lizenz oder vergleichbar).
+        </p>
+    </div>
+
+    <h2>Fachliche Grundlagen</h2>
+    <p>Unsere Inhalte orientieren sich an anerkannten Quellen und Frameworks:</p>
+    <ul>
+        <li><strong>DTB</strong> (Deutscher Tennis Bund) -- Trainerausbildung und Lehrplaene</li>
+        <li><strong>ITF</strong> (International Tennis Federation) -- Coaching-Methodologie und Biomechanik</li>
+        <li>Aktuelle sportwissenschaftliche Forschung zu Tennistechnik und -training</li>
+        <li>Biomechanische Analysen (kinematische Kette, Gelenkwinkel, Kraftuebertragung)</li>
+    </ul>
+
+    <h2>Verwendete KI-Modelle</h2>
+    <ul>
+        <li><strong>Texterstellung:</strong> Claude (Anthropic) -- Haiku-Modell fuer effiziente, qualitativ hochwertige Texte</li>
+        <li><strong>Bildgenerierung:</strong> Gemini (Google) -- Nano Banana Pro fuer realistische Sportfotografie</li>
+        <li><strong>Automatisierung:</strong> GitHub Actions fuer taegliche Veroeffentlichung</li>
+    </ul>
+
+    <h2>Kontakt</h2>
+    <p>
+        AI Tennis Lab ist ein Projekt von <a href="https://cybertime.at">cybertime</a>,
+        einem Multimedia-Entwicklungsunternehmen aus Oesterreich.
+    </p>
+</div>
+
+    </main>
+
+    <footer>
+        <div class="footer-inner">
+            <ul class="footer-links">
+                <li><a href="https://nichtagentur.github.io/tennis-technique-blog/">Startseite</a></li>
+                <li><a href="https://nichtagentur.github.io/tennis-technique-blog/ueber-uns.html">Ueber uns</a></li>
+                <li><a href="https://nichtagentur.github.io/tennis-technique-blog/sitemap.xml">Sitemap</a></li>
+            </ul>
+            <p class="footer-disclosure">Dieser Inhalt wurde mit KI erstellt und dient als Trainingsressource. Fuer individuelles Training wenden Sie sich an einen zertifizierten Tennistrainer.</p>
+            <p class="footer-copy">&copy; 2026 AI Tennis Lab | Ein Projekt von <a href="https://cybertime.at">cybertime</a></p>
+        </div>
+    </footer>
+</body>
+</html>
