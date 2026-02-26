@@ -1,0 +1,960 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Tennis Lab -- Email Gateway Presentation</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,300;0,400;0,500;0,600;0,700;0,800;1,400&family=Barlow+Condensed:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
+:root {
+    --black: #000000;
+    --black-up: #0a0a0a;
+    --black-card: #111111;
+    --border: #222222;
+    --volt: #d4f73f;
+    --volt-dim: #b0cc2e;
+    --volt-glow: rgba(212, 247, 63, 0.08);
+    --volt-glow-strong: rgba(212, 247, 63, 0.2);
+    --clay: #ff3b30;
+    --white: #ffffff;
+    --gray-100: #f0f0f0;
+    --gray-300: #aaaaaa;
+    --gray-500: #666666;
+    --gray-700: #333333;
+    --display: 'Bebas Neue', Impact, sans-serif;
+    --body: 'Barlow', Helvetica, Arial, sans-serif;
+    --condensed: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+    --ease: cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+html, body { height: 100%; overflow: hidden; }
+
+body {
+    font-family: var(--body);
+    background: var(--black);
+    color: var(--white);
+    -webkit-font-smoothing: antialiased;
+}
+
+/* Noise texture */
+body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    z-index: 9998;
+    pointer-events: none;
+    opacity: 0.025;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    background-size: 256px 256px;
+}
+
+/* === SLIDE SYSTEM === */
+.deck { position: relative; width: 100%; height: 100vh; }
+
+.slide {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: clamp(2rem, 6vw, 6rem);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.6s var(--ease), transform 0.6s var(--ease);
+    transform: translateX(60px);
+    overflow: hidden;
+}
+.slide.active {
+    opacity: 1;
+    pointer-events: auto;
+    transform: translateX(0);
+    z-index: 10;
+}
+.slide.prev {
+    transform: translateX(-60px);
+}
+
+/* === SLIDE COUNTER === */
+.counter {
+    position: fixed;
+    bottom: 2rem;
+    right: clamp(2rem, 6vw, 6rem);
+    z-index: 100;
+    font-family: var(--condensed);
+    font-size: 0.8rem;
+    font-weight: 600;
+    letter-spacing: 3px;
+    color: var(--gray-500);
+    text-transform: uppercase;
+}
+.counter-current {
+    font-family: var(--display);
+    font-size: 2rem;
+    color: var(--volt);
+    line-height: 1;
+}
+
+/* === NAV ARROWS === */
+.nav-hint {
+    position: fixed;
+    bottom: 2rem;
+    left: clamp(2rem, 6vw, 6rem);
+    z-index: 100;
+    font-family: var(--condensed);
+    font-size: 0.7rem;
+    font-weight: 500;
+    letter-spacing: 3px;
+    color: var(--gray-700);
+    text-transform: uppercase;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+}
+.nav-key {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 32px;
+    height: 32px;
+    border: 1px solid var(--gray-700);
+    color: var(--gray-500);
+    font-size: 0.9rem;
+    transition: all 0.3s var(--ease);
+}
+.nav-key:hover {
+    border-color: var(--volt);
+    color: var(--volt);
+}
+
+/* === PROGRESS BAR === */
+.progress {
+    position: fixed;
+    top: 0;
+    left: 0;
+    height: 3px;
+    background: var(--volt);
+    z-index: 200;
+    transition: width 0.5s var(--ease);
+    box-shadow: 0 0 20px var(--volt-glow-strong);
+}
+
+/* === SHARED TYPOGRAPHY === */
+.slide-overline {
+    font-family: var(--condensed);
+    font-size: clamp(0.7rem, 1.2vw, 0.85rem);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 6px;
+    color: var(--volt);
+    margin-bottom: 1.5rem;
+}
+.slide-title {
+    font-family: var(--display);
+    font-size: clamp(3.5rem, 9vw, 8rem);
+    line-height: 0.9;
+    letter-spacing: 0.04em;
+    text-transform: uppercase;
+    color: var(--white);
+    margin-bottom: 1.5rem;
+}
+.slide-title .accent { color: var(--volt); }
+.slide-subtitle {
+    font-family: var(--body);
+    font-size: clamp(1rem, 2vw, 1.3rem);
+    font-weight: 300;
+    color: var(--gray-300);
+    max-width: 600px;
+    line-height: 1.7;
+}
+
+/* === SLIDE 1: TITLE === */
+.s1-bg {
+    position: absolute;
+    top: -20%;
+    right: -15%;
+    width: 700px;
+    height: 700px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--volt-glow-strong) 0%, transparent 60%);
+    filter: blur(120px);
+    pointer-events: none;
+}
+.s1-watermark {
+    position: absolute;
+    bottom: -5%;
+    right: -3%;
+    font-family: var(--display);
+    font-size: clamp(15rem, 30vw, 28rem);
+    color: rgba(255,255,255,0.015);
+    letter-spacing: 0.05em;
+    line-height: 0.85;
+    pointer-events: none;
+}
+.s1-brand {
+    margin-top: 3rem;
+    font-family: var(--condensed);
+    font-size: 0.75rem;
+    font-weight: 500;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--gray-500);
+}
+.s1-brand span { color: var(--volt); }
+.s1-line {
+    width: 80px;
+    height: 3px;
+    background: var(--volt);
+    margin-bottom: 2rem;
+}
+
+/* === SLIDE 2: CONCEPT === */
+.concept-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    margin-top: 3rem;
+    max-width: 1100px;
+}
+.concept-item {
+    padding: 2rem 2.5rem;
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+    transition: border-color 0.4s var(--ease);
+}
+.concept-item::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 3px;
+    background: var(--volt);
+    transform: scaleY(0);
+    transition: transform 0.4s var(--ease);
+}
+.concept-item:hover { border-color: var(--gray-700); }
+.concept-item:hover::before { transform: scaleY(1); }
+.concept-icon {
+    font-family: var(--display);
+    font-size: 2.5rem;
+    color: var(--volt);
+    margin-bottom: 0.75rem;
+    line-height: 1;
+}
+.concept-label {
+    font-family: var(--condensed);
+    font-size: 1.1rem;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+}
+.concept-desc {
+    font-size: 0.92rem;
+    color: var(--gray-300);
+    line-height: 1.6;
+    font-weight: 400;
+}
+
+/* === SLIDE 3: ARCHITECTURE === */
+.arch-flow {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-top: 2.5rem;
+    max-width: 1200px;
+    width: 100%;
+}
+.arch-row {
+    display: flex;
+    align-items: center;
+    gap: 0;
+    flex-wrap: nowrap;
+}
+.arch-node {
+    padding: 1rem 1.5rem;
+    border: 2px solid var(--border);
+    font-family: var(--condensed);
+    font-size: clamp(0.65rem, 1vw, 0.8rem);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--white);
+    white-space: nowrap;
+    position: relative;
+    flex-shrink: 0;
+    transition: all 0.3s var(--ease);
+}
+.arch-node:hover {
+    border-color: var(--volt);
+    box-shadow: 0 0 30px var(--volt-glow);
+}
+.arch-node.highlight {
+    background: var(--volt);
+    color: var(--black);
+    border-color: var(--volt);
+}
+.arch-node.api {
+    border-color: var(--volt-dim);
+    color: var(--volt);
+}
+.arch-arrow {
+    font-family: var(--body);
+    font-size: 1.2rem;
+    color: var(--gray-700);
+    padding: 0 0.6rem;
+    flex-shrink: 0;
+}
+.arch-arrow.volt { color: var(--volt); }
+.arch-reply {
+    margin-top: 1.5rem;
+    padding-left: 0;
+    display: flex;
+    align-items: center;
+    gap: 0;
+}
+.arch-reply-label {
+    font-family: var(--condensed);
+    font-size: 0.7rem;
+    font-weight: 600;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: var(--gray-500);
+    margin-right: 1rem;
+}
+
+/* === SLIDE 4: COMMANDS === */
+.cmd-table {
+    margin-top: 2.5rem;
+    max-width: 1100px;
+    width: 100%;
+}
+.cmd-row {
+    display: grid;
+    grid-template-columns: 1fr 0.1fr 1.2fr;
+    gap: 1.5rem;
+    align-items: center;
+    padding: 1.25rem 0;
+    border-bottom: 1px solid var(--border);
+    transition: all 0.3s var(--ease);
+}
+.cmd-row:hover { background: rgba(212,247,63,0.02); padding-left: 1rem; }
+.cmd-row:last-child { border-bottom: none; }
+.cmd-input {
+    font-family: var(--condensed);
+    font-size: clamp(0.85rem, 1.3vw, 1.05rem);
+    font-weight: 700;
+    color: var(--volt);
+    letter-spacing: 1px;
+}
+.cmd-arrow-cell {
+    font-size: 1.1rem;
+    color: var(--gray-700);
+    text-align: center;
+}
+.cmd-output {
+    font-family: var(--body);
+    font-size: 0.92rem;
+    color: var(--gray-300);
+    font-weight: 400;
+    line-height: 1.5;
+}
+
+/* === SLIDE 5: PIPELINE === */
+.pipeline {
+    margin-top: 2rem;
+    max-width: 1000px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 0 3rem;
+}
+.pipe-step {
+    display: flex;
+    align-items: flex-start;
+    gap: 1.25rem;
+    padding: 1rem 0;
+    border-bottom: 1px solid rgba(34,34,34,0.6);
+}
+.pipe-num {
+    font-family: var(--display);
+    font-size: 1.8rem;
+    color: var(--border);
+    line-height: 1;
+    flex-shrink: 0;
+    width: 2.5rem;
+    text-align: right;
+    transition: color 0.3s var(--ease);
+}
+.pipe-step:hover .pipe-num { color: var(--volt); }
+.pipe-text {
+    font-family: var(--body);
+    font-size: 0.88rem;
+    color: var(--gray-300);
+    line-height: 1.5;
+    font-weight: 400;
+}
+.pipe-text strong {
+    color: var(--white);
+    font-weight: 600;
+}
+.pipe-cost {
+    font-family: var(--condensed);
+    font-size: 0.65rem;
+    font-weight: 600;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--volt-dim);
+    margin-top: 0.2rem;
+    display: block;
+}
+
+/* === SLIDE 6: AUTO === */
+.auto-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2px;
+    margin-top: 3rem;
+    max-width: 900px;
+    background: var(--border);
+}
+.auto-cell {
+    background: var(--black-up);
+    padding: 2.5rem 2rem;
+    position: relative;
+    transition: background 0.3s var(--ease);
+}
+.auto-cell:hover { background: var(--black-card); }
+.auto-cell::before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 3px;
+    background: var(--volt);
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform 0.5s var(--ease);
+}
+.auto-cell:hover::before { transform: scaleX(1); }
+.auto-val {
+    font-family: var(--display);
+    font-size: 3rem;
+    color: var(--volt);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+}
+.auto-label {
+    font-family: var(--condensed);
+    font-size: 0.7rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 3px;
+    color: var(--gray-500);
+    margin-bottom: 0.75rem;
+}
+.auto-desc {
+    font-size: 0.85rem;
+    color: var(--gray-300);
+    line-height: 1.6;
+}
+
+/* === SLIDE 7: EFFICIENCY === */
+.eff-bars {
+    margin-top: 2.5rem;
+    max-width: 900px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+.eff-row {
+    display: grid;
+    grid-template-columns: 200px 1fr 100px;
+    gap: 1.5rem;
+    align-items: center;
+}
+.eff-label {
+    font-family: var(--condensed);
+    font-size: 0.85rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--white);
+    text-align: right;
+}
+.eff-bar-wrap {
+    height: 36px;
+    background: var(--black-card);
+    border: 1px solid var(--border);
+    position: relative;
+    overflow: hidden;
+}
+.eff-bar {
+    height: 100%;
+    background: var(--volt);
+    transition: width 1s var(--ease);
+}
+.eff-bar.zero { width: 3px; background: var(--gray-700); }
+.eff-bar.low { width: 15%; }
+.eff-bar.med { width: 45%; }
+.eff-bar.high { width: 80%; }
+.eff-cost {
+    font-family: var(--condensed);
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+.eff-cost.free { color: var(--volt); }
+.eff-cost.paid { color: var(--gray-300); }
+
+/* === SLIDE 8: TECH STACK === */
+.stack-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 2px;
+    margin-top: 3rem;
+    max-width: 1100px;
+    background: var(--border);
+}
+.stack-item {
+    background: var(--black-up);
+    padding: 2rem 1.75rem;
+    transition: all 0.4s var(--ease);
+    position: relative;
+}
+.stack-item:hover {
+    background: var(--black-card);
+}
+.stack-item::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--volt);
+    transform: scaleX(0);
+    transition: transform 0.4s var(--ease);
+}
+.stack-item:hover::after { transform: scaleX(1); }
+.stack-name {
+    font-family: var(--display);
+    font-size: 1.5rem;
+    color: var(--white);
+    letter-spacing: 0.03em;
+    margin-bottom: 0.4rem;
+}
+.stack-detail {
+    font-family: var(--condensed);
+    font-size: 0.72rem;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: var(--gray-500);
+}
+
+/* === RESPONSIVE === */
+@media (max-width: 900px) {
+    .concept-grid { grid-template-columns: 1fr; gap: 1.5rem; }
+    .arch-row { flex-wrap: wrap; gap: 0.5rem; }
+    .arch-arrow { padding: 0 0.3rem; font-size: 0.9rem; }
+    .arch-node { padding: 0.7rem 1rem; font-size: 0.6rem; }
+    .pipeline { grid-template-columns: 1fr; }
+    .auto-grid { grid-template-columns: 1fr; }
+    .stack-grid { grid-template-columns: 1fr 1fr; }
+    .eff-row { grid-template-columns: 120px 1fr 80px; }
+    .cmd-row { grid-template-columns: 1fr; gap: 0.5rem; }
+    .cmd-arrow-cell { display: none; }
+}
+@media (max-width: 600px) {
+    .slide { padding: clamp(1.5rem, 4vw, 3rem); }
+    .slide-title { font-size: clamp(2.5rem, 12vw, 5rem); }
+    .stack-grid { grid-template-columns: 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="progress" id="progress"></div>
+
+<div class="deck" id="deck">
+
+    <!-- SLIDE 1: TITLE -->
+    <div class="slide active" data-slide="1">
+        <div class="s1-bg"></div>
+        <div class="s1-watermark">EMAIL</div>
+        <div class="s1-line"></div>
+        <div class="slide-overline">AI Tennis Lab</div>
+        <h1 class="slide-title">
+            Email<br><span class="accent">Gateway.</span>
+        </h1>
+        <p class="slide-subtitle">KI-gesteuerter Blog per E-Mail -- Artikel erstellen, ueberarbeiten und verwalten. Von jedem Geraet.</p>
+        <div class="s1-brand">Ein Projekt von <span>cybertime</span></div>
+    </div>
+
+    <!-- SLIDE 2: CONCEPT -->
+    <div class="slide" data-slide="2">
+        <div class="slide-overline">Das Konzept</div>
+        <h2 class="slide-title" style="font-size:clamp(2.5rem,7vw,5.5rem)">
+            Eine Email.<br><span class="accent">Ein Artikel.</span>
+        </h2>
+        <div class="concept-grid">
+            <div class="concept-item">
+                <div class="concept-icon">&rarr;</div>
+                <div class="concept-label">Email senden</div>
+                <div class="concept-desc">Eine Mail an i-am-a-user@nichtagentur.at -- mehr braucht es nicht.</div>
+            </div>
+            <div class="concept-item">
+                <div class="concept-icon">*</div>
+                <div class="concept-label">Jedes Geraet</div>
+                <div class="concept-desc">Handy, Tablet, Laptop. Ueberall wo du E-Mail hast.</div>
+            </div>
+            <div class="concept-item">
+                <div class="concept-icon">/</div>
+                <div class="concept-label">Kein Login</div>
+                <div class="concept-desc">Kein CMS, kein Dashboard, kein Passwort. Nur dein Postfach.</div>
+            </div>
+            <div class="concept-item">
+                <div class="concept-icon">&lt;</div>
+                <div class="concept-label">Sofort Antwort</div>
+                <div class="concept-desc">Der Assistent antwortet mit Ergebnis und Link zum fertigen Artikel.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 3: ARCHITECTURE -->
+    <div class="slide" data-slide="3">
+        <div class="slide-overline">Architektur</div>
+        <h2 class="slide-title" style="font-size:clamp(2rem,5vw,4rem)">
+            Der <span class="accent">Datenfluss.</span>
+        </h2>
+        <div class="arch-flow">
+            <div class="arch-row">
+                <div class="arch-node highlight">Raffael's Handy</div>
+                <div class="arch-arrow volt">&rarr;</div>
+                <div class="arch-node">IMAP Server</div>
+                <div class="arch-arrow">&rarr;</div>
+                <div class="arch-node highlight">Python Script</div>
+                <div class="arch-arrow">&rarr;</div>
+                <div class="arch-node api">Claude API</div>
+                <div class="arch-arrow">+</div>
+                <div class="arch-node api">Gemini API</div>
+                <div class="arch-arrow">&rarr;</div>
+                <div class="arch-node">HTML Artikel</div>
+                <div class="arch-arrow">&rarr;</div>
+                <div class="arch-node">Git Push</div>
+                <div class="arch-arrow volt">&rarr;</div>
+                <div class="arch-node highlight">Live Blog</div>
+            </div>
+            <div class="arch-reply">
+                <div class="arch-reply-label">Antwort</div>
+                <div class="arch-node highlight" style="padding:0.7rem 1.2rem">Python Script</div>
+                <div class="arch-arrow volt">&rarr;</div>
+                <div class="arch-node">SMTP Server</div>
+                <div class="arch-arrow volt">&rarr;</div>
+                <div class="arch-node highlight">Raffael's Postfach</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 4: COMMANDS -->
+    <div class="slide" data-slide="4">
+        <div class="slide-overline">Befehle</div>
+        <h2 class="slide-title" style="font-size:clamp(2rem,5vw,4rem)">
+            5 <span class="accent">Kommandos.</span>
+        </h2>
+        <div class="cmd-table">
+            <div class="cmd-row">
+                <div class="cmd-input">"neuer artikel ueber [Thema]"</div>
+                <div class="cmd-arrow-cell">&rarr;</div>
+                <div class="cmd-output">Recherche + Schreiben + Qualitaetscheck + Bild + Publish</div>
+            </div>
+            <div class="cmd-row">
+                <div class="cmd-input">"ueberarbeite [Thema]"</div>
+                <div class="cmd-arrow-cell">&rarr;</div>
+                <div class="cmd-output">Artikel komplett neu schreiben mit deinem Feedback</div>
+            </div>
+            <div class="cmd-row">
+                <div class="cmd-input">"themenliste"</div>
+                <div class="cmd-arrow-cell">&rarr;</div>
+                <div class="cmd-output">Alle 32 Themen mit Status (fertig / offen)</div>
+            </div>
+            <div class="cmd-row">
+                <div class="cmd-input">"status"</div>
+                <div class="cmd-arrow-cell">&rarr;</div>
+                <div class="cmd-output">Blog-Statistiken und Fortschritt</div>
+            </div>
+            <div class="cmd-row">
+                <div class="cmd-input">Alles andere</div>
+                <div class="cmd-arrow-cell">&rarr;</div>
+                <div class="cmd-output">Claude beantwortet deine Frage direkt per Mail</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 5: PIPELINE -->
+    <div class="slide" data-slide="5">
+        <div class="slide-overline">Pipeline</div>
+        <h2 class="slide-title" style="font-size:clamp(1.8rem,4.5vw,3.5rem)">
+            11 Schritte.<br><span class="accent">Null Klicks.</span>
+        </h2>
+        <div class="pipeline">
+            <div class="pipe-step">
+                <div class="pipe-num">01</div>
+                <div>
+                    <div class="pipe-text"><strong>IMAP Poll</strong> findet die Email</div>
+                    <span class="pipe-cost">30s Intervall</span>
+                </div>
+            </div>
+            <div class="pipe-step">
+                <div class="pipe-num">02</div>
+                <div>
+                    <div class="pipe-text"><strong>Keyword-Parsing</strong> erkennt Befehl + Thema</div>
+                    <span class="pipe-cost">0 Tokens</span>
+                </div>
+            </div>
+            <div class="pipe-step">
+                <div class="pipe-num">03</div>
+                <div>
+                    <div class="pipe-text"><strong>Topic-Matching</strong> findet Thema aus 32 Optionen</div>
+                    <span class="pipe-cost">0 Tokens</span>
+                </div>
+            </div>
+            <div class="pipe-step">
+                <div class="pipe-num">04</div>
+                <div>
+                    <div class="pipe-text"><strong>Claude recherchiert</strong> Fakten und Quellen</div>
+                    <span class="pipe-cost">1 API Call</span>
+                </div>
+            </div>
+            <div class="pipe-step">
+                <div class="pipe-num">05</div>
+                <div>
+                    <div class="pipe-text"><strong>Claude schreibt</strong> 1200-1500 Woerter HTML</div>
+                    <span class="pipe-cost">1 API Call</span>
+                </div>
+            </div>
+            <div class="pipe-step">
+                <div class="pipe-num">06</div>
+                <div>
+                    <div class="pipe-text"><strong>Qualitaetscheck</strong> -- Score 1-10, Retry bei &lt; 7</div>
+                    <span class="pipe-cost">1 API Call</span>
+                </div>
+            </div>
+            <div class="pipe-step">
+                <div class="pipe-num">07</div>
+                <div>
+                    <div class="pipe-text"><strong>Gemini generiert</strong> Hero-Bild (16:9)</div>
+                    <span class="pipe-cost">1 API Call</span>
+                </div>
+            </div>
+            <div class="pipe-step">
+                <div class="pipe-num">08</div>
+                <div>
+                    <div class="pipe-text"><strong>Jinja2 Template</strong> rendert die Seite</div>
+                    <span class="pipe-cost">Lokal</span>
+                </div>
+            </div>
+            <div class="pipe-step">
+                <div class="pipe-num">09</div>
+                <div>
+                    <div class="pipe-text"><strong>Git commit + push</strong> zum Repository</div>
+                    <span class="pipe-cost">Automatisch</span>
+                </div>
+            </div>
+            <div class="pipe-step">
+                <div class="pipe-num">10</div>
+                <div>
+                    <div class="pipe-text"><strong>GitHub Pages</strong> deployed die Seite</div>
+                    <span class="pipe-cost">1-2 Minuten</span>
+                </div>
+            </div>
+            <div class="pipe-step" style="grid-column: span 2">
+                <div class="pipe-num">11</div>
+                <div>
+                    <div class="pipe-text"><strong>Antwort-Email</strong> mit Link an Raffael</div>
+                    <span class="pipe-cost">SMTP Reply</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 6: AUTO-GENERATION -->
+    <div class="slide" data-slide="6">
+        <div class="slide-overline">Auto-Generierung</div>
+        <h2 class="slide-title" style="font-size:clamp(2rem,5vw,4.5rem)">
+            Laeuft.<br><span class="accent">Immer.</span>
+        </h2>
+        <div class="auto-grid">
+            <div class="auto-cell">
+                <div class="auto-val">30</div>
+                <div class="auto-label">Minuten Intervall</div>
+                <div class="auto-desc">Automatisch wird der naechste offene Artikel aus der Pipeline erstellt.</div>
+            </div>
+            <div class="auto-cell">
+                <div class="auto-val">32</div>
+                <div class="auto-label">Themen Pipeline</div>
+                <div class="auto-desc">Grundschlaege, Aufschlag, Netzspiel, Beinarbeit, Taktik, Training.</div>
+            </div>
+            <div class="auto-cell">
+                <div class="auto-val">&rarr;</div>
+                <div class="auto-label">Email-Benachrichtigung</div>
+                <div class="auto-desc">Bei jedem neuen Artikel bekommst du eine Mail mit Titel, Score und Link.</div>
+            </div>
+            <div class="auto-cell">
+                <div class="auto-val">+</div>
+                <div class="auto-label">Parallel: Email-Befehle</div>
+                <div class="auto-desc">Deine Befehle per Mail werden weiterhin sofort verarbeitet.</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 7: EFFICIENCY -->
+    <div class="slide" data-slide="7">
+        <div class="slide-overline">Token-Effizienz</div>
+        <h2 class="slide-title" style="font-size:clamp(2rem,5vw,4rem)">
+            Smart.<br><span class="accent">Sparsam.</span>
+        </h2>
+        <div class="eff-bars">
+            <div class="eff-row">
+                <div class="eff-label">IMAP Check</div>
+                <div class="eff-bar-wrap"><div class="eff-bar zero"></div></div>
+                <div class="eff-cost free">0 Tokens</div>
+            </div>
+            <div class="eff-row">
+                <div class="eff-label">Command Parsing</div>
+                <div class="eff-bar-wrap"><div class="eff-bar zero"></div></div>
+                <div class="eff-cost free">0 Tokens</div>
+            </div>
+            <div class="eff-row">
+                <div class="eff-label">Status / Themen</div>
+                <div class="eff-bar-wrap"><div class="eff-bar zero"></div></div>
+                <div class="eff-cost free">0 Calls</div>
+            </div>
+            <div class="eff-row">
+                <div class="eff-label">Frage beantworten</div>
+                <div class="eff-bar-wrap"><div class="eff-bar low"></div></div>
+                <div class="eff-cost paid">1 Call</div>
+            </div>
+            <div class="eff-row">
+                <div class="eff-label">Neuer Artikel</div>
+                <div class="eff-bar-wrap"><div class="eff-bar high"></div></div>
+                <div class="eff-cost paid">3-5 + 1</div>
+            </div>
+            <div class="eff-row">
+                <div class="eff-label">Leere Inbox (30s)</div>
+                <div class="eff-bar-wrap"><div class="eff-bar zero"></div></div>
+                <div class="eff-cost free">~0.5 KB</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- SLIDE 8: TECH STACK -->
+    <div class="slide" data-slide="8">
+        <div class="slide-overline">Tech Stack</div>
+        <h2 class="slide-title" style="font-size:clamp(2rem,5vw,4.5rem)">
+            Unter der<br><span class="accent">Haube.</span>
+        </h2>
+        <div class="stack-grid">
+            <div class="stack-item">
+                <div class="stack-name">Python 3</div>
+                <div class="stack-detail">email_assistant.py ~400 Zeilen</div>
+            </div>
+            <div class="stack-item">
+                <div class="stack-name">IMAP / SMTP</div>
+                <div class="stack-detail">mail.easyname.eu</div>
+            </div>
+            <div class="stack-item">
+                <div class="stack-name">Claude 4.5</div>
+                <div class="stack-detail">Haiku -- Text & Analyse</div>
+            </div>
+            <div class="stack-item">
+                <div class="stack-name">Gemini</div>
+                <div class="stack-detail">Imagen 4.0 -- Bilder</div>
+            </div>
+            <div class="stack-item">
+                <div class="stack-name">Jinja2</div>
+                <div class="stack-detail">HTML Templates</div>
+            </div>
+            <div class="stack-item">
+                <div class="stack-name">GitHub</div>
+                <div class="stack-detail">Pages -- Hosting</div>
+            </div>
+            <div class="stack-item">
+                <div class="stack-name">Bebas Neue</div>
+                <div class="stack-detail">Nike-inspired Design</div>
+            </div>
+            <div class="stack-item">
+                <div class="stack-name">Barlow</div>
+                <div class="stack-detail">Body Typography</div>
+            </div>
+        </div>
+    </div>
+
+</div>
+
+<!-- COUNTER -->
+<div class="counter">
+    <div class="counter-current" id="counter-num">01</div>
+    / 08
+</div>
+
+<!-- NAV HINT -->
+<div class="nav-hint">
+    <div class="nav-key" onclick="prevSlide()">&larr;</div>
+    <div class="nav-key" onclick="nextSlide()">&rarr;</div>
+    Navigation
+</div>
+
+<script>
+let current = 1;
+const total = 8;
+
+function goTo(n) {
+    if (n < 1 || n > total) return;
+    const slides = document.querySelectorAll('.slide');
+    slides.forEach(s => {
+        const idx = parseInt(s.dataset.slide);
+        s.classList.remove('active', 'prev');
+        if (idx === n) s.classList.add('active');
+        else if (idx < n) s.classList.add('prev');
+    });
+    current = n;
+    document.getElementById('counter-num').textContent = String(n).padStart(2, '0');
+    document.getElementById('progress').style.width = ((n / total) * 100) + '%';
+}
+
+function nextSlide() { goTo(current + 1); }
+function prevSlide() { goTo(current - 1); }
+
+document.addEventListener('keydown', e => {
+    if (e.key === 'ArrowRight' || e.key === ' ') { e.preventDefault(); nextSlide(); }
+    if (e.key === 'ArrowLeft') { e.preventDefault(); prevSlide(); }
+    if (e.key === 'Home') { e.preventDefault(); goTo(1); }
+    if (e.key === 'End') { e.preventDefault(); goTo(total); }
+});
+
+// Touch swipe support
+let touchStartX = 0;
+document.addEventListener('touchstart', e => { touchStartX = e.touches[0].clientX; });
+document.addEventListener('touchend', e => {
+    const diff = touchStartX - e.changedTouches[0].clientX;
+    if (Math.abs(diff) > 50) {
+        if (diff > 0) nextSlide();
+        else prevSlide();
+    }
+});
+
+// Init
+goTo(1);
+</script>
+
+</body>
+</html>
