@@ -24,9 +24,9 @@
   .slide{
     position:absolute;inset:0;display:flex;flex-direction:column;
     justify-content:center;align-items:center;padding:60px 80px;
-    opacity:0;pointer-events:none;transition:opacity .4s var(--ease);
+    opacity:0;visibility:hidden;pointer-events:none;transition:opacity .4s var(--ease),visibility .4s;
   }
-  .slide.active{opacity:1;pointer-events:auto}
+  .slide.active{opacity:1;visibility:visible;pointer-events:auto}
 
   /* Court line texture */
   .slide::before{
