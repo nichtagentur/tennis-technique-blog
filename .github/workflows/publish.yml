@@ -1,9 +1,13 @@
-name: Daily Tennis Article
+name: Tennis Article Pipeline
 
 on:
   schedule:
-    - cron: '0 6 * * *'  # 6am UTC = 7am CET
-  workflow_dispatch:       # Manual trigger
+    - cron: '*/30 * * * *'  # Every 30 minutes
+  workflow_dispatch:          # Manual trigger
+
+concurrency:
+  group: tennis-pipeline
+  cancel-in-progress: false
 
 permissions:
   contents: write
@@ -25,6 +29,7 @@ jobs:
         env:
           CLAUDE_API_KEY_1: ${{ secrets.CLAUDE_API_KEY_1 }}
           GEMINI_API_KEY: ${{ secrets.GEMINI_API_KEY }}
+          EMAIL_PASSWORD: ${{ secrets.EMAIL_PASSWORD }}
         run: python3 generate.py --count 1
 
       - name: Commit and push

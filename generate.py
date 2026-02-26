@@ -6,6 +6,9 @@ import sys
 import argparse
 import datetime
 import time
+import re
+import smtplib
+from email.mime.text import MIMEText
 import requests
 import base64
 from pathlib import Path
@@ -53,6 +56,24 @@ def call_claude(prompt, system=""):
     return resp.json()["content"][0]["text"]
 
 
+def research_topic(topic):
+    """Gather verified facts about a topic before writing."""
+    prompt = f"""Recherchiere zum Tennisthema: "{topic['title']}"
+Kategorie: {topic['category']}, Niveau: {topic['difficulty']}
+
+Liefere kurze, faktenbasierte Notizen zu:
+1. Biomechanische Grundlagen (kinematische Kette, Gelenkwinkel)
+2. DTB/ITF-Methodik und offizielle Empfehlungen
+3. Haeufige Mythen oder Missverstaendnisse
+4. 5 zentrale Fakten die im Artikel vorkommen muessen
+5. Typische Fehlerbilder und deren Korrektur
+
+Antworte kompakt in Stichpunkten, max 300 Woerter."""
+
+    print("  Recherche...")
+    return call_claude(prompt, "Du bist ein Tennisexperte und Sportwissenschaftler.")
+
+
 def generate_image(topic):
     """Generate a hero image using Gemini image generation."""
     api_key = os.environ.get("GEMINI_API_KEY")
@@ -98,7 +119,7 @@ def generate_image(topic):
         return None
 
 
-def generate_article(topic):
+def generate_article(topic, research_notes="", feedback=""):
     """Generate a full article for a topic using Claude."""
     system = (
         "Du bist ein erfahrener Tennisexperte und Sportanalyst. "
@@ -107,11 +128,20 @@ def generate_article(topic):
         "Referenziere DTB- und ITF-Methodik wo passend."
     )
 
+    research_block = ""
+    if research_notes:
+        research_block = f"\n\nRecherche-Ergebnisse (nutze diese Fakten im Artikel):\n{research_notes}\n"
+
+    feedback_block = ""
+    if feedback:
+        feedback_block = f"\n\nBitte beruecksichtige folgendes Feedback zur Verbesserung:\n{feedback}\n"
+
     prompt = f"""Schreibe einen ausfuehrlichen Artikel zum Thema: "{topic['title']}"
 
 Kategorie: {topic['category']}
 Niveau: {topic['difficulty']}
 Keywords: {', '.join(topic['keywords'])}
+{research_block}{feedback_block}
 
 Anforderungen:
 - 1200-1500 Woerter
@@ -257,6 +287,109 @@ def _get_file_date(path):
     return datetime.date.today().isoformat()
 
 
+def check_quality(topic, content_html):
+    """Score article quality 1-10 using an independent Claude call."""
+    prompt = f"""Bewerte folgenden Tennis-Fachartikel zum Thema "{topic['title']}".
+
+Bewerte auf einer Skala von 1-10 in diesen Kategorien:
+- Fachliche Korrektheit (biomechanische Begriffe, DTB/ITF-konform)
+- Lesbarkeit (Struktur, Verstaendlichkeit fuer Trainer)
+- Vollstaendigkeit (Technik, Fehlerbilder, Uebungen, Sicherheit)
+- E-E-A-T (Expertise, Experience, Authority, Trust)
+
+Artikel-HTML:
+{content_html[:3000]}
+
+Antworte NUR in diesem Format:
+KORREKTHEIT: <Zahl>
+LESBARKEIT: <Zahl>
+VOLLSTAENDIGKEIT: <Zahl>
+EEAT: <Zahl>
+GESAMT: <Zahl>
+FEEDBACK: <1-2 Saetze konkretes Verbesserungsfeedback>"""
+
+    print("  Qualitaetspruefung...")
+    raw = call_claude(prompt, "Du bist ein strenger Redakteur fuer Sportfachmedien.")
+
+    # Parse score
+    score = 7  # default
+    feedback = ""
+    for line in raw.strip().split("\n"):
+        if line.startswith("GESAMT:"):
+            try:
+                score = int(line.split(":")[1].strip().split("/")[0].strip())
+            except (ValueError, IndexError):
+                pass
+        if line.startswith("FEEDBACK:"):
+            feedback = line.split(":", 1)[1].strip()
+
+    passed = score >= 7
+    print(f"  Qualitaet: {score}/10 {'OK' if passed else 'MANGELHAFT'}")
+    return passed, score, feedback
+
+
+def check_urls(html_path, base_url):
+    """Check all URLs in a rendered HTML file for broken links."""
+    content = html_path.read_text(encoding="utf-8")
+    urls = re.findall(r'(?:href|src)=["\']([^"\']+)["\']', content)
+
+    broken = []
+    for url in urls:
+        # Skip anchors and javascript
+        if url.startswith("#") or url.startswith("javascript:") or url.startswith("data:"):
+            continue
+
+        # Internal URL
+        if not url.startswith("http"):
+            # Resolve relative to docs/
+            if url.startswith("/"):
+                local_path = DOCS_DIR / url.lstrip("/")
+            else:
+                local_path = html_path.parent / url
+            if not local_path.exists():
+                broken.append(f"LOKAL: {url}")
+        else:
+            # External URL - HEAD request
+            try:
+                r = requests.head(url, timeout=5, allow_redirects=True)
+                if r.status_code >= 400:
+                    broken.append(f"HTTP {r.status_code}: {url}")
+            except requests.RequestException as e:
+                broken.append(f"FEHLER: {url} ({e})")
+
+    if broken:
+        print(f"  {len(broken)} fehlerhafte URLs gefunden:")
+        for b in broken:
+            print(f"    - {b}")
+    else:
+        print("  Alle URLs OK")
+
+    return broken
+
+
+def send_email(subject, body):
+    """Send email notification via SMTP STARTTLS."""
+    smtp_host = "mail.easyname.eu"
+    smtp_port = 587
+    from_addr = "i-am-a-user@nichtagentur.at"
+    to_addr = "r.leb@cybertime.at"
+    password = os.environ.get("EMAIL_PASSWORD", "i_am_an_AI_password_2026")
+
+    msg = MIMEText(body, "plain", "utf-8")
+    msg["Subject"] = subject
+    msg["From"] = from_addr
+    msg["To"] = to_addr
+
+    try:
+        with smtplib.SMTP(smtp_host, smtp_port, timeout=15) as server:
+            server.starttls()
+            server.login(from_addr, password)
+            server.sendmail(from_addr, [to_addr], msg.as_string())
+        print(f"  E-Mail gesendet an {to_addr}")
+    except Exception as e:
+        print(f"  WARNUNG: E-Mail-Versand fehlgeschlagen: {e}")
+
+
 def main():
     parser = argparse.ArgumentParser(description="AI Tennis Lab Generator")
     parser.add_argument("--count", type=int, default=1, help="Anzahl neuer Artikel (Standard: 1)")
@@ -286,15 +419,32 @@ def main():
     env = Environment(loader=FileSystemLoader(TEMPLATES_DIR))
     existing_slugs = {p.stem for p in ARTIKEL_DIR.glob("*.html")}
 
+    results = []  # Collect results for email summary
+
     for i, topic in enumerate(to_generate, 1):
         print(f"[{i}/{len(to_generate)}] {topic['title']}")
 
-        # Generate article text
-        print("  Generiere Text...")
-        article_data = generate_article(topic)
+        # Step 1: Research
+        research_notes = research_topic(topic)
         time.sleep(1)
 
-        # Generate image
+        # Step 2: Generate article with research context + quality loop
+        feedback = ""
+        quality_score = 0
+        for attempt in range(3):  # max 3 attempts (1 initial + 2 retries)
+            print(f"  Generiere Text{' (Versuch ' + str(attempt + 1) + ')' if attempt > 0 else ''}...")
+            article_data = generate_article(topic, research_notes=research_notes, feedback=feedback)
+            time.sleep(1)
+
+            # Quality check
+            passed, quality_score, feedback = check_quality(topic, article_data["content_html"])
+            if passed:
+                break
+            if attempt < 2:
+                print(f"  Regeneriere mit Feedback...")
+            time.sleep(1)
+
+        # Step 3: Generate image
         print("  Generiere Bild...")
         image_file = generate_image(topic)
         time.sleep(1)
@@ -325,9 +475,40 @@ def main():
         out_path.write_text(html, encoding="utf-8")
         print(f"  Gespeichert: {out_path.name}")
 
+        # Step 4: Check URLs
+        broken_urls = check_urls(out_path, site["base_url"])
+
+        # Collect result
+        results.append({
+            "title": topic["title"],
+            "slug": topic["slug"],
+            "score": quality_score,
+            "broken_urls": broken_urls,
+        })
+
     # Rebuild site (index, sitemap, etc.)
     print("\nAktualisiere Seite...")
     build_site(site, topics)
+
+    # Step 5: Send email summary
+    if results:
+        email_lines = ["AI Tennis Lab -- Pipeline-Bericht\n"]
+        for r in results:
+            url = f"{site['base_url']}/artikel/{r['slug']}.html"
+            email_lines.append(f"Artikel: {r['title']}")
+            email_lines.append(f"  Qualitaet: {r['score']}/10")
+            email_lines.append(f"  URL: {url}")
+            if r["broken_urls"]:
+                email_lines.append(f"  Fehlerhafte Links: {len(r['broken_urls'])}")
+                for b in r["broken_urls"]:
+                    email_lines.append(f"    - {b}")
+            email_lines.append("")
+
+        send_email(
+            f"Tennis Blog: {len(results)} neue Artikel generiert",
+            "\n".join(email_lines),
+        )
+
     print(f"\nFertig! {len(to_generate)} Artikel generiert.\n")
 
 
