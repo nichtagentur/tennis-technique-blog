@@ -19,22 +19,23 @@
 {% block extra_css %}
 /* === HERO === */
 .hero {
-    padding: clamp(3rem, 8vw, 5rem) 0;
-    text-align: center;
-    position: relative;
-    background: var(--bg);
+    padding: clamp(2.5rem, 6vw, 4rem) 0 clamp(2rem, 4vw, 3rem);
+    border-bottom: 1px solid var(--border);
+}
+.hero-inner {
+    max-width: 720px;
 }
 .hero-badge {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
-    padding: 0.4rem 1rem 0.4rem 0.5rem;
+    padding: 0.35rem 0.9rem 0.35rem 0.45rem;
     background: var(--accent-bg);
     border-radius: 100px;
     font-size: 0.78rem;
     font-weight: 500;
     color: var(--accent-dark);
-    margin-bottom: 1.75rem;
+    margin-bottom: 1.5rem;
     animation: rise 0.5s var(--ease) both;
 }
 .hero-badge-dot {
@@ -42,18 +43,16 @@
     height: 18px;
     border-radius: 50%;
     background: var(--accent);
+    flex-shrink: 0;
 }
 .hero-title {
     font-family: var(--serif);
-    font-size: clamp(2.5rem, 6vw, 4rem);
+    font-size: clamp(2rem, 4.5vw, 3rem);
     font-weight: 400;
-    line-height: 1.1;
+    line-height: 1.15;
     letter-spacing: -0.02em;
     color: var(--text);
-    margin-bottom: 1.25rem;
-    max-width: 750px;
-    margin-left: auto;
-    margin-right: auto;
+    margin-bottom: 1rem;
     animation: rise 0.6s var(--ease) 0.05s both;
 }
 .hero-title em {
@@ -61,48 +60,138 @@
     color: var(--accent-dark);
 }
 .hero-desc {
-    font-size: 1.1rem;
+    font-size: 1.05rem;
     color: var(--text-secondary);
     line-height: 1.75;
-    max-width: 560px;
-    margin: 0 auto 2.5rem;
+    margin-bottom: 1.75rem;
     animation: rise 0.6s var(--ease) 0.1s both;
 }
 .hero-stats {
-    display: inline-flex;
-    gap: 0;
-    background: var(--bg-card);
-    border-radius: var(--radius);
-    border: 1px solid var(--border);
-    overflow: hidden;
-    box-shadow: var(--shadow-sm);
-    animation: rise 0.6s var(--ease) 0.2s both;
+    display: flex;
+    gap: 2rem;
+    animation: rise 0.6s var(--ease) 0.15s both;
 }
-.hero-stat {
-    padding: 1rem 1.75rem;
-    text-align: center;
-    transition: background 0.3s var(--ease);
-}
-.hero-stat + .hero-stat { border-left: 1px solid var(--border); }
-.hero-stat:hover { background: var(--bg-warm); }
 .hero-stat-val {
     font-family: var(--serif);
-    font-size: 1.6rem;
+    font-size: 1.5rem;
     color: var(--text);
     line-height: 1;
-    margin-bottom: 0.25rem;
 }
 .hero-stat-label {
-    font-size: 0.68rem;
+    font-size: 0.7rem;
     font-weight: 500;
+    color: var(--text-light);
+    margin-top: 0.2rem;
+}
+
+/* === FEATURED ARTICLE === */
+.featured {
+    padding: clamp(2rem, 4vw, 3rem) 0;
+    border-bottom: 1px solid var(--border);
+    animation: rise 0.6s var(--ease) 0.1s both;
+}
+.featured-label {
+    font-size: 0.7rem;
+    font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 1px;
+    letter-spacing: 1.5px;
+    color: var(--text-light);
+    margin-bottom: 1.25rem;
+}
+.featured-card {
+    display: grid;
+    grid-template-columns: 1.1fr 1fr;
+    gap: clamp(1.5rem, 3vw, 2.5rem);
+    align-items: center;
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+    box-shadow: var(--shadow-md);
+    transition: all 0.4s var(--ease);
+}
+.featured-card:hover {
+    box-shadow: var(--shadow-lg);
+    border-color: var(--border-hover);
+}
+.featured-img-wrap {
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+    min-height: 320px;
+}
+.featured-img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    transition: transform 0.6s var(--ease);
+}
+.featured-card:hover .featured-img { transform: scale(1.03); }
+.featured-body {
+    padding: 2rem 2.5rem 2rem 0.5rem;
+}
+.featured-tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+    margin-bottom: 1rem;
+}
+.featured-title {
+    font-family: var(--serif);
+    font-size: clamp(1.4rem, 2.5vw, 1.85rem);
+    font-weight: 400;
+    line-height: 1.25;
+    color: var(--text);
+    margin-bottom: 0.85rem;
+}
+.featured-title a { color: var(--text); }
+.featured-title a:hover { color: var(--accent-dark); }
+.featured-excerpt {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    line-height: 1.75;
+    margin-bottom: 1.25rem;
+}
+.featured-meta {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+}
+.featured-date {
+    font-size: 0.8rem;
     color: var(--text-light);
 }
+.featured-sep {
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--border-hover);
+}
+.featured-difficulty {
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--text-light);
+    background: var(--bg-warm);
+    padding: 0.2rem 0.6rem;
+    border-radius: 4px;
+}
+.featured-read {
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--accent-dark);
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    transition: gap 0.3s var(--ease);
+}
+.featured-card:hover .featured-read { gap: 0.7rem; }
 
 /* === SECTIONS === */
 .section {
-    padding: 3rem 0;
+    padding: clamp(2rem, 4vw, 3rem) 0;
 }
 .section + .section {
     border-top: 1px solid var(--border);
@@ -110,197 +199,292 @@
 .section-header {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    margin-bottom: 2rem;
-    animation: rise 0.5s var(--ease) both;
+    justify-content: space-between;
+    margin-bottom: 1.75rem;
+}
+.section-left {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
 }
 .section-num {
     font-family: var(--mono);
-    font-size: 0.72rem;
+    font-size: 0.68rem;
     font-weight: 500;
     color: var(--text-light);
     background: var(--bg-warm);
-    padding: 0.25rem 0.6rem;
-    border-radius: 6px;
+    padding: 0.2rem 0.5rem;
+    border-radius: 5px;
 }
 .section-title {
     font-family: var(--serif);
-    font-size: 1.5rem;
+    font-size: 1.35rem;
     font-weight: 400;
     color: var(--text);
 }
-
-/* === CARDS === */
-.card-grid {
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
-    gap: 1.5rem;
+.section-count {
+    font-size: 0.78rem;
+    color: var(--text-light);
 }
-.card {
+
+/* === ARTICLE LIST === */
+.article-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+}
+.article-item {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: 1.5rem;
+    align-items: center;
     background: var(--bg-card);
-    border-radius: var(--radius-lg);
     border: 1px solid var(--border);
+    border-radius: var(--radius);
     overflow: hidden;
-    transition: all 0.4s var(--ease);
     box-shadow: var(--shadow-sm);
+    transition: all 0.4s var(--ease);
     animation: rise 0.5s var(--ease) both;
 }
-.card:nth-child(1) { animation-delay: 0.05s; }
-.card:nth-child(2) { animation-delay: 0.1s; }
-.card:nth-child(3) { animation-delay: 0.15s; }
-.card:nth-child(4) { animation-delay: 0.2s; }
-.card:nth-child(5) { animation-delay: 0.25s; }
-.card:nth-child(6) { animation-delay: 0.3s; }
+.article-item:nth-child(1) { animation-delay: 0.03s; }
+.article-item:nth-child(2) { animation-delay: 0.08s; }
+.article-item:nth-child(3) { animation-delay: 0.13s; }
+.article-item:nth-child(4) { animation-delay: 0.18s; }
 
-.card:hover {
-    transform: translateY(-4px);
-    box-shadow: var(--shadow-lg);
+.article-item:hover {
+    transform: translateY(-2px);
+    box-shadow: var(--shadow-md);
     border-color: var(--border-hover);
 }
-.card-img-wrap {
+.article-img-wrap {
     position: relative;
     overflow: hidden;
-    height: 200px;
+    height: 100%;
+    min-height: 160px;
 }
-.card-img {
+.article-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
     transition: transform 0.6s var(--ease);
 }
-.card:hover .card-img { transform: scale(1.04); }
-.card-stripe {
-    position: absolute;
-    top: 0.75rem;
-    left: 0.75rem;
-    z-index: 2;
+.article-item:hover .article-img { transform: scale(1.04); }
+.article-body {
+    padding: 1.25rem 1.5rem 1.25rem 0;
 }
-.card-body { padding: 1.25rem 1.5rem 1.5rem; }
-.card-title {
-    font-family: var(--serif);
-    font-size: 1.2rem;
-    font-weight: 400;
-    line-height: 1.3;
+.article-tags {
+    display: flex;
+    gap: 0.4rem;
+    flex-wrap: wrap;
     margin-bottom: 0.6rem;
 }
-.card-title a { color: var(--text); }
-.card-title a:hover { color: var(--accent-dark); }
-.card-excerpt {
-    font-size: 0.88rem;
+.article-title {
+    font-family: var(--serif);
+    font-size: 1.15rem;
+    font-weight: 400;
+    line-height: 1.3;
+    color: var(--text);
+    margin-bottom: 0.5rem;
+}
+.article-title a { color: var(--text); }
+.article-title a:hover { color: var(--accent-dark); }
+.article-excerpt {
+    font-size: 0.9rem;
     color: var(--text-secondary);
-    line-height: 1.6;
-    margin-bottom: 1rem;
+    line-height: 1.65;
+    margin-bottom: 0.85rem;
     display: -webkit-box;
     -webkit-line-clamp: 2;
     -webkit-box-orient: vertical;
     overflow: hidden;
 }
-.card-meta {
+.article-meta {
     display: flex;
-    justify-content: space-between;
     align-items: center;
-    padding-top: 0.75rem;
-    border-top: 1px solid var(--border);
+    gap: 0.6rem;
+    flex-wrap: wrap;
 }
-.card-date {
+.article-date {
     font-size: 0.75rem;
     color: var(--text-light);
 }
-.card-read {
-    font-size: 0.78rem;
+.article-sep {
+    width: 3px;
+    height: 3px;
+    border-radius: 50%;
+    background: var(--border-hover);
+}
+.article-difficulty {
+    font-size: 0.68rem;
+    font-weight: 500;
+    color: var(--text-light);
+    background: var(--bg-warm);
+    padding: 0.15rem 0.5rem;
+    border-radius: 4px;
+}
+.article-read {
+    font-size: 0.8rem;
     font-weight: 600;
     color: var(--accent-dark);
+    margin-left: auto;
     display: flex;
     align-items: center;
     gap: 0.35rem;
     transition: gap 0.3s var(--ease);
 }
-.card:hover .card-read { gap: 0.6rem; }
-.card-difficulty {
-    font-size: 0.68rem;
+.article-item:hover .article-read { gap: 0.6rem; }
+
+/* Keywords as small tags */
+.kw-tag {
+    display: inline-block;
+    font-size: 0.62rem;
     font-weight: 500;
     color: var(--text-light);
     background: var(--bg-warm);
-    padding: 0.2rem 0.5rem;
-    border-radius: 4px;
+    padding: 0.15rem 0.45rem;
+    border-radius: 3px;
+    letter-spacing: 0.3px;
+}
+
+/* === NO-IMAGE FALLBACK === */
+.article-item.no-image {
+    grid-template-columns: 1fr;
+}
+.article-item.no-image .article-body {
+    padding: 1.25rem 1.5rem;
 }
 
 /* === RESPONSIVE === */
 @media (max-width: 900px) {
-    .hero { padding: 3rem 0; }
+    .featured-card { grid-template-columns: 1fr; }
+    .featured-img-wrap { min-height: 220px; }
+    .featured-body { padding: 1.5rem; }
 }
 @media (max-width: 768px) {
-    .card-grid { grid-template-columns: 1fr; }
+    .article-item { grid-template-columns: 1fr; }
+    .article-img-wrap { min-height: 180px; }
+    .article-body { padding: 1.25rem 1.5rem; }
     .section { padding: 2rem 0; }
-    .hero-stats { flex-wrap: wrap; }
-    .hero-stat + .hero-stat { border-left: none; border-top: 1px solid var(--border); }
+    .hero-stats { gap: 1.5rem; }
 }
 @media (max-width: 480px) {
-    .hero-title { font-size: clamp(2rem, 8vw, 3rem); }
-    .hero-stats { flex-direction: column; width: 100%; max-width: 300px; }
+    .hero-stats { flex-wrap: wrap; }
+    .featured-img-wrap { min-height: 180px; }
 }
 {% endblock %}
 
 {% block content %}
 <div class="container">
+
+<!-- Hero intro -->
 <section class="hero">
-    <div class="hero-badge">
-        <div class="hero-badge-dot"></div>
-        KI-gestuetzte Technikanalyse
-    </div>
-    <h1 class="hero-title">
-        Besseres Tennis durch <em>intelligente Analyse</em>
-    </h1>
-    <p class="hero-desc">{{ site.tagline }} -- Biomechanisch fundiert, praxisnah aufbereitet fuer Tennistrainer aller Leistungsstufen.</p>
-    <div class="hero-stats">
-        <div class="hero-stat">
-            <div class="hero-stat-val">{{ total_articles }}</div>
-            <div class="hero-stat-label">Artikel</div>
+    <div class="hero-inner">
+        <div class="hero-badge">
+            <div class="hero-badge-dot"></div>
+            KI-gestuetzte Technikanalyse
         </div>
-        <div class="hero-stat">
-            <div class="hero-stat-val">{{ total_categories }}</div>
-            <div class="hero-stat-label">Kategorien</div>
-        </div>
-        <div class="hero-stat">
-            <div class="hero-stat-val">24/7</div>
-            <div class="hero-stat-label">KI-Analyse</div>
-        </div>
-        <div class="hero-stat">
-            <div class="hero-stat-val">DTB</div>
-            <div class="hero-stat-label">Framework</div>
+        <h1 class="hero-title">
+            Besseres Tennis durch <em>intelligente Analyse</em>
+        </h1>
+        <p class="hero-desc">{{ site.tagline }} -- Biomechanisch fundiert, praxisnah aufbereitet fuer Tennistrainer aller Leistungsstufen.</p>
+        <div class="hero-stats">
+            <div>
+                <div class="hero-stat-val">{{ total_articles }}</div>
+                <div class="hero-stat-label">Artikel</div>
+            </div>
+            <div>
+                <div class="hero-stat-val">{{ total_categories }}</div>
+                <div class="hero-stat-label">Kategorien</div>
+            </div>
+            <div>
+                <div class="hero-stat-val">DTB</div>
+                <div class="hero-stat-label">Framework</div>
+            </div>
         </div>
     </div>
 </section>
 
+<!-- Featured: newest article (first from last category or first overall) -->
+{% set all_articles = [] %}
+{% for category, articles in categories.items() %}
+    {% for article in articles %}
+        {% if all_articles.append(article) %}{% endif %}
+    {% endfor %}
+{% endfor %}
+
+{% if all_articles %}
+<section class="featured">
+    <div class="featured-label">Neuester Artikel</div>
+    {% set feat = all_articles[-1] %}
+    <div class="featured-card">
+        {% if feat.image %}
+        <a href="{{ site.base_url }}/artikel/{{ feat.slug }}.html" class="featured-img-wrap">
+            <img class="featured-img" src="{{ site.base_url }}/images/{{ feat.image }}" alt="{{ feat.title }}" loading="lazy">
+        </a>
+        {% endif %}
+        <div class="featured-body">
+            <div class="featured-tags">
+                <span class="tag">{{ feat.category }}</span>
+                {% for kw in feat.keywords[:3] %}
+                <span class="kw-tag">{{ kw }}</span>
+                {% endfor %}
+            </div>
+            <h2 class="featured-title">
+                <a href="{{ site.base_url }}/artikel/{{ feat.slug }}.html">{{ feat.title }}</a>
+            </h2>
+            {% if feat.excerpt %}
+            <p class="featured-excerpt">{{ feat.excerpt }}</p>
+            {% endif %}
+            <div class="featured-meta">
+                <span class="featured-date">{{ feat.date }}</span>
+                <div class="featured-sep"></div>
+                <span class="featured-difficulty">{{ feat.difficulty }}</span>
+                <a href="{{ site.base_url }}/artikel/{{ feat.slug }}.html" class="featured-read">Artikel lesen &rarr;</a>
+            </div>
+        </div>
+    </div>
+</section>
+{% endif %}
+
+<!-- Article sections by category -->
 {% set ns = namespace(cat_idx=0) %}
 {% for category, articles in categories.items() %}
 {% set ns.cat_idx = ns.cat_idx + 1 %}
 <section class="section">
     <div class="section-header">
-        <span class="section-num">0{{ ns.cat_idx }}</span>
-        <h2 class="section-title">{{ category }}</h2>
+        <div class="section-left">
+            <span class="section-num">0{{ ns.cat_idx }}</span>
+            <h2 class="section-title">{{ category }}</h2>
+        </div>
+        <span class="section-count">{{ articles | length }} {% if articles | length == 1 %}Artikel{% else %}Artikel{% endif %}</span>
     </div>
-    <div class="card-grid">
+    <div class="article-list">
         {% for article in articles %}
-        <article class="card">
+        <article class="article-item{% if not article.image %} no-image{% endif %}">
             {% if article.image %}
-            <a href="{{ site.base_url }}/artikel/{{ article.slug }}.html" class="card-img-wrap">
-                <div class="card-stripe"><span class="tag">{{ article.category }}</span></div>
-                <img class="card-img" src="{{ site.base_url }}/images/{{ article.image }}" alt="{{ article.title }}" loading="lazy">
+            <a href="{{ site.base_url }}/artikel/{{ article.slug }}.html" class="article-img-wrap">
+                <img class="article-img" src="{{ site.base_url }}/images/{{ article.image }}" alt="{{ article.title }}" loading="lazy">
             </a>
             {% endif %}
-            <div class="card-body">
-                <h3 class="card-title">
+            <div class="article-body">
+                <div class="article-tags">
+                    <span class="tag">{{ article.category }}</span>
+                    {% for kw in article.keywords[:2] %}
+                    <span class="kw-tag">{{ kw }}</span>
+                    {% endfor %}
+                </div>
+                <h3 class="article-title">
                     <a href="{{ site.base_url }}/artikel/{{ article.slug }}.html">{{ article.title }}</a>
                 </h3>
                 {% if article.excerpt %}
-                <p class="card-excerpt">{{ article.excerpt }}</p>
+                <p class="article-excerpt">{{ article.excerpt }}</p>
                 {% endif %}
-                <div class="card-meta">
-                    <span class="card-date">{{ article.date }}</span>
-                    <span class="card-difficulty">{{ article.difficulty }}</span>
-                    <a href="{{ site.base_url }}/artikel/{{ article.slug }}.html" class="card-read">Lesen &rarr;</a>
+                <div class="article-meta">
+                    <span class="article-date">{{ article.date }}</span>
+                    <div class="article-sep"></div>
+                    <span class="article-difficulty">{{ article.difficulty }}</span>
+                    <a href="{{ site.base_url }}/artikel/{{ article.slug }}.html" class="article-read">Lesen &rarr;</a>
                 </div>
             </div>
         </article>
@@ -308,5 +492,6 @@
     </div>
 </section>
 {% endfor %}
+
 </div>
 {% endblock %}
