@@ -1,0 +1,706 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI Tennis Lab -- So funktioniert der automatische Blog</title>
+<style>
+  *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+  :root{
+    --night:#08090f;--night-up:#0e1018;--night-card:#12141e;
+    --night-surface:#181a26;--border:#1f2233;--border-hover:#2a2d42;
+    --ball:#d4f73f;--ball-dim:#b0cc2e;--ball-glow:rgba(212,247,63,.12);
+    --ball-glow-strong:rgba(212,247,63,.25);--clay:#c94a3a;
+    --text:#e8eaed;--text-mid:#9da1b0;--text-dim:#5c6078;
+    --serif:Georgia,"Times New Roman",serif;
+    --sans:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;
+    --mono:"SF Mono",SFMono-Regular,ui-monospace,"Cascadia Code",Menlo,monospace;
+    --ease:cubic-bezier(.23,1,.32,1);
+  }
+  html,body{height:100%;overflow:hidden;background:var(--night);color:var(--text);font-family:var(--sans);font-size:18px;line-height:1.6}
+
+  /* Slide container */
+  .deck{position:relative;width:100%;height:100%}
+  .slide{
+    position:absolute;inset:0;display:flex;flex-direction:column;
+    justify-content:center;align-items:center;padding:60px 80px;
+    opacity:0;pointer-events:none;transition:opacity .4s var(--ease);
+  }
+  .slide.active{opacity:1;pointer-events:auto}
+
+  /* Court line texture */
+  .slide::before{
+    content:'';position:absolute;inset:0;pointer-events:none;
+    background:repeating-linear-gradient(180deg,transparent,transparent 119px,rgba(212,247,63,.03) 119px,rgba(212,247,63,.03) 120px);
+  }
+
+  /* Counter */
+  .counter{
+    position:fixed;bottom:24px;right:32px;font-family:var(--mono);
+    font-size:14px;color:var(--text-dim);z-index:100;
+  }
+
+  /* Nav dots */
+  .nav-dots{
+    position:fixed;bottom:24px;left:50%;transform:translateX(-50%);
+    display:flex;gap:8px;z-index:100;
+  }
+  .nav-dots .dot{
+    width:8px;height:8px;border-radius:50%;background:var(--border-hover);
+    cursor:pointer;transition:all .3s var(--ease);
+  }
+  .nav-dots .dot.active{background:var(--ball);box-shadow:0 0 8px var(--ball-glow-strong)}
+
+  /* Part label */
+  .part-label{
+    font-family:var(--mono);font-size:11px;text-transform:uppercase;
+    letter-spacing:3px;color:var(--ball-dim);margin-bottom:12px;
+  }
+
+  /* Typography */
+  h1{font-family:var(--serif);font-size:2.8rem;font-weight:700;color:var(--text);line-height:1.2;margin-bottom:16px}
+  h2{font-family:var(--serif);font-size:2.2rem;font-weight:700;color:var(--text);line-height:1.25;margin-bottom:12px}
+  h3{font-family:var(--serif);font-size:1.4rem;font-weight:400;color:var(--text-mid);margin-bottom:24px}
+  .accent{color:var(--ball)}
+  .clay{color:var(--clay)}
+
+  /* Flow diagrams */
+  .flow{display:flex;align-items:center;gap:0;flex-wrap:wrap;justify-content:center;margin:32px 0}
+  .flow-box{
+    background:var(--night-card);border:1px solid var(--border);
+    border-radius:4px;padding:20px 28px;text-align:center;min-width:160px;
+  }
+  .flow-box .label{font-family:var(--mono);font-size:12px;color:var(--ball-dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:6px}
+  .flow-box .value{font-family:var(--serif);font-size:1.1rem;color:var(--text)}
+  .flow-arrow{font-size:1.6rem;color:var(--ball);padding:0 12px;flex-shrink:0}
+
+  /* Cards grid */
+  .cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:16px;width:100%;max-width:1000px;margin:24px 0}
+  .card{
+    background:var(--night-card);border:1px solid var(--border);border-radius:4px;
+    padding:20px 24px;transition:border-color .3s var(--ease);
+  }
+  .card:hover{border-color:var(--ball)}
+  .card .card-title{font-family:var(--mono);font-size:12px;color:var(--ball-dim);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px}
+  .card .card-body{font-size:.95rem;color:var(--text-mid);line-height:1.5}
+  .card .card-body strong{color:var(--text)}
+
+  /* Code block */
+  .code{
+    background:var(--night-up);border:1px solid var(--border);border-radius:4px;
+    padding:16px 20px;font-family:var(--mono);font-size:.85rem;color:var(--text-mid);
+    text-align:left;max-width:800px;width:100%;margin:16px 0;overflow-x:auto;
+    white-space:pre;line-height:1.7;
+  }
+  .code .kw{color:var(--ball)}
+  .code .str{color:var(--clay)}
+  .code .cmt{color:var(--text-dim)}
+
+  /* Stats row */
+  .stats{display:flex;gap:40px;justify-content:center;flex-wrap:wrap;margin:24px 0}
+  .stat{text-align:center}
+  .stat .num{font-family:var(--serif);font-size:2.6rem;font-weight:700;color:var(--ball);line-height:1}
+  .stat .lbl{font-family:var(--mono);font-size:12px;color:var(--text-dim);text-transform:uppercase;letter-spacing:1px;margin-top:6px}
+
+  /* Timeline */
+  .timeline{display:flex;flex-direction:column;gap:0;max-width:700px;width:100%;margin:20px 0}
+  .tl-item{display:flex;align-items:flex-start;gap:16px;position:relative;padding-bottom:20px}
+  .tl-item:not(:last-child)::after{
+    content:'';position:absolute;left:15px;top:36px;bottom:0;width:2px;background:var(--border);
+  }
+  .tl-dot{
+    width:32px;height:32px;border-radius:50%;background:var(--night-card);
+    border:2px solid var(--ball);display:flex;align-items:center;justify-content:center;
+    font-family:var(--mono);font-size:11px;color:var(--ball);flex-shrink:0;
+  }
+  .tl-content .tl-time{font-family:var(--mono);font-size:12px;color:var(--ball-dim)}
+  .tl-content .tl-text{font-size:.95rem;color:var(--text-mid);margin-top:2px}
+  .tl-content .tl-text strong{color:var(--text)}
+
+  /* List */
+  .feature-list{list-style:none;max-width:700px;width:100%;margin:16px 0}
+  .feature-list li{
+    padding:10px 0;border-bottom:1px solid var(--border);
+    display:flex;align-items:baseline;gap:12px;font-size:.95rem;color:var(--text-mid);
+  }
+  .feature-list li::before{content:'>';font-family:var(--mono);color:var(--ball);font-weight:700}
+  .feature-list li strong{color:var(--text)}
+
+  /* Big URL */
+  .big-url{
+    font-family:var(--mono);font-size:1rem;color:var(--ball);
+    background:var(--night-up);border:1px solid var(--border);
+    padding:12px 24px;border-radius:4px;margin:16px 0;
+    word-break:break-all;
+  }
+
+  /* Subtitle text */
+  .sub{font-size:1rem;color:var(--text-mid);max-width:700px;text-align:center;margin:8px 0}
+
+  /* Two columns */
+  .cols{display:grid;grid-template-columns:1fr 1fr;gap:32px;width:100%;max-width:900px;margin:20px 0}
+  .cols.three{grid-template-columns:1fr 1fr 1fr}
+
+  /* Diagram box */
+  .diagram{
+    background:var(--night-up);border:1px solid var(--border);border-radius:4px;
+    padding:24px;max-width:800px;width:100%;margin:16px 0;
+  }
+  .diagram-row{display:flex;align-items:center;justify-content:center;gap:8px;margin:8px 0;flex-wrap:wrap}
+  .diagram-box{
+    background:var(--night-card);border:1px solid var(--border);border-radius:4px;
+    padding:10px 16px;font-size:.85rem;color:var(--text-mid);text-align:center;
+  }
+  .diagram-box.highlight{border-color:var(--ball);color:var(--ball)}
+  .diagram-arrow{color:var(--ball);font-family:var(--mono)}
+
+  /* Hint */
+  .hint{
+    position:fixed;bottom:24px;left:32px;font-family:var(--mono);
+    font-size:12px;color:var(--text-dim);z-index:100;
+  }
+
+  @media(max-width:768px){
+    .slide{padding:32px 24px}
+    h1{font-size:2rem}h2{font-size:1.6rem}
+    .flow{flex-direction:column;gap:8px}
+    .flow-arrow{transform:rotate(90deg);padding:4px 0}
+    .cols,.cols.three{grid-template-columns:1fr}
+    .stats{gap:24px}
+    .stat .num{font-size:2rem}
+  }
+</style>
+</head>
+<body>
+
+<div class="deck" id="deck">
+
+<!-- ==================== SLIDE 1: Titel ==================== -->
+<div class="slide active" data-part="1">
+  <div class="part-label">AI Tennis Lab</div>
+  <h1>So funktioniert der<br><span class="accent">automatische Blog</span></h1>
+  <h3>Vom Thema zum fertigen Artikel -- ohne einen Klick</h3>
+  <div style="margin-top:32px">
+    <div class="big-url">nichtagentur.github.io/tennis-technique-blog</div>
+  </div>
+  <p class="sub" style="margin-top:24px;color:var(--text-dim)">Ein Projekt von cybertime -- gebaut mit KI</p>
+</div>
+
+<!-- ==================== SLIDE 2: Das grosse Bild ==================== -->
+<div class="slide" data-part="1">
+  <div class="part-label">Teil 1 -- Ueberblick</div>
+  <h2>Das grosse Bild</h2>
+  <p class="sub">Drei Schritte -- vom Thema zum publizierten Artikel</p>
+  <div class="flow">
+    <div class="flow-box">
+      <div class="label">Schritt 1</div>
+      <div class="value">Themen-Datenbank</div>
+      <div style="font-size:.8rem;color:var(--text-dim);margin-top:4px">topics.json</div>
+    </div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-box">
+      <div class="label">Schritt 2</div>
+      <div class="value">KI-Generierung</div>
+      <div style="font-size:.8rem;color:var(--text-dim);margin-top:4px">Text + Bild</div>
+    </div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-box">
+      <div class="label">Schritt 3</div>
+      <div class="value">Veroeffentlichung</div>
+      <div style="font-size:.8rem;color:var(--text-dim);margin-top:4px">GitHub Pages</div>
+    </div>
+  </div>
+  <p class="sub" style="margin-top:24px">Jeden Tag um <strong style="color:var(--ball)">7:00 Uhr</strong> laeuft dieser Prozess automatisch.</p>
+</div>
+
+<!-- ==================== SLIDE 3: Tech Stack ==================== -->
+<div class="slide" data-part="1">
+  <div class="part-label">Teil 1 -- Ueberblick</div>
+  <h2>Der Tech Stack</h2>
+  <div class="cards" style="max-width:900px">
+    <div class="card">
+      <div class="card-title">Text-KI</div>
+      <div class="card-body"><strong>Claude Haiku 4.5</strong><br>Anthropic API<br>Schnell &amp; guenstig</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Bild-KI</div>
+      <div class="card-body"><strong>Imagen 4.0 Fast</strong><br>Google Gemini API<br>Sportfotografie-Stil</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Automation</div>
+      <div class="card-body"><strong>GitHub Actions</strong><br>Cron-Job taeglich<br>Kostenlos (public repo)</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Hosting</div>
+      <div class="card-body"><strong>GitHub Pages</strong><br>Statisches HTML<br>Kostenlos</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Templates</div>
+      <div class="card-body"><strong>Jinja2</strong><br>Python Template-Engine<br>HTML-Bausteine</div>
+    </div>
+    <div class="card">
+      <div class="card-title">Sprache</div>
+      <div class="card-body"><strong>Python 3.12</strong><br>generate.py<br>~300 Zeilen Code</div>
+    </div>
+  </div>
+  <p class="sub" style="margin-top:16px">Gesamtkosten: <strong style="color:var(--ball)">~5 Cent pro Artikel</strong></p>
+</div>
+
+<!-- ==================== SLIDE 4: Themen-Datenbank ==================== -->
+<div class="slide" data-part="2">
+  <div class="part-label">Teil 2 -- Content-Prozess</div>
+  <h2>Die Themen-Datenbank</h2>
+  <p class="sub">Alle Artikel sind in <span style="color:var(--ball)">topics.json</span> vordefiniert</p>
+  <div class="cols">
+    <div>
+      <div class="code" style="font-size:.8rem">{
+  <span class="str">"title"</span>: <span class="str">"Vorhand Topspin"</span>,
+  <span class="str">"slug"</span>: <span class="str">"vorhand-topspin"</span>,
+  <span class="str">"category"</span>: <span class="str">"Grundschlaege"</span>,
+  <span class="str">"difficulty"</span>: <span class="str">"Anfaenger"</span>,
+  <span class="str">"keywords"</span>: [<span class="str">"vorhand"</span>, ...],
+  <span class="str">"description"</span>: <span class="str">"Technik,
+  Fehlerbilder und Uebungen"</span>
+}</div>
+    </div>
+    <div>
+      <div class="stats" style="flex-direction:column;align-items:flex-start;gap:16px">
+        <div class="stat" style="text-align:left"><div class="num">32</div><div class="lbl">Themen gesamt</div></div>
+        <div class="stat" style="text-align:left"><div class="num">6</div><div class="lbl">Kategorien</div></div>
+      </div>
+      <ul class="feature-list" style="margin-top:12px;font-size:.85rem">
+        <li>Aufschlag (5)</li>
+        <li>Beinarbeit (5)</li>
+        <li>Grundschlaege (5)</li>
+        <li>Netzspiel (5)</li>
+        <li>Taktik (5)</li>
+        <li>Training &amp; Didaktik (7)</li>
+      </ul>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 5: Text-Generierung ==================== -->
+<div class="slide" data-part="2">
+  <div class="part-label">Teil 2 -- Content-Prozess</div>
+  <h2>Text-Generierung mit <span class="accent">Claude</span></h2>
+  <div class="diagram">
+    <div class="diagram-row">
+      <div class="diagram-box highlight">System-Prompt</div>
+      <div class="diagram-arrow">+</div>
+      <div class="diagram-box highlight">Artikel-Brief</div>
+      <div class="diagram-arrow">&rarr;</div>
+      <div class="diagram-box" style="border-color:var(--clay);color:var(--clay)">Claude Haiku 4.5</div>
+      <div class="diagram-arrow">&rarr;</div>
+      <div class="diagram-box highlight">HTML + Meta</div>
+    </div>
+  </div>
+  <div class="cols" style="margin-top:16px">
+    <div>
+      <div class="card">
+        <div class="card-title">System-Prompt</div>
+        <div class="card-body" style="font-size:.85rem">"Du bist ein erfahrener <strong>Tennisexperte</strong> und Sportanalyst. Schreibe fuer Tennistrainer. Nutze korrekte <strong>biomechanische Fachbegriffe</strong>. Referenziere DTB- und ITF-Methodik."</div>
+      </div>
+    </div>
+    <div>
+      <div class="card">
+        <div class="card-title">Output</div>
+        <div class="card-body" style="font-size:.85rem">
+          <strong>1200-1500 Woerter</strong> pro Artikel<br>
+          Strukturiertes HTML (h2, h3, ul, ol)<br>
+          Uebungen mit Wiederholungen<br>
+          SEO Meta-Description (max 155 Zeichen)<br>
+          HowTo-Steps fuer Schema.org
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 6: Bild-Generierung ==================== -->
+<div class="slide" data-part="2">
+  <div class="part-label">Teil 2 -- Content-Prozess</div>
+  <h2>Bild-Generierung mit <span class="accent">Imagen</span></h2>
+  <div class="code" style="max-width:750px;font-size:.82rem"><span class="str">"Professional tennis photography: [TITEL].</span>
+<span class="str"> Dynamic action shot on a modern tennis court,</span>
+<span class="str"> dramatic lighting, sports magazine quality,</span>
+<span class="str"> 16:9 aspect ratio, photorealistic.</span>
+<span class="str"> Category: [KATEGORIE]."</span></div>
+  <div class="cards" style="max-width:700px;grid-template-columns:1fr 1fr 1fr">
+    <div class="card" style="text-align:center">
+      <div class="card-title">Modell</div>
+      <div class="card-body"><strong>Imagen 4.0 Fast</strong></div>
+    </div>
+    <div class="card" style="text-align:center">
+      <div class="card-title">Format</div>
+      <div class="card-body"><strong>16:9 JPEG</strong></div>
+    </div>
+    <div class="card" style="text-align:center">
+      <div class="card-title">Stil</div>
+      <div class="card-body"><strong>Sportfotografie</strong></div>
+    </div>
+  </div>
+  <p class="sub" style="margin-top:20px">Jeder Artikel bekommt ein einzigartiges Hero-Bild passend zum Thema.</p>
+</div>
+
+<!-- ==================== SLIDE 7: Template-Rendering ==================== -->
+<div class="slide" data-part="2">
+  <div class="part-label">Teil 2 -- Content-Prozess</div>
+  <h2>Template-Rendering mit <span class="accent">Jinja2</span></h2>
+  <div class="diagram">
+    <div class="diagram-row">
+      <div class="diagram-box highlight">base.html</div>
+      <div class="diagram-arrow">+</div>
+      <div class="diagram-box highlight">article.html</div>
+      <div class="diagram-arrow">+</div>
+      <div class="diagram-box" style="border-color:var(--clay);color:var(--clay)">Claude-Text + Imagen-Bild</div>
+    </div>
+    <div style="text-align:center;margin:12px 0"><span class="diagram-arrow" style="font-size:1.4rem">&darr;</span></div>
+    <div class="diagram-row">
+      <div class="diagram-box highlight" style="min-width:300px">Fertige HTML-Seite</div>
+    </div>
+  </div>
+  <div class="cards" style="max-width:800px;grid-template-columns:1fr 1fr">
+    <div class="card">
+      <div class="card-title">4 Templates</div>
+      <div class="card-body" style="font-size:.85rem">
+        <strong>base.html</strong> -- Layout, CSS, Navigation<br>
+        <strong>article.html</strong> -- Artikel-Seite<br>
+        <strong>index.html</strong> -- Startseite<br>
+        <strong>about.html</strong> -- Ueber-uns-Seite
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Eingebaut</div>
+      <div class="card-body" style="font-size:.85rem">
+        Schema.org JSON-LD<br>
+        Open Graph Meta-Tags<br>
+        Canonical URLs<br>
+        KI-Offenlegungshinweis
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 8: Seiten-Aufbau ==================== -->
+<div class="slide" data-part="2">
+  <div class="part-label">Teil 2 -- Content-Prozess</div>
+  <h2>Was wird generiert?</h2>
+  <p class="sub">Bei jedem Durchlauf werden alle Seiten neu aufgebaut</p>
+  <div class="cards" style="max-width:800px;grid-template-columns:1fr 1fr">
+    <div class="card">
+      <div class="card-title">Pro Artikel</div>
+      <div class="card-body" style="font-size:.85rem">
+        <strong>docs/artikel/{slug}.html</strong><br>
+        Vollstaendige HTML-Seite<br><br>
+        <strong>docs/images/{slug}.jpg</strong><br>
+        Hero-Bild (16:9)
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Gesamte Site</div>
+      <div class="card-body" style="font-size:.85rem">
+        <strong>index.html</strong> -- Startseite mit Kategorien<br>
+        <strong>ueber-uns.html</strong> -- About-Seite<br>
+        <strong>sitemap.xml</strong> -- fuer Suchmaschinen<br>
+        <strong>robots.txt</strong> -- Crawler-Regeln
+      </div>
+    </div>
+  </div>
+  <div class="diagram" style="margin-top:20px;max-width:600px">
+    <div style="text-align:center;font-family:var(--mono);font-size:.8rem;color:var(--text-dim)">docs/</div>
+    <div class="diagram-row" style="margin-top:8px">
+      <div class="diagram-box">index.html</div>
+      <div class="diagram-box">sitemap.xml</div>
+      <div class="diagram-box">robots.txt</div>
+    </div>
+    <div class="diagram-row">
+      <div class="diagram-box highlight">artikel/*.html</div>
+      <div class="diagram-box highlight">images/*.jpg</div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 9: GitHub Actions ==================== -->
+<div class="slide" data-part="3">
+  <div class="part-label">Teil 3 -- Automation</div>
+  <h2>GitHub Actions <span class="accent">Workflow</span></h2>
+  <div class="code" style="max-width:700px;font-size:.8rem"><span class="cmt"># .github/workflows/publish.yml</span>
+<span class="kw">name:</span> Daily Tennis Article
+<span class="kw">on:</span>
+  <span class="kw">schedule:</span>
+    - <span class="kw">cron:</span> <span class="str">'0 6 * * *'</span>  <span class="cmt"># 6 UTC = 7 Uhr MEZ</span>
+  <span class="kw">workflow_dispatch:</span>     <span class="cmt"># manueller Start</span>
+
+<span class="kw">steps:</span>
+  - Setup Python 3.12
+  - <span class="kw">pip install</span> requests jinja2 google-genai
+  - <span class="kw">python3</span> generate.py --count 1
+  - <span class="kw">git add</span> docs/ && <span class="kw">git commit</span> && <span class="kw">git push</span></div>
+  <p class="sub" style="margin-top:16px">Der Workflow laeuft auf GitHub-Servern -- dein Computer muss nicht an sein.</p>
+</div>
+
+<!-- ==================== SLIDE 10: Der taegliche Zyklus ==================== -->
+<div class="slide" data-part="3">
+  <div class="part-label">Teil 3 -- Automation</div>
+  <h2>Der taegliche Zyklus</h2>
+  <div class="timeline">
+    <div class="tl-item">
+      <div class="tl-dot">1</div>
+      <div class="tl-content">
+        <div class="tl-time">07:00 -- Start</div>
+        <div class="tl-text"><strong>GitHub Actions</strong> startet den Workflow (Cron-Trigger)</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot">2</div>
+      <div class="tl-content">
+        <div class="tl-time">07:01 -- Thema waehlen</div>
+        <div class="tl-text"><strong>topics.json</strong> wird gelesen, naechstes Thema ohne Artikel gewaehlt</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot">3</div>
+      <div class="tl-content">
+        <div class="tl-time">07:02 -- Text generieren</div>
+        <div class="tl-text"><strong>Claude Haiku</strong> schreibt 1200-1500 Woerter auf Deutsch</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot">4</div>
+      <div class="tl-content">
+        <div class="tl-time">07:03 -- Bild generieren</div>
+        <div class="tl-text"><strong>Imagen 4.0</strong> erzeugt ein Sportfotografie-Bild</div>
+      </div>
+    </div>
+    <div class="tl-item">
+      <div class="tl-dot">5</div>
+      <div class="tl-content">
+        <div class="tl-time">07:04 -- Bauen &amp; Publizieren</div>
+        <div class="tl-text"><strong>Jinja2</strong> rendert HTML, <strong>Git Push</strong> veroeffentlicht auf GitHub Pages</div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 11: Fehlerbehandlung ==================== -->
+<div class="slide" data-part="3">
+  <div class="part-label">Teil 3 -- Automation</div>
+  <h2>Fehlerbehandlung</h2>
+  <p class="sub">Was passiert, wenn etwas schiefgeht?</p>
+  <div class="cards" style="max-width:800px">
+    <div class="card">
+      <div class="card-title">Graceful Fallbacks</div>
+      <div class="card-body" style="font-size:.85rem">
+        Wenn die <strong>Bild-API</strong> fehlschlaegt: Artikel wird trotzdem publiziert (ohne Bild)<br><br>
+        Wenn die <strong>Text-API</strong> fehlschlaegt: Workflow stoppt sauber, naechster Versuch morgen
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Idempotenz</div>
+      <div class="card-body" style="font-size:.85rem">
+        Bereits generierte Artikel werden <strong>nicht ueberschrieben</strong><br><br>
+        Der Workflow kann jederzeit <strong>manuell neu gestartet</strong> werden ohne Datenverlust
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Git-Sicherheit</div>
+      <div class="card-body" style="font-size:.85rem">
+        <span style="font-family:var(--mono);font-size:.8rem">git diff --staged --quiet || git commit</span><br><br>
+        Commit nur wenn sich <strong>tatsaechlich etwas geaendert</strong> hat
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 12: Sicherheit ==================== -->
+<div class="slide" data-part="3">
+  <div class="part-label">Teil 3 -- Automation</div>
+  <h2>Sicherheit -- <span class="accent">API Keys</span></h2>
+  <div class="diagram" style="max-width:700px">
+    <div class="diagram-row">
+      <div class="diagram-box highlight" style="min-width:200px">GitHub Secrets</div>
+      <div class="diagram-arrow">&rarr;</div>
+      <div class="diagram-box" style="min-width:200px">Environment Variables</div>
+      <div class="diagram-arrow">&rarr;</div>
+      <div class="diagram-box" style="border-color:var(--clay);color:var(--clay);min-width:120px">generate.py</div>
+    </div>
+  </div>
+  <div class="cols" style="margin-top:24px;max-width:700px">
+    <div class="card">
+      <div class="card-title">Geschuetzte Keys</div>
+      <div class="card-body" style="font-size:.85rem">
+        <strong>CLAUDE_API_KEY_1</strong><br>Anthropic API-Zugang<br><br>
+        <strong>GEMINI_API_KEY</strong><br>Google Imagen-Zugang
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Warum Secrets?</div>
+      <div class="card-body" style="font-size:.85rem">
+        Keys sind <strong>nie im Code</strong> sichtbar<br><br>
+        Nur der Workflow kann sie lesen<br><br>
+        Werden in Logs <strong>automatisch maskiert</strong>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 13: SEO-Features ==================== -->
+<div class="slide" data-part="4">
+  <div class="part-label">Teil 4 -- Ergebnis</div>
+  <h2>SEO-Features</h2>
+  <p class="sub">Der Blog ist fuer Suchmaschinen optimiert</p>
+  <div class="cards" style="max-width:900px;grid-template-columns:1fr 1fr">
+    <div class="card">
+      <div class="card-title">Structured Data</div>
+      <div class="card-body" style="font-size:.85rem">
+        <strong>Schema.org JSON-LD</strong><br>
+        BlogPosting + HowTo<br>
+        Google versteht den Inhalt
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Social Sharing</div>
+      <div class="card-body" style="font-size:.85rem">
+        <strong>Open Graph</strong> Meta-Tags<br>
+        Vorschaubild + Beschreibung<br>
+        Fuer WhatsApp, Twitter, etc.
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">Crawling</div>
+      <div class="card-body" style="font-size:.85rem">
+        <strong>sitemap.xml</strong> -- alle URLs<br>
+        <strong>robots.txt</strong> -- Crawler-Regeln<br>
+        <strong>Canonical URLs</strong> -- kein Duplicate Content
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-title">E-E-A-T Signale</div>
+      <div class="card-body" style="font-size:.85rem">
+        <strong>Autor-Info</strong> auf jeder Seite<br>
+        <strong>KI-Offenlegung</strong> (Transparenz)<br>
+        <strong>Fachbegriffe</strong> (DTB/ITF-Methodik)
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ==================== SLIDE 14: Kosten ==================== -->
+<div class="slide" data-part="4">
+  <div class="part-label">Teil 4 -- Ergebnis</div>
+  <h2>Was kostet das?</h2>
+  <div class="stats" style="margin:32px 0">
+    <div class="stat"><div class="num">~5ct</div><div class="lbl">pro Artikel</div></div>
+    <div class="stat"><div class="num">~$1.70</div><div class="lbl">fuer alle 32</div></div>
+    <div class="stat"><div class="num">$0</div><div class="lbl">Hosting</div></div>
+  </div>
+  <div class="cards" style="max-width:800px;grid-template-columns:1fr 1fr 1fr">
+    <div class="card" style="text-align:center">
+      <div class="card-title">Claude Haiku</div>
+      <div class="card-body"><strong>~2-3ct</strong><br><span style="font-size:.8rem;color:var(--text-dim)">Text-Generierung</span></div>
+    </div>
+    <div class="card" style="text-align:center">
+      <div class="card-title">Imagen 4.0</div>
+      <div class="card-body"><strong>~2ct</strong><br><span style="font-size:.8rem;color:var(--text-dim)">Bild-Generierung</span></div>
+    </div>
+    <div class="card" style="text-align:center">
+      <div class="card-title">GitHub</div>
+      <div class="card-body"><strong>$0</strong><br><span style="font-size:.8rem;color:var(--text-dim)">Actions + Pages</span></div>
+    </div>
+  </div>
+  <p class="sub" style="margin-top:24px">Ein kompletter SEO-optimierter Tennis-Blog fuer <strong style="color:var(--ball)">unter 2 Dollar</strong>.</p>
+</div>
+
+<!-- ==================== SLIDE 15: Zusammenfassung ==================== -->
+<div class="slide" data-part="4">
+  <div class="part-label">Teil 4 -- Ergebnis</div>
+  <h2>Zusammenfassung</h2>
+  <div class="stats" style="margin:24px 0">
+    <div class="stat"><div class="num">32</div><div class="lbl">Artikel</div></div>
+    <div class="stat"><div class="num">6</div><div class="lbl">Kategorien</div></div>
+    <div class="stat"><div class="num">2</div><div class="lbl">KI-Modelle</div></div>
+    <div class="stat"><div class="num">0</div><div class="lbl">Manuelle Schritte</div></div>
+  </div>
+  <div class="flow" style="margin:24px 0">
+    <div class="flow-box" style="border-color:var(--ball)">
+      <div class="label">Input</div>
+      <div class="value">topics.json</div>
+    </div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-box" style="border-color:var(--clay)">
+      <div class="label">Prozess</div>
+      <div class="value">generate.py</div>
+    </div>
+    <div class="flow-arrow">&rarr;</div>
+    <div class="flow-box" style="border-color:var(--ball)">
+      <div class="label">Output</div>
+      <div class="value">Live-Blog</div>
+    </div>
+  </div>
+  <div class="big-url" style="margin-top:16px">nichtagentur.github.io/tennis-technique-blog</div>
+  <p class="sub" style="margin-top:20px;font-size:1.1rem"><strong style="color:var(--ball)">100% automatisch</strong> -- vom Thema zum fertigen Artikel, jeden Tag.</p>
+</div>
+
+</div><!-- /deck -->
+
+<!-- Counter -->
+<div class="counter"><span id="current">1</span> / <span id="total">15</span></div>
+
+<!-- Nav dots -->
+<div class="nav-dots" id="dots"></div>
+
+<!-- Hint -->
+<div class="hint" id="hint">Pfeiltasten oder Klick zum Navigieren</div>
+
+<script>
+(function(){
+  const slides = document.querySelectorAll('.slide');
+  const total = slides.length;
+  let current = 0;
+
+  document.getElementById('total').textContent = total;
+
+  // Build dots
+  const dotsEl = document.getElementById('dots');
+  for(let i = 0; i < total; i++){
+    const d = document.createElement('div');
+    d.className = 'dot' + (i === 0 ? ' active' : '');
+    d.addEventListener('click', () => goTo(i));
+    dotsEl.appendChild(d);
+  }
+
+  function goTo(n){
+    if(n < 0 || n >= total) return;
+    slides[current].classList.remove('active');
+    dotsEl.children[current].classList.remove('active');
+    current = n;
+    slides[current].classList.add('active');
+    dotsEl.children[current].classList.add('active');
+    document.getElementById('current').textContent = current + 1;
+    // Hide hint after first navigation
+    document.getElementById('hint').style.opacity = '0';
+  }
+
+  document.addEventListener('keydown', function(e){
+    if(e.key === 'ArrowRight' || e.key === 'ArrowDown' || e.key === ' '){
+      e.preventDefault(); goTo(current + 1);
+    } else if(e.key === 'ArrowLeft' || e.key === 'ArrowUp'){
+      e.preventDefault(); goTo(current - 1);
+    } else if(e.key === 'Home'){
+      e.preventDefault(); goTo(0);
+    } else if(e.key === 'End'){
+      e.preventDefault(); goTo(total - 1);
+    }
+  });
+
+  // Click left/right halves to navigate
+  document.addEventListener('click', function(e){
+    if(e.target.closest('.nav-dots') || e.target.closest('.big-url')) return;
+    if(e.clientX < window.innerWidth / 3) goTo(current - 1);
+    else goTo(current + 1);
+  });
+})();
+</script>
+</body>
+</html>
