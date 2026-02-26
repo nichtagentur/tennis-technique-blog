@@ -287,6 +287,36 @@ def _get_file_date(path):
     return datetime.date.today().isoformat()
 
 
+def render_article(topic, article_data, image_file, site, topics):
+    """Render article HTML and save to docs/artikel/."""
+    env = Environment(loader=FileSystemLoader(TEMPLATES_DIR))
+    existing_slugs = {p.stem for p in ARTIKEL_DIR.glob("*.html")}
+    existing_slugs.add(topic["slug"])
+    related = get_related_articles(topic, topics, existing_slugs)
+
+    article = {
+        "slug": topic["slug"],
+        "title": topic["title"],
+        "category": topic["category"],
+        "difficulty": topic["difficulty"],
+        "keywords": topic["keywords"],
+        "date": datetime.date.today().strftime("%d.%m.%Y"),
+        "date_iso": datetime.date.today().isoformat(),
+        "content_html": article_data["content_html"],
+        "meta_description": article_data["meta_description"],
+        "howto_steps": article_data["howto_steps"],
+        "image": image_file,
+        "related": related,
+    }
+
+    tpl = env.get_template("article.html")
+    html = tpl.render(site=site, article=article, year=datetime.datetime.now().year)
+    out_path = ARTIKEL_DIR / f"{topic['slug']}.html"
+    out_path.write_text(html, encoding="utf-8")
+    print(f"  Gespeichert: {out_path.name}")
+    return out_path
+
+
 def check_quality(topic, content_html):
     """Score article quality 1-10 using an independent Claude call."""
     prompt = f"""Bewerte folgenden Tennis-Fachartikel zum Thema "{topic['title']}".
@@ -416,9 +446,6 @@ def main():
     print(f"\n=== AI Tennis Lab Generator ===")
     print(f"Generiere {len(to_generate)} Artikel...\n")
 
-    env = Environment(loader=FileSystemLoader(TEMPLATES_DIR))
-    existing_slugs = {p.stem for p in ARTIKEL_DIR.glob("*.html")}
-
     results = []  # Collect results for email summary
 
     for i, topic in enumerate(to_generate, 1):
@@ -449,31 +476,8 @@ def main():
         image_file = generate_image(topic)
         time.sleep(1)
 
-        # Build article context
-        existing_slugs.add(topic["slug"])
-        related = get_related_articles(topic, topics, existing_slugs)
-
-        article = {
-            "slug": topic["slug"],
-            "title": topic["title"],
-            "category": topic["category"],
-            "difficulty": topic["difficulty"],
-            "keywords": topic["keywords"],
-            "date": datetime.date.today().strftime("%d.%m.%Y"),
-            "date_iso": datetime.date.today().isoformat(),
-            "content_html": article_data["content_html"],
-            "meta_description": article_data["meta_description"],
-            "howto_steps": article_data["howto_steps"],
-            "image": image_file,
-            "related": related,
-        }
-
         # Render article page
-        tpl = env.get_template("article.html")
-        html = tpl.render(site=site, article=article, year=datetime.datetime.now().year)
-        out_path = ARTIKEL_DIR / f"{topic['slug']}.html"
-        out_path.write_text(html, encoding="utf-8")
-        print(f"  Gespeichert: {out_path.name}")
+        out_path = render_article(topic, article_data, image_file, site, topics)
 
         # Step 4: Check URLs
         broken_urls = check_urls(out_path, site["base_url"])
