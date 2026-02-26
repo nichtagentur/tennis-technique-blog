@@ -1,0 +1,55 @@
+=== AI Tennis Lab Email Assistant ===
+Polling i-am-a-user@nichtagentur.at every 30s
+Only processing emails from r.leb@cybertime.at
+Press Ctrl+C to stop
+
+Found 1 unseen email(s)
+
+From: support@nichtagentur.at
+Subject: Re: Re: Status
+  Ignoring (not from r.leb@cybertime.at)
+Found 1 unseen email(s)
+
+From: support@nichtagentur.at
+Subject: Re: Blog stats please
+  Ignoring (not from r.leb@cybertime.at)
+Found 1 unseen email(s)
+
+From: support@nichtagentur.at
+Subject: Re: Blog stats please
+  Ignoring (not from r.leb@cybertime.at)
+Found 1 unseen email(s)
+
+From: r.leb@cybertime.at
+Subject: Re: Dein AI Tennis Lab Assistent ist bereit!
+  Command: topic_list, arg: None
+  Reply sent to r.leb@cybertime.at
+Found 1 unseen email(s)
+
+From: keller@blaugrau.at
+Subject: Re: AI Assistent ist online!
+  Ignoring (not from r.leb@cybertime.at)
+Found 1 unseen email(s)
+
+From: j.reithner@gmail.com
+Subject: Re: [StreamPulse Review] Fluffy Ponies on Twitch: A Growing Community
+ of Creative Streamers
+  Ignoring (not from r.leb@cybertime.at)
+IMAP connection failed: b'[UNAVAILABLE] Account is temporarily unavailable.'
+Found 2 unseen email(s)
+
+From: r.leb@cybertime.at
+Subject: Re: Neuen Artikel erstellen?
+  Command: new_article, arg: volley
+  Generating new article: Volley Grundtechnik: Kontaktpunkt, Griff und Koerperposition
+  Recherche...
+  Writing...
+  Qualitaetspruefung...
+  Qualitaet: 7/10 OK
+  Generating image...
+  Bild generiert: volley-grundtechnik.jpg
+  Gespeichert: volley-grundtechnik.html
+  index.html aktualisiert
+  ueber-uns.html aktualisiert
+  sitemap.xml aktualisiert
+  robots.txt aktualisiert
