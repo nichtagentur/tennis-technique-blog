@@ -73,23 +73,22 @@ def generate_image(topic):
             f"Category: {topic['category']}."
         )
 
-        response = client.models.generate_content(
-            model="gemini-2.0-flash-preview-image-generation",
-            contents=image_prompt,
-            config=types.GenerateContentConfig(
-                response_modalities=["TEXT", "IMAGE"],
+        response = client.models.generate_images(
+            model="imagen-4.0-fast-generate-001",
+            prompt=image_prompt,
+            config=types.GenerateImagesConfig(
+                number_of_images=1,
+                aspect_ratio="16:9",
             ),
         )
 
-        # Extract image from response
-        for part in response.candidates[0].content.parts:
-            if part.inline_data is not None:
-                img_data = part.inline_data.data
-                img_path = IMAGES_DIR / f"{topic['slug']}.jpg"
-                with open(img_path, "wb") as f:
-                    f.write(img_data)
-                print(f"  Bild generiert: {img_path.name}")
-                return f"{topic['slug']}.jpg"
+        if response.generated_images:
+            img_data = response.generated_images[0].image.image_bytes
+            img_path = IMAGES_DIR / f"{topic['slug']}.jpg"
+            with open(img_path, "wb") as f:
+                f.write(img_data)
+            print(f"  Bild generiert: {img_path.name}")
+            return f"{topic['slug']}.jpg"
 
         print(f"  WARNUNG: Kein Bild in Antwort fuer {topic['slug']}")
         return None
@@ -141,8 +140,18 @@ Gib am Ende in einer separaten Zeile folgendes JSON zurueck (nach dem HTML):
         content_html = raw
         meta = {"meta_description": topic["title"], "howto_steps": []}
 
+    # Strip markdown code fences if present
+    content_html = content_html.strip()
+    if content_html.startswith("```html"):
+        content_html = content_html[7:]
+    if content_html.startswith("```"):
+        content_html = content_html[3:]
+    if content_html.endswith("```"):
+        content_html = content_html[:-3]
+    content_html = content_html.strip()
+
     return {
-        "content_html": content_html.strip(),
+        "content_html": content_html,
         "meta_description": meta.get("meta_description", topic["title"]),
         "howto_steps": meta.get("howto_steps", []),
     }
