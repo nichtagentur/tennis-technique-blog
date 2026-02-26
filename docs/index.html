@@ -28,83 +28,72 @@
 
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow:ital,wght@0,400;0,500;0,600;0,700;0,800;1,400;1,600&family=Barlow+Condensed:wght@400;500;600;700&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=DM+Sans:ital,opsz,wght@0,9..40,300;0,9..40,400;0,9..40,500;0,9..40,600;0,9..40,700;1,9..40,400&family=DM+Serif+Display:ital@0;1&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
     <style>
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 
         :root {
-            --black: #000000;
-            --black-up: #0a0a0a;
-            --black-card: #111111;
-            --black-surface: #161616;
-            --border: #222222;
-            --border-hover: #333333;
+            --bg: #fafaf8;
+            --bg-warm: #f4f3ef;
+            --bg-card: #ffffff;
+            --bg-dark: #1a1a1a;
+            --border: #e5e3de;
+            --border-hover: #d0cdc6;
 
-            --volt: #d4f73f;
-            --volt-dim: #b0cc2e;
-            --volt-glow: rgba(212, 247, 63, 0.08);
-            --volt-glow-strong: rgba(212, 247, 63, 0.2);
-            --clay: #ff3b30;
+            --accent: #d4f73f;
+            --accent-dark: #4a5a10;
+            --accent-bg: #f0f7d4;
+            --clay: #e05a4a;
 
-            --white: #ffffff;
-            --gray-100: #f0f0f0;
-            --gray-300: #aaaaaa;
-            --gray-500: #666666;
-            --gray-700: #333333;
+            --text: #1a1a1a;
+            --text-secondary: #555555;
+            --text-light: #888888;
+            --text-white: #ffffff;
 
-            --display: 'Bebas Neue', 'Impact', 'Arial Narrow', sans-serif;
-            --body: 'Barlow', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-            --condensed: 'Barlow Condensed', 'Arial Narrow', sans-serif;
+            --serif: 'DM Serif Display', Georgia, serif;
+            --sans: 'DM Sans', system-ui, -apple-system, sans-serif;
+            --mono: 'JetBrains Mono', 'SF Mono', monospace;
 
-            --ease: cubic-bezier(0.16, 1, 0.3, 1);
-            --ease-out: cubic-bezier(0, 0, 0.2, 1);
-            --ease-snap: cubic-bezier(0.68, -0.55, 0.265, 1.55);
+            --radius: 12px;
+            --radius-lg: 16px;
+            --ease: cubic-bezier(0.23, 1, 0.32, 1);
+            --shadow-sm: 0 1px 3px rgba(0,0,0,0.04), 0 1px 2px rgba(0,0,0,0.06);
+            --shadow-md: 0 4px 16px rgba(0,0,0,0.06), 0 2px 6px rgba(0,0,0,0.04);
+            --shadow-lg: 0 12px 40px rgba(0,0,0,0.08), 0 4px 12px rgba(0,0,0,0.04);
         }
 
         html { scroll-behavior: smooth; }
 
         body {
-            font-family: var(--body);
-            background: var(--black);
-            color: var(--white);
+            font-family: var(--sans);
+            background: var(--bg);
+            color: var(--text);
             line-height: 1.6;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
-            overflow-x: hidden;
         }
 
-        /* Noise texture overlay for depth */
-        body::before {
-            content: '';
-            position: fixed;
-            inset: 0;
-            z-index: 9998;
-            pointer-events: none;
-            opacity: 0.03;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-            background-size: 256px 256px;
-        }
-
-        a { color: var(--volt); text-decoration: none; transition: all 0.4s var(--ease); }
-        a:hover { color: #e6ff6b; }
+        a { color: var(--accent-dark); text-decoration: none; transition: all 0.3s var(--ease); }
+        a:hover { color: var(--clay); }
 
         /* === NAV === */
         nav {
-            background: var(--black);
+            background: var(--bg);
             padding: 0 clamp(1.5rem, 5vw, 4rem);
             position: sticky;
             top: 0;
             z-index: 100;
-            height: 80px;
+            height: 72px;
             display: flex;
             align-items: center;
             border-bottom: 1px solid var(--border);
+            backdrop-filter: blur(12px);
+            background: rgba(250, 250, 248, 0.9);
         }
         .nav-inner {
-            max-width: 1600px;
+            max-width: 1200px;
             width: 100%;
             margin: 0 auto;
             display: flex;
@@ -114,49 +103,44 @@
         .nav-brand {
             display: flex;
             align-items: center;
-            gap: 1rem;
-            color: var(--white);
-            transition: all 0.4s var(--ease);
+            gap: 0.75rem;
+            color: var(--text);
+            transition: all 0.3s var(--ease);
         }
-        .nav-brand:hover { color: var(--volt); }
-        .nav-brand:hover .nav-ball {
-            box-shadow: 0 0 20px var(--volt-glow-strong), 0 0 40px var(--volt-glow);
-            transform: scale(1.15);
-        }
+        .nav-brand:hover { color: var(--accent-dark); }
         .nav-ball {
-            width: 26px;
-            height: 26px;
+            width: 28px;
+            height: 28px;
             border-radius: 50%;
-            background: var(--volt);
+            background: var(--accent);
             position: relative;
             flex-shrink: 0;
-            box-shadow: 0 0 16px var(--volt-glow-strong);
-            transition: all 0.4s var(--ease);
+            box-shadow: 0 2px 8px rgba(212, 247, 63, 0.3);
+            transition: all 0.3s var(--ease);
+        }
+        .nav-brand:hover .nav-ball {
+            transform: scale(1.1);
+            box-shadow: 0 4px 16px rgba(212, 247, 63, 0.4);
         }
         .nav-ball::before {
             content: '';
             position: absolute;
             inset: 4px;
             border-radius: 50%;
-            border: 1.5px solid rgba(0,0,0,0.2);
+            border: 1.5px solid rgba(0,0,0,0.15);
             clip-path: ellipse(35% 50% at 50% 50%);
         }
         .nav-title {
-            font-family: var(--display);
-            font-size: 1.65rem;
+            font-family: var(--serif);
+            font-size: 1.25rem;
             font-weight: 400;
-            letter-spacing: 0.08em;
-            text-transform: uppercase;
-            line-height: 1;
+            letter-spacing: -0.01em;
         }
-        .nav-links { display: flex; gap: 3rem; list-style: none; align-items: center; }
+        .nav-links { display: flex; gap: 2rem; list-style: none; align-items: center; }
         .nav-links a {
-            color: var(--gray-500);
-            font-family: var(--condensed);
-            font-size: 0.8rem;
-            font-weight: 600;
-            text-transform: uppercase;
-            letter-spacing: 3px;
+            color: var(--text-light);
+            font-size: 0.88rem;
+            font-weight: 500;
             padding: 0.4rem 0;
             position: relative;
             transition: color 0.3s var(--ease);
@@ -168,12 +152,13 @@
             left: 0;
             width: 100%;
             height: 2px;
-            background: var(--volt);
+            background: var(--accent);
+            border-radius: 1px;
             transform: scaleX(0);
             transform-origin: right;
-            transition: transform 0.5s var(--ease);
+            transition: transform 0.4s var(--ease);
         }
-        .nav-links a:hover { color: var(--white); }
+        .nav-links a:hover { color: var(--text); }
         .nav-links a:hover::after { transform: scaleX(1); transform-origin: left; }
 
         /* === MAIN === */
@@ -182,7 +167,7 @@
             width: 100%;
         }
         .container {
-            max-width: 1600px;
+            max-width: 1200px;
             margin: 0 auto;
             padding: 0 clamp(1.5rem, 5vw, 4rem);
         }
@@ -190,464 +175,334 @@
         /* === FOOTER === */
         footer {
             margin-top: auto;
-            background: var(--black);
-            border-top: 1px solid var(--border);
+            background: var(--bg-dark);
+            color: var(--text-white);
         }
         .footer-inner {
-            max-width: 1600px;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 4rem clamp(1.5rem, 5vw, 4rem) 2.5rem;
+            padding: 3.5rem clamp(1.5rem, 5vw, 4rem) 2rem;
             display: grid;
-            grid-template-columns: 2fr 1fr 1fr;
-            gap: 4rem;
+            grid-template-columns: 1.5fr 1fr 1fr;
+            gap: 3rem;
         }
         .footer-brand {
-            font-family: var(--display);
-            font-size: 3rem;
-            letter-spacing: 0.06em;
-            text-transform: uppercase;
-            color: var(--white);
-            line-height: 1;
-            margin-bottom: 1.5rem;
+            font-family: var(--serif);
+            font-size: 1.5rem;
+            color: var(--text-white);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.65rem;
+        }
+        .footer-brand-ball {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: var(--accent);
+            flex-shrink: 0;
         }
         .footer-col h4 {
-            font-family: var(--condensed);
-            font-size: 0.7rem;
-            font-weight: 700;
+            font-size: 0.72rem;
+            font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 4px;
-            color: var(--gray-500);
-            margin-bottom: 1.25rem;
+            letter-spacing: 2px;
+            color: rgba(255,255,255,0.4);
+            margin-bottom: 1rem;
         }
         .footer-col a, .footer-col p {
             display: block;
             font-size: 0.88rem;
-            color: var(--gray-300);
-            margin-bottom: 0.6rem;
-            line-height: 1.5;
-            font-weight: 500;
+            color: rgba(255,255,255,0.6);
+            margin-bottom: 0.5rem;
+            line-height: 1.6;
         }
-        .footer-col a:hover { color: var(--volt); }
+        .footer-col a:hover { color: var(--accent); }
         .footer-disclosure {
-            font-size: 0.75rem;
-            color: var(--gray-500);
+            font-size: 0.8rem;
+            color: rgba(255,255,255,0.35);
             line-height: 1.7;
-            max-width: 420px;
+            max-width: 380px;
         }
         .footer-bottom {
-            max-width: 1600px;
+            max-width: 1200px;
             margin: 0 auto;
-            padding: 1.75rem clamp(1.5rem, 5vw, 4rem);
-            border-top: 1px solid var(--border);
+            padding: 1.5rem clamp(1.5rem, 5vw, 4rem);
+            border-top: 1px solid rgba(255,255,255,0.08);
             display: flex;
             justify-content: space-between;
             align-items: center;
         }
         .footer-copy {
-            font-family: var(--condensed);
-            font-size: 0.72rem;
-            font-weight: 500;
-            color: var(--gray-500);
-            letter-spacing: 2px;
-            text-transform: uppercase;
+            font-size: 0.75rem;
+            color: rgba(255,255,255,0.3);
         }
-        .footer-copy a { color: var(--gray-500); }
-        .footer-copy a:hover { color: var(--volt); }
+        .footer-copy a { color: rgba(255,255,255,0.3); }
+        .footer-copy a:hover { color: var(--accent); }
 
         /* === SHARED === */
         .tag {
             display: inline-block;
-            font-family: var(--condensed);
-            font-size: 0.7rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 3px;
-            padding: 0.5rem 1.2rem;
-            border: 2px solid var(--volt);
-            color: var(--volt);
-            transition: all 0.3s var(--ease);
-            clip-path: polygon(0 0, calc(100% - 8px) 0, 100% 8px, 100% 100%, 8px 100%, 0 calc(100% - 8px));
-        }
-        .tag:hover, .tag--active {
-            background: var(--volt);
-            color: var(--black);
-        }
-
-        .overline {
-            font-family: var(--condensed);
             font-size: 0.7rem;
             font-weight: 600;
             text-transform: uppercase;
-            letter-spacing: 4px;
-            color: var(--gray-500);
+            letter-spacing: 1px;
+            padding: 0.3rem 0.75rem;
+            border-radius: 100px;
+            background: var(--accent-bg);
+            color: var(--accent-dark);
+            transition: all 0.3s var(--ease);
+        }
+        .tag:hover {
+            background: var(--accent);
+            color: var(--bg-dark);
         }
 
         /* Animations */
         @keyframes rise {
-            from { opacity: 0; transform: translateY(40px); }
+            from { opacity: 0; transform: translateY(24px); }
             to { opacity: 1; transform: translateY(0); }
         }
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
         }
-        @keyframes sweepIn {
-            from { transform: scaleX(0); }
-            to { transform: scaleX(1); }
-        }
-        @keyframes slideUp {
-            from { opacity: 0; transform: translateY(80px); }
-            to { opacity: 1; transform: translateY(0); }
-        }
-        @keyframes clipReveal {
-            from { clip-path: inset(0 100% 0 0); }
-            to { clip-path: inset(0 0 0 0); }
-        }
-        @keyframes pulseGlow {
-            0%, 100% { box-shadow: 0 0 20px var(--volt-glow); }
-            50% { box-shadow: 0 0 40px var(--volt-glow-strong); }
-        }
 
         /* === RESPONSIVE === */
         @media (max-width: 768px) {
-            nav { height: 64px; }
-            .nav-title { font-size: 1.35rem; }
-            .nav-links { gap: 1.5rem; }
-            .nav-links a { font-size: 0.7rem; letter-spacing: 2px; }
-            .footer-inner { grid-template-columns: 1fr; gap: 2.5rem; }
-            .footer-brand { font-size: 2rem; }
+            nav { height: 60px; }
+            .nav-title { font-size: 1.1rem; }
+            .nav-links { gap: 1.25rem; }
+            .nav-links a { font-size: 0.82rem; }
+            .footer-inner { grid-template-columns: 1fr; gap: 2rem; }
         }
         @media (max-width: 480px) {
-            .nav-inner { flex-wrap: wrap; gap: 0.5rem; }
-            .nav-links a { letter-spacing: 1.5px; }
+            .nav-links a { font-size: 0.78rem; }
         }
 
         
 /* === HERO === */
 .hero {
+    padding: clamp(3rem, 8vw, 5rem) 0;
+    text-align: center;
     position: relative;
-    padding: 0;
-    min-height: 90vh;
-    display: flex;
+    background: var(--bg);
+}
+.hero-badge {
+    display: inline-flex;
     align-items: center;
-    overflow: hidden;
-    border-bottom: 3px solid var(--volt);
+    gap: 0.5rem;
+    padding: 0.4rem 1rem 0.4rem 0.5rem;
+    background: var(--accent-bg);
+    border-radius: 100px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--accent-dark);
+    margin-bottom: 1.75rem;
+    animation: rise 0.5s var(--ease) both;
 }
-.hero::before {
-    content: '';
-    position: absolute;
-    inset: 0;
-    background:
-        radial-gradient(ellipse 80% 60% at 70% 40%, var(--volt-glow-strong) 0%, transparent 60%),
-        radial-gradient(ellipse 50% 80% at 20% 80%, rgba(212,247,63,0.05) 0%, transparent 50%);
-    z-index: 1;
-}
-/* Diagonal slash across hero */
-.hero::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    right: 0;
-    height: 120px;
-    background: var(--black);
-    clip-path: polygon(0 100%, 0 30%, 100% 100%);
-    z-index: 2;
-}
-.hero-inner {
-    position: relative;
-    z-index: 3;
-    max-width: 1600px;
-    width: 100%;
-    margin: 0 auto;
-    padding: 8rem clamp(1.5rem, 5vw, 4rem) 10rem;
-    display: grid;
-    grid-template-columns: 1.2fr 0.8fr;
-    gap: 4rem;
-    align-items: center;
-}
-.hero-left {
-    animation: slideUp 0.8s var(--ease) both;
-}
-.hero-overline {
-    font-family: var(--condensed);
-    font-size: 0.8rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 6px;
-    color: var(--volt);
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 1.25rem;
-}
-.hero-overline::after {
-    content: '';
-    height: 2px;
-    width: 80px;
-    background: var(--volt);
-    animation: sweepIn 0.8s var(--ease) 0.5s both;
-    transform-origin: left;
+.hero-badge-dot {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--accent);
 }
 .hero-title {
-    font-family: var(--display);
-    font-size: clamp(5rem, 12vw, 10rem);
+    font-family: var(--serif);
+    font-size: clamp(2.5rem, 6vw, 4rem);
     font-weight: 400;
-    line-height: 0.88;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--white);
-    margin-bottom: 2rem;
+    line-height: 1.1;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    margin-bottom: 1.25rem;
+    max-width: 750px;
+    margin-left: auto;
+    margin-right: auto;
+    animation: rise 0.6s var(--ease) 0.05s both;
 }
-.hero-title-accent {
-    color: var(--volt);
-    display: block;
-    position: relative;
-}
-/* Underline slash beneath accent text */
-.hero-title-accent::after {
-    content: '';
-    display: block;
-    height: 4px;
-    width: 120px;
-    background: var(--volt);
-    margin-top: 0.3rem;
+.hero-title em {
+    font-style: italic;
+    color: var(--accent-dark);
 }
 .hero-desc {
-    font-family: var(--body);
-    font-size: 1.15rem;
-    font-weight: 400;
-    color: var(--gray-300);
-    line-height: 1.8;
-    max-width: 500px;
-    animation: slideUp 0.8s var(--ease) 0.2s both;
-}
-.hero-right {
-    animation: slideUp 0.8s var(--ease) 0.35s both;
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    line-height: 1.75;
+    max-width: 560px;
+    margin: 0 auto 2.5rem;
+    animation: rise 0.6s var(--ease) 0.1s both;
 }
 .hero-stats {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 2px;
-    background: var(--border);
+    display: inline-flex;
+    gap: 0;
+    background: var(--bg-card);
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    overflow: hidden;
+    box-shadow: var(--shadow-sm);
+    animation: rise 0.6s var(--ease) 0.2s both;
 }
 .hero-stat {
-    background: var(--black-up);
-    padding: 2.25rem 2rem;
-    transition: all 0.4s var(--ease);
-    position: relative;
-    overflow: hidden;
+    padding: 1rem 1.75rem;
+    text-align: center;
+    transition: background 0.3s var(--ease);
 }
-.hero-stat::before {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 3px;
-    background: var(--volt);
-    transform: scaleX(0);
-    transform-origin: left;
-    transition: transform 0.5s var(--ease);
-}
-.hero-stat:hover { background: var(--black-card); }
-.hero-stat:hover::before { transform: scaleX(1); }
+.hero-stat + .hero-stat { border-left: 1px solid var(--border); }
+.hero-stat:hover { background: var(--bg-warm); }
 .hero-stat-val {
-    font-family: var(--display);
-    font-size: 3.5rem;
-    color: var(--volt);
+    font-family: var(--serif);
+    font-size: 1.6rem;
+    color: var(--text);
     line-height: 1;
-    margin-bottom: 0.4rem;
-    letter-spacing: 0.04em;
+    margin-bottom: 0.25rem;
 }
 .hero-stat-label {
-    font-family: var(--condensed);
     font-size: 0.68rem;
-    font-weight: 600;
+    font-weight: 500;
     text-transform: uppercase;
-    letter-spacing: 4px;
-    color: var(--gray-500);
+    letter-spacing: 1px;
+    color: var(--text-light);
 }
 
 /* === SECTIONS === */
 .section {
-    padding: 5rem 0;
-    position: relative;
+    padding: 3rem 0;
 }
 .section + .section {
     border-top: 1px solid var(--border);
 }
 .section-header {
     display: flex;
-    align-items: flex-end;
-    gap: 2rem;
-    margin-bottom: 3rem;
-    animation: rise 0.6s var(--ease) both;
+    align-items: center;
+    gap: 1rem;
+    margin-bottom: 2rem;
+    animation: rise 0.5s var(--ease) both;
 }
 .section-num {
-    font-family: var(--display);
-    font-size: 6rem;
-    color: var(--border);
-    line-height: 0.8;
-    letter-spacing: 0.02em;
-    transition: color 0.5s var(--ease);
-}
-.section:hover .section-num {
-    color: var(--volt-glow-strong);
+    font-family: var(--mono);
+    font-size: 0.72rem;
+    font-weight: 500;
+    color: var(--text-light);
+    background: var(--bg-warm);
+    padding: 0.25rem 0.6rem;
+    border-radius: 6px;
 }
 .section-title {
-    font-family: var(--display);
-    font-size: clamp(1.8rem, 4vw, 2.8rem);
+    font-family: var(--serif);
+    font-size: 1.5rem;
     font-weight: 400;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-    color: var(--white);
-    line-height: 1;
-    padding-bottom: 0.5rem;
-    border-bottom: 3px solid var(--volt);
+    color: var(--text);
 }
 
 /* === CARDS === */
 .card-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
-    gap: 2px;
-    background: var(--border);
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: 1.5rem;
 }
 .card {
-    background: var(--black-card);
+    background: var(--bg-card);
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
     overflow: hidden;
-    transition: all 0.5s var(--ease);
-    position: relative;
+    transition: all 0.4s var(--ease);
+    box-shadow: var(--shadow-sm);
     animation: rise 0.5s var(--ease) both;
 }
 .card:nth-child(1) { animation-delay: 0.05s; }
-.card:nth-child(2) { animation-delay: 0.12s; }
-.card:nth-child(3) { animation-delay: 0.19s; }
-.card:nth-child(4) { animation-delay: 0.26s; }
-.card:nth-child(5) { animation-delay: 0.33s; }
-.card:nth-child(6) { animation-delay: 0.40s; }
+.card:nth-child(2) { animation-delay: 0.1s; }
+.card:nth-child(3) { animation-delay: 0.15s; }
+.card:nth-child(4) { animation-delay: 0.2s; }
+.card:nth-child(5) { animation-delay: 0.25s; }
+.card:nth-child(6) { animation-delay: 0.3s; }
 
 .card:hover {
-    background: var(--black-surface);
     transform: translateY(-4px);
-    box-shadow: 0 30px 80px rgba(0,0,0,0.6), 0 0 0 1px var(--volt);
-    z-index: 10;
+    box-shadow: var(--shadow-lg);
+    border-color: var(--border-hover);
 }
 .card-img-wrap {
     position: relative;
     overflow: hidden;
-    height: 260px;
+    height: 200px;
 }
 .card-img {
     width: 100%;
     height: 100%;
     object-fit: cover;
     display: block;
-    transition: transform 0.7s var(--ease), filter 0.7s var(--ease);
-    filter: grayscale(30%) contrast(1.1);
+    transition: transform 0.6s var(--ease);
 }
-.card:hover .card-img {
-    transform: scale(1.08);
-    filter: grayscale(0%) contrast(1.05);
-}
-/* Hard diagonal slash on image */
-.card-img-wrap::after {
-    content: '';
-    position: absolute;
-    bottom: -1px;
-    left: 0;
-    right: 0;
-    height: 60px;
-    background: var(--black-card);
-    clip-path: polygon(0 100%, 100% 20%, 100% 100%);
-    transition: background 0.5s var(--ease);
-}
-.card:hover .card-img-wrap::after {
-    background: var(--black-surface);
-}
-/* Category stripe -- angular, bold */
+.card:hover .card-img { transform: scale(1.04); }
 .card-stripe {
     position: absolute;
-    top: 0;
-    left: 0;
-    background: var(--volt);
-    color: var(--black);
-    font-family: var(--condensed);
-    font-size: 0.65rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 3px;
-    padding: 0.55rem 1.5rem 0.55rem 1rem;
-    clip-path: polygon(0 0, 100% 0, calc(100% - 12px) 100%, 0 100%);
+    top: 0.75rem;
+    left: 0.75rem;
     z-index: 2;
 }
-.card-body { padding: 1.75rem 2rem 2rem; }
+.card-body { padding: 1.25rem 1.5rem 1.5rem; }
 .card-title {
-    font-family: var(--display);
-    font-size: 1.45rem;
+    font-family: var(--serif);
+    font-size: 1.2rem;
     font-weight: 400;
-    text-transform: uppercase;
-    letter-spacing: 0.03em;
-    line-height: 1.15;
-    margin-bottom: 1.25rem;
+    line-height: 1.3;
+    margin-bottom: 0.6rem;
 }
-.card-title a {
-    color: var(--white);
-    transition: color 0.3s var(--ease);
+.card-title a { color: var(--text); }
+.card-title a:hover { color: var(--accent-dark); }
+.card-excerpt {
+    font-size: 0.88rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 1rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
-.card-title a:hover { color: var(--volt); }
-.card-footer {
+.card-meta {
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding-top: 1rem;
+    padding-top: 0.75rem;
     border-top: 1px solid var(--border);
 }
 .card-date {
-    font-family: var(--condensed);
-    font-size: 0.7rem;
-    font-weight: 500;
-    color: var(--gray-500);
-    letter-spacing: 2px;
-    text-transform: uppercase;
+    font-size: 0.75rem;
+    color: var(--text-light);
 }
-.card-arrow {
-    width: 36px;
-    height: 36px;
+.card-read {
+    font-size: 0.78rem;
+    font-weight: 600;
+    color: var(--accent-dark);
     display: flex;
     align-items: center;
-    justify-content: center;
-    transition: all 0.4s var(--ease);
-    color: var(--gray-500);
-    font-size: 1rem;
-    border: 2px solid var(--border);
-    clip-path: polygon(0 0, calc(100% - 6px) 0, 100% 6px, 100% 100%, 6px 100%, 0 calc(100% - 6px));
+    gap: 0.35rem;
+    transition: gap 0.3s var(--ease);
 }
-.card:hover .card-arrow {
-    background: var(--volt);
-    border-color: var(--volt);
-    color: var(--black);
-    transform: translateX(4px);
+.card:hover .card-read { gap: 0.6rem; }
+.card-difficulty {
+    font-size: 0.68rem;
+    font-weight: 500;
+    color: var(--text-light);
+    background: var(--bg-warm);
+    padding: 0.2rem 0.5rem;
+    border-radius: 4px;
 }
 
 /* === RESPONSIVE === */
 @media (max-width: 900px) {
-    .hero-inner { grid-template-columns: 1fr; gap: 3rem; }
-    .hero { min-height: auto; }
-    .hero-title { font-size: clamp(4rem, 15vw, 7rem); }
-    .hero-inner { padding: 6rem clamp(1.5rem, 5vw, 4rem) 8rem; }
+    .hero { padding: 3rem 0; }
 }
 @media (max-width: 768px) {
     .card-grid { grid-template-columns: 1fr; }
-    .section { padding: 3.5rem 0; }
-    .section-num { font-size: 4rem; }
+    .section { padding: 2rem 0; }
+    .hero-stats { flex-wrap: wrap; }
+    .hero-stat + .hero-stat { border-left: none; border-top: 1px solid var(--border); }
 }
 @media (max-width: 480px) {
-    .hero-stats { grid-template-columns: 1fr; }
-    .hero-title { letter-spacing: 0.02em; }
-    .hero-stat-val { font-size: 2.5rem; }
-    .card-grid { gap: 1px; }
+    .hero-title { font-size: clamp(2rem, 8vw, 3rem); }
+    .hero-stats { flex-direction: column; width: 100%; max-width: 300px; }
 }
 
     </style>
@@ -660,7 +515,7 @@
                 <span class="nav-title">AI Tennis Lab</span>
             </a>
             <ul class="nav-links">
-                <li><a href="https://nichtagentur.github.io/tennis-technique-blog/">Startseite</a></li>
+                <li><a href="https://nichtagentur.github.io/tennis-technique-blog/">Blog</a></li>
                 <li><a href="https://nichtagentur.github.io/tennis-technique-blog/ueber-uns.html">Ueber uns</a></li>
             </ul>
         </div>
@@ -668,40 +523,36 @@
 
     <main>
         
+<div class="container">
 <section class="hero">
-    <div class="hero-inner">
-        <div class="hero-left">
-            <div class="hero-overline">Technikanalyse &amp; Training</div>
-            <h1 class="hero-title">
-                AI Tennis
-                <span class="hero-title-accent">Lab.</span>
-            </h1>
-            <p class="hero-desc">KI-gestuetzte Technikanalyse fuer Tennistrainer -- Biomechanisch fundiert, praxisnah aufbereitet fuer Tennistrainer aller Leistungsstufen.</p>
+    <div class="hero-badge">
+        <div class="hero-badge-dot"></div>
+        KI-gestuetzte Technikanalyse
+    </div>
+    <h1 class="hero-title">
+        Besseres Tennis durch <em>intelligente Analyse</em>
+    </h1>
+    <p class="hero-desc">KI-gestuetzte Technikanalyse fuer Tennistrainer -- Biomechanisch fundiert, praxisnah aufbereitet fuer Tennistrainer aller Leistungsstufen.</p>
+    <div class="hero-stats">
+        <div class="hero-stat">
+            <div class="hero-stat-val">7</div>
+            <div class="hero-stat-label">Artikel</div>
         </div>
-        <div class="hero-right">
-            <div class="hero-stats">
-                <div class="hero-stat">
-                    <div class="hero-stat-val">7</div>
-                    <div class="hero-stat-label">Artikel</div>
-                </div>
-                <div class="hero-stat">
-                    <div class="hero-stat-val">3</div>
-                    <div class="hero-stat-label">Kategorien</div>
-                </div>
-                <div class="hero-stat">
-                    <div class="hero-stat-val">24/7</div>
-                    <div class="hero-stat-label">KI-Analyse</div>
-                </div>
-                <div class="hero-stat">
-                    <div class="hero-stat-val">DTB</div>
-                    <div class="hero-stat-label">Framework</div>
-                </div>
-            </div>
+        <div class="hero-stat">
+            <div class="hero-stat-val">3</div>
+            <div class="hero-stat-label">Kategorien</div>
+        </div>
+        <div class="hero-stat">
+            <div class="hero-stat-val">24/7</div>
+            <div class="hero-stat-label">KI-Analyse</div>
+        </div>
+        <div class="hero-stat">
+            <div class="hero-stat-val">DTB</div>
+            <div class="hero-stat-label">Framework</div>
         </div>
     </div>
 </section>
 
-<div class="container">
 
 
 
@@ -715,7 +566,7 @@
         <article class="card">
             
             <a href="https://nichtagentur.github.io/tennis-technique-blog/artikel/vorhand-topspin-technik.html" class="card-img-wrap">
-                <div class="card-stripe">Grundschlaege</div>
+                <div class="card-stripe"><span class="tag">Grundschlaege</span></div>
                 <img class="card-img" src="https://nichtagentur.github.io/tennis-technique-blog/images/vorhand-topspin-technik.jpg" alt="Vorhand Topspin: Technik, Fehlerbilder und Uebungen" loading="lazy">
             </a>
             
@@ -723,9 +574,13 @@
                 <h3 class="card-title">
                     <a href="https://nichtagentur.github.io/tennis-technique-blog/artikel/vorhand-topspin-technik.html">Vorhand Topspin: Technik, Fehlerbilder und Uebungen</a>
                 </h3>
-                <div class="card-footer">
+                
+                <p class="card-excerpt">Vorhand Topspin: Technik, Fehlerbilder und Uebungen</p>
+                
+                <div class="card-meta">
                     <span class="card-date">2026-02-26</span>
-                    <div class="card-arrow">&rarr;</div>
+                    <span class="card-difficulty">Anfaenger bis Fortgeschrittene</span>
+                    <a href="https://nichtagentur.github.io/tennis-technique-blog/artikel/vorhand-topspin-technik.html" class="card-read">Lesen &rarr;</a>
                 </div>
             </div>
         </article>
@@ -733,7 +588,7 @@
         <article class="card">
             
             <a href="https://nichtagentur.github.io/tennis-technique-blog/artikel/rueckhand-beidhaendig.html" class="card-img-wrap">
-                <div class="card-stripe">Grundschlaege</div>
+                <div class="card-stripe"><span class="tag">Grundschlaege</span></div>
                 <img class="card-img" src="https://nichtagentur.github.io/tennis-technique-blog/images/rueckhand-beidhaendig.jpg" alt="Beidhaendige Rueckhand: Griffhaltung, Schwungbahn und Drills" loading="lazy">
             </a>
             
@@ -741,9 +596,13 @@
                 <h3 class="card-title">
                     <a href="https://nichtagentur.github.io/tennis-technique-blog/artikel/rueckhand-beidhaendig.html">Beidhaendige Rueckhand: Griffhaltung, Schwungbahn und Drills</a>
                 </h3>
-                <div class="card-footer">
+                
+                <p class="card-excerpt">Beidhaendige Rueckhand: Griffhaltung, Schwungbahn und Drills</p>
+                
+                <div class="card-meta">
                     <span class="card-date">2026-02-26</span>
-                    <div class="card-arrow">&rarr;</div>
+                    <span class="card-difficulty">Anfaenger bis Fortgeschrittene</span>
+                    <a href="https://nichtagentur.github.io/tennis-technique-blog/artikel/rueckhand-beidhaendig.html" class="card-read">Lesen &rarr;</a>
                 </div>
             </div>
         </article>
@@ -751,7 +610,7 @@
         <article class="card">
             
             <a href="https://nichtagentur.github.io/tennis-technique-blog/artikel/rueckhand-einhaendig.html" class="card-img-wrap">
-                <div class="card-stripe">Grundschlaege</div>
+                <div class="card-stripe"><span class="tag">Grundschlaege</span></div>
                 <img class="card-img" src="https://nichtagentur.github.io/tennis-technique-blog/images/rueckhand-einhaendig.jpg" alt="Einhaendige Rueckhand: Klassische Technik und moderne Varianten" loading="lazy">
             </a>
             
@@ -759,9 +618,13 @@
                 <h3 class="card-title">
                     <a href="https://nichtagentur.github.io/tennis-technique-blog/artikel/rueckhand-einhaendig.html">Einhaendige Rueckhand: Klassische Technik und moderne Varianten</a>
                 </h3>
-                <div class="card-footer">
+                
+                <p class="card-excerpt">Einhaendige Rueckhand: Klassische Technik und moderne Varianten</p>
+                
+                <div class="card-meta">
                     <span class="card-date">2026-02-26</span>
-                    <div class="card-arrow">&rarr;</div>
+                    <span class="card-difficulty">Fortgeschrittene</span>
+                    <a href="https://nichtagentur.github.io/tennis-technique-blog/artikel/rueckhand-einhaendig.html" class="card-read">Lesen &rarr;</a>
                 </div>
             </div>
         </article>
@@ -769,7 +632,7 @@
         <article class="card">
             
             <a href="https://nichtagentur.github.io/tennis-technique-blog/artikel/vorhand-slice.html" class="card-img-wrap">
-                <div class="card-stripe">Grundschlaege</div>
+                <div class="card-stripe"><span class="tag">Grundschlaege</span></div>
                 <img class="card-img" src="https://nichtagentur.github.io/tennis-technique-blog/images/vorhand-slice.jpg" alt="Vorhand Slice: Wann und wie den Slice effektiv einsetzen" loading="lazy">
             </a>
             
@@ -777,9 +640,13 @@
                 <h3 class="card-title">
                     <a href="https://nichtagentur.github.io/tennis-technique-blog/artikel/vorhand-slice.html">Vorhand Slice: Wann und wie den Slice effektiv einsetzen</a>
                 </h3>
-                <div class="card-footer">
+                
+                <p class="card-excerpt">Vorhand Slice: Wann und wie den Slice effektiv einsetzen</p>
+                
+                <div class="card-meta">
                     <span class="card-date">2026-02-26</span>
-                    <div class="card-arrow">&rarr;</div>
+                    <span class="card-difficulty">Fortgeschrittene</span>
+                    <a href="https://nichtagentur.github.io/tennis-technique-blog/artikel/vorhand-slice.html" class="card-read">Lesen &rarr;</a>
                 </div>
             </div>
         </article>
@@ -787,7 +654,7 @@
         <article class="card">
             
             <a href="https://nichtagentur.github.io/tennis-technique-blog/artikel/rueckhand-slice-technik.html" class="card-img-wrap">
-                <div class="card-stripe">Grundschlaege</div>
+                <div class="card-stripe"><span class="tag">Grundschlaege</span></div>
                 <img class="card-img" src="https://nichtagentur.github.io/tennis-technique-blog/images/rueckhand-slice-technik.jpg" alt="Rueckhand Slice: Technik, Einsatzmoeglichkeiten und Fehlerkorrektur" loading="lazy">
             </a>
             
@@ -795,9 +662,13 @@
                 <h3 class="card-title">
                     <a href="https://nichtagentur.github.io/tennis-technique-blog/artikel/rueckhand-slice-technik.html">Rueckhand Slice: Technik, Einsatzmoeglichkeiten und Fehlerkorrektur</a>
                 </h3>
-                <div class="card-footer">
+                
+                <p class="card-excerpt">Rueckhand Slice: Technik, Einsatzmoeglichkeiten und Fehlerkorrektur</p>
+                
+                <div class="card-meta">
                     <span class="card-date">2026-02-26</span>
-                    <div class="card-arrow">&rarr;</div>
+                    <span class="card-difficulty">Anfaenger bis Fortgeschrittene</span>
+                    <a href="https://nichtagentur.github.io/tennis-technique-blog/artikel/rueckhand-slice-technik.html" class="card-read">Lesen &rarr;</a>
                 </div>
             </div>
         </article>
@@ -816,7 +687,7 @@
         <article class="card">
             
             <a href="https://nichtagentur.github.io/tennis-technique-blog/artikel/erster-aufschlag-power.html" class="card-img-wrap">
-                <div class="card-stripe">Aufschlag</div>
+                <div class="card-stripe"><span class="tag">Aufschlag</span></div>
                 <img class="card-img" src="https://nichtagentur.github.io/tennis-technique-blog/images/erster-aufschlag-power.jpg" alt="Erster Aufschlag: Maximale Power durch korrekte Biomechanik" loading="lazy">
             </a>
             
@@ -824,9 +695,13 @@
                 <h3 class="card-title">
                     <a href="https://nichtagentur.github.io/tennis-technique-blog/artikel/erster-aufschlag-power.html">Erster Aufschlag: Maximale Power durch korrekte Biomechanik</a>
                 </h3>
-                <div class="card-footer">
+                
+                <p class="card-excerpt">Erster Aufschlag: Maximale Power durch korrekte Biomechanik</p>
+                
+                <div class="card-meta">
                     <span class="card-date">2026-02-26</span>
-                    <div class="card-arrow">&rarr;</div>
+                    <span class="card-difficulty">Fortgeschrittene</span>
+                    <a href="https://nichtagentur.github.io/tennis-technique-blog/artikel/erster-aufschlag-power.html" class="card-read">Lesen &rarr;</a>
                 </div>
             </div>
         </article>
@@ -845,7 +720,7 @@
         <article class="card">
             
             <a href="https://nichtagentur.github.io/tennis-technique-blog/artikel/volley-grundtechnik.html" class="card-img-wrap">
-                <div class="card-stripe">Netzspiel</div>
+                <div class="card-stripe"><span class="tag">Netzspiel</span></div>
                 <img class="card-img" src="https://nichtagentur.github.io/tennis-technique-blog/images/volley-grundtechnik.jpg" alt="Volley Grundtechnik: Kontaktpunkt, Griff und Koerperposition" loading="lazy">
             </a>
             
@@ -853,9 +728,13 @@
                 <h3 class="card-title">
                     <a href="https://nichtagentur.github.io/tennis-technique-blog/artikel/volley-grundtechnik.html">Volley Grundtechnik: Kontaktpunkt, Griff und Koerperposition</a>
                 </h3>
-                <div class="card-footer">
+                
+                <p class="card-excerpt">Volley Grundtechnik: Kontaktpunkt, Griff und Koerperposition</p>
+                
+                <div class="card-meta">
                     <span class="card-date">2026-02-26</span>
-                    <div class="card-arrow">&rarr;</div>
+                    <span class="card-difficulty">Anfaenger bis Fortgeschrittene</span>
+                    <a href="https://nichtagentur.github.io/tennis-technique-blog/artikel/volley-grundtechnik.html" class="card-read">Lesen &rarr;</a>
                 </div>
             </div>
         </article>
@@ -870,12 +749,15 @@
     <footer>
         <div class="footer-inner">
             <div class="footer-col">
-                <div class="footer-brand">AI Tennis Lab</div>
+                <div class="footer-brand">
+                    <div class="footer-brand-ball"></div>
+                    AI Tennis Lab
+                </div>
                 <p class="footer-disclosure">Dieser Inhalt wurde mit KI erstellt und dient als Trainingsressource. Fuer individuelles Training wenden Sie sich an einen zertifizierten Tennistrainer.</p>
             </div>
             <div class="footer-col">
                 <h4>Navigation</h4>
-                <a href="https://nichtagentur.github.io/tennis-technique-blog/">Startseite</a>
+                <a href="https://nichtagentur.github.io/tennis-technique-blog/">Blog</a>
                 <a href="https://nichtagentur.github.io/tennis-technique-blog/ueber-uns.html">Ueber uns</a>
                 <a href="https://nichtagentur.github.io/tennis-technique-blog/sitemap.xml">Sitemap</a>
             </div>

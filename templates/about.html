@@ -8,265 +8,201 @@
 {% block extra_css %}
 /* === ABOUT HERO === */
 .ab-hero {
-    padding: 6rem 0 4.5rem;
-    position: relative;
-    overflow: hidden;
-    border-bottom: 3px solid var(--volt);
+    padding: clamp(3rem, 8vw, 5rem) 0 clamp(2rem, 4vw, 3rem);
+    text-align: center;
 }
-.ab-hero::before {
-    content: '';
-    position: absolute;
-    top: 10%;
-    left: -5%;
-    width: 600px;
-    height: 600px;
-    border-radius: 50%;
-    background: radial-gradient(circle, var(--volt-glow-strong) 0%, transparent 60%);
-    filter: blur(100px);
-    opacity: 0.6;
-}
-/* Oversized watermark text */
-.ab-hero::after {
-    content: 'LAB';
-    position: absolute;
-    top: 50%;
-    right: -5%;
-    transform: translateY(-50%);
-    font-family: var(--display);
-    font-size: clamp(12rem, 25vw, 22rem);
-    color: rgba(255,255,255,0.02);
-    letter-spacing: 0.05em;
-    line-height: 1;
-    pointer-events: none;
-    z-index: 0;
-}
-.ab-hero-inner {
-    position: relative;
-    z-index: 1;
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 4rem;
-    align-items: end;
-    max-width: 1600px;
-    margin: 0 auto;
-    padding: 0 clamp(1.5rem, 5vw, 4rem);
-}
-.ab-hero-overline {
-    font-family: var(--condensed);
-    font-size: 0.8rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 6px;
-    color: var(--volt);
+.ab-hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 1rem 0.4rem 0.5rem;
+    background: var(--accent-bg);
+    border-radius: 100px;
+    font-size: 0.78rem;
+    font-weight: 500;
+    color: var(--accent-dark);
     margin-bottom: 1.5rem;
-    animation: rise 0.6s var(--ease) both;
+    animation: rise 0.5s var(--ease) both;
+}
+.ab-hero-badge-dot {
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background: var(--accent);
 }
 .ab-hero h1 {
-    font-family: var(--display);
-    font-size: clamp(3.5rem, 8vw, 6rem);
+    font-family: var(--serif);
+    font-size: clamp(2.2rem, 5vw, 3.2rem);
     font-weight: 400;
-    line-height: 0.92;
-    letter-spacing: 0.04em;
-    text-transform: uppercase;
-    color: var(--white);
-    animation: slideUp 0.7s var(--ease) 0.1s both;
+    line-height: 1.15;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    margin-bottom: 1rem;
+    animation: rise 0.6s var(--ease) 0.05s both;
 }
 .ab-hero h1 em {
-    font-style: normal;
-    color: var(--volt);
-    display: block;
+    font-style: italic;
+    color: var(--accent-dark);
 }
 .ab-hero-intro {
-    font-family: var(--body);
     font-size: 1.1rem;
-    font-weight: 400;
-    color: var(--gray-300);
-    line-height: 1.85;
-    animation: slideUp 0.7s var(--ease) 0.2s both;
+    color: var(--text-secondary);
+    line-height: 1.75;
+    max-width: 600px;
+    margin: 0 auto;
+    animation: rise 0.6s var(--ease) 0.1s both;
 }
 
 /* === ABOUT GRID === */
 .ab-grid {
     display: grid;
-    grid-template-columns: 1fr 360px;
-    gap: 4rem;
+    grid-template-columns: 1fr 300px;
+    gap: 3rem;
     align-items: start;
-    padding: 4rem 0 5rem;
-    max-width: 1600px;
-    margin: 0 auto;
-    padding-left: clamp(1.5rem, 5vw, 4rem);
-    padding-right: clamp(1.5rem, 5vw, 4rem);
+    padding: 2rem 0 4rem;
 }
 
 /* === ABOUT CONTENT === */
 .ab-content {
-    animation: fadeIn 0.6s ease 0.2s both;
+    animation: fadeIn 0.6s ease 0.15s both;
 }
 .ab-content h2 {
-    font-family: var(--display);
-    font-size: 1.8rem;
+    font-family: var(--serif);
+    font-size: 1.4rem;
     font-weight: 400;
-    text-transform: uppercase;
-    letter-spacing: 0.04em;
-    color: var(--white);
-    margin: 3.5rem 0 1.25rem;
-    padding-left: 1.5rem;
-    border-left: 4px solid var(--volt);
-    line-height: 1.1;
+    color: var(--text);
+    margin: 2.5rem 0 0.85rem;
+    padding-bottom: 0.4rem;
+    border-bottom: 2px solid var(--accent);
+    line-height: 1.3;
 }
 .ab-content h2:first-child { margin-top: 0; }
 .ab-content p {
-    margin-bottom: 1.35rem;
-    line-height: 1.85;
-    color: var(--gray-300);
-    font-size: 1.05rem;
-    font-weight: 400;
+    margin-bottom: 1.15rem;
+    line-height: 1.8;
+    color: var(--text-secondary);
+    font-size: 1rem;
 }
 .ab-content ul {
-    margin: 1rem 0 1.75rem 0;
+    margin: 0.75rem 0 1.5rem 0;
     list-style: none;
     padding: 0;
 }
 .ab-content li {
-    margin-bottom: 0.75rem;
-    padding-left: 2rem;
+    margin-bottom: 0.6rem;
+    padding-left: 1.75rem;
     position: relative;
-    line-height: 1.75;
-    color: var(--gray-300);
-    font-size: 1.02rem;
+    line-height: 1.7;
+    color: var(--text-secondary);
 }
 .ab-content li::before {
     content: '';
     position: absolute;
     left: 0;
-    top: 0.55em;
-    width: 10px;
-    height: 10px;
-    background: var(--volt);
-    clip-path: polygon(50% 0%, 100% 50%, 50% 100%, 0% 50%);
+    top: 0.6em;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
 }
-.ab-content strong { color: var(--white); font-weight: 600; }
+.ab-content strong { color: var(--text); font-weight: 600; }
 
 /* === CALLOUT === */
 .ab-callout {
-    margin: 3rem 0;
-    padding: 2.25rem 2.5rem;
-    border: 1px solid var(--border);
-    border-left: 4px solid var(--clay);
-    background: var(--black-up);
-    position: relative;
-}
-.ab-callout::before {
-    content: '';
-    position: absolute;
-    top: -1px;
-    right: -1px;
-    width: 40px;
-    height: 40px;
-    background: var(--black);
-    clip-path: polygon(0 0, 100% 0, 100% 100%);
-    border-left: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
+    margin: 2rem 0;
+    padding: 1.5rem;
+    border-radius: var(--radius);
+    border-left: 3px solid var(--clay);
+    background: #fef5f4;
 }
 .ab-callout h3 {
-    font-family: var(--condensed);
-    font-size: 0.7rem;
-    font-weight: 700;
+    font-size: 0.72rem;
+    font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 4px;
+    letter-spacing: 1.5px;
     color: var(--clay);
-    margin-bottom: 1.25rem;
+    margin-bottom: 0.75rem;
 }
 .ab-callout p {
-    color: var(--gray-300);
-    font-size: 0.98rem;
-    line-height: 1.8;
-    margin-bottom: 0.85rem;
+    color: var(--text-secondary);
+    font-size: 0.95rem;
+    line-height: 1.75;
+    margin-bottom: 0.75rem;
 }
 .ab-callout p:last-child { margin-bottom: 0; }
 
 /* === SIDEBAR CARDS === */
 .ab-sidebar {
     position: sticky;
-    top: 100px;
-    animation: fadeIn 0.6s ease 0.4s both;
+    top: 90px;
+    animation: fadeIn 0.6s ease 0.25s both;
 }
 .ab-card {
+    background: var(--bg-card);
     border: 1px solid var(--border);
+    border-radius: var(--radius);
     overflow: hidden;
-    margin-bottom: 1.75rem;
-    transition: border-color 0.4s var(--ease);
+    margin-bottom: 1.25rem;
+    box-shadow: var(--shadow-sm);
 }
-.ab-card:hover { border-color: var(--gray-700); }
 .ab-card-header {
-    background: var(--black-card);
-    padding: 1.1rem 1.5rem;
-    font-family: var(--condensed);
-    font-size: 0.68rem;
-    font-weight: 700;
+    padding: 0.85rem 1.25rem;
+    font-size: 0.7rem;
+    font-weight: 600;
     text-transform: uppercase;
-    letter-spacing: 4px;
-    color: var(--gray-500);
+    letter-spacing: 1.5px;
+    color: var(--text-light);
     border-bottom: 1px solid var(--border);
+    background: var(--bg-warm);
 }
 .ab-card-body { padding: 0; }
 .ab-card-row {
     display: flex;
     justify-content: space-between;
-    padding: 0.85rem 1.5rem;
+    padding: 0.65rem 1.25rem;
     border-bottom: 1px solid var(--border);
-    font-size: 0.88rem;
+    font-size: 0.85rem;
     align-items: center;
 }
 .ab-card-row:last-child { border-bottom: none; }
 .ab-card-row-label {
-    color: var(--gray-500);
-    font-family: var(--condensed);
-    font-size: 0.68rem;
-    font-weight: 600;
+    font-size: 0.72rem;
+    font-weight: 500;
     text-transform: uppercase;
-    letter-spacing: 2px;
+    letter-spacing: 1px;
+    color: var(--text-light);
 }
-.ab-card-row-val { color: var(--gray-300); font-weight: 500; }
+.ab-card-row-val { color: var(--text-secondary); font-weight: 500; }
 .ab-card-text {
-    padding: 1rem 1.5rem;
-    font-size: 0.9rem;
-    color: var(--gray-300);
+    padding: 0.7rem 1.25rem;
+    font-size: 0.88rem;
+    color: var(--text-secondary);
     line-height: 1.5;
     border-bottom: 1px solid var(--border);
-    font-weight: 500;
-    transition: all 0.3s var(--ease);
+    transition: background 0.3s var(--ease);
 }
 .ab-card-text:last-child { border-bottom: none; }
-.ab-card-text:hover {
-    background: rgba(212,247,63,0.03);
-    color: var(--volt);
-}
+.ab-card-text:hover { background: var(--accent-bg); }
 
 /* === RESPONSIVE === */
 @media (max-width: 900px) {
-    .ab-hero-inner { grid-template-columns: 1fr; gap: 2.5rem; }
-    .ab-grid { grid-template-columns: 1fr; gap: 2.5rem; }
+    .ab-grid { grid-template-columns: 1fr; gap: 2rem; }
     .ab-sidebar { position: static; }
-    .ab-hero h1 { font-size: clamp(3rem, 12vw, 5rem); }
-}
-@media (max-width: 480px) {
-    .ab-hero { padding: 4rem 0 3rem; }
 }
 {% endblock %}
 
 {% block content %}
+<div class="container">
 <section class="ab-hero">
-    <div class="ab-hero-inner">
-        <div>
-            <div class="ab-hero-overline">Transparenz &amp; Methodik</div>
-            <h1>Ueber<br><em>AI Tennis Lab</em></h1>
-        </div>
-        <p class="ab-hero-intro">
-            Wir kombinieren aktuelle sportwissenschaftliche Erkenntnisse mit KI-Technologie,
-            um praxisnahe Ressourcen fuer den Trainingsalltag zu schaffen -- vollstaendig transparent.
-        </p>
+    <div class="ab-hero-badge">
+        <div class="ab-hero-badge-dot"></div>
+        Transparenz &amp; Methodik
     </div>
+    <h1>Ueber <em>AI Tennis Lab</em></h1>
+    <p class="ab-hero-intro">
+        Wir kombinieren aktuelle sportwissenschaftliche Erkenntnisse mit KI-Technologie,
+        um praxisnahe Ressourcen fuer den Trainingsalltag zu schaffen -- vollstaendig transparent.
+    </p>
 </section>
 
 <div class="ab-grid">
@@ -357,5 +293,6 @@
             </div>
         </div>
     </aside>
+</div>
 </div>
 {% endblock %}

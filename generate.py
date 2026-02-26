@@ -227,10 +227,21 @@ def build_site(site, topics):
         if t["slug"] in existing_slugs:
             img_file = f"{t['slug']}.jpg"
             has_image = (IMAGES_DIR / img_file).exists()
+            # Extract meta_description from rendered HTML
+            excerpt = t["title"]
+            try:
+                html_content = (ARTIKEL_DIR / f"{t['slug']}.html").read_text(encoding="utf-8")
+                import re as _re
+                m = _re.search(r'<meta name="description" content="([^"]+)"', html_content)
+                if m:
+                    excerpt = m.group(1)
+            except Exception:
+                pass
             generated.append({
                 **t,
                 "image": img_file if has_image else None,
                 "date": _get_file_date(ARTIKEL_DIR / f"{t['slug']}.html"),
+                "excerpt": excerpt,
             })
 
     # Group by category (ordered)
