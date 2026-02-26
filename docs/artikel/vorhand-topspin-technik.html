@@ -43,500 +43,489 @@
 
 
     <style>
-        /* === RESET & VARIABLES === */
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
         :root {
-            --bg-deep: #050505;
-            --bg: #0a0a0a;
-            --bg-elevated: #111113;
-            --bg-card: #141416;
-            --bg-card-hover: #1a1a1e;
-            --surface: #1e1e22;
-            --border: #222225;
-            --border-light: #2a2a2e;
-            --accent: #00e87b;
-            --accent-bright: #00ff88;
-            --accent-dim: #00b862;
-            --accent-glow: rgba(0, 232, 123, 0.15);
-            --accent-glow-strong: rgba(0, 232, 123, 0.3);
-            --warm: #f0c040;
-            --text: #eaeaea;
-            --text-secondary: #b0b0b4;
-            --text-muted: #6e6e74;
-            --radius: 12px;
-            --radius-sm: 6px;
-            --radius-lg: 20px;
+            --night: #08090f;
+            --night-up: #0e1018;
+            --night-card: #12141e;
+            --night-surface: #181a26;
+            --border: #1f2233;
+            --border-hover: #2a2d42;
+
+            --ball: #d4f73f;
+            --ball-dim: #b0cc2e;
+            --ball-glow: rgba(212, 247, 63, 0.12);
+            --ball-glow-strong: rgba(212, 247, 63, 0.25);
+            --clay: #c94a3a;
+            --court-line: rgba(212, 247, 63, 0.04);
+
+            --text: #e8eaed;
+            --text-mid: #9da1b0;
+            --text-dim: #5c6078;
+
+            --serif: Georgia, 'Times New Roman', 'Noto Serif', serif;
+            --sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --mono: 'SF Mono', SFMono-Regular, ui-monospace, 'Cascadia Code', Menlo, monospace;
+
+            --radius: 4px;
+            --ease: cubic-bezier(0.23, 1, 0.32, 1);
         }
 
-        /* === BASE === */
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-            background: var(--bg-deep);
+            font-family: var(--sans);
+            background: var(--night);
             color: var(--text);
-            line-height: 1.65;
+            line-height: 1.6;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
         }
 
-        /* Grain overlay on body */
-        body::before {
+        /* Court-line texture overlay */
+        body::after {
             content: '';
             position: fixed;
             inset: 0;
             z-index: 9999;
             pointer-events: none;
-            opacity: 0.025;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-            background-repeat: repeat;
-            background-size: 256px 256px;
+            background:
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 120px,
+                    var(--court-line) 120px,
+                    var(--court-line) 121px
+                );
+            opacity: 0.5;
         }
 
-        a { color: var(--accent); text-decoration: none; transition: color 0.25s ease; }
-        a:hover { color: var(--accent-bright); }
+        a { color: var(--ball); text-decoration: none; transition: all 0.3s var(--ease); }
+        a:hover { color: #e6ff6b; }
 
-        /* === NAVIGATION === */
+        /* === NAV === */
         nav {
-            background: rgba(10, 10, 10, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            padding: 0 2.5rem;
+            background: var(--night);
+            padding: 0 clamp(1.5rem, 4vw, 3rem);
             position: sticky;
             top: 0;
             z-index: 100;
-            border-bottom: 1px solid var(--border);
+            height: 72px;
+            display: flex;
+            align-items: center;
         }
         nav::after {
             content: '';
             position: absolute;
-            bottom: -1px;
+            bottom: 0;
             left: 0;
             right: 0;
             height: 1px;
-            background: linear-gradient(90deg, transparent 0%, var(--accent) 20%, var(--accent-bright) 50%, var(--accent) 80%, transparent 100%);
-            opacity: 0.6;
+            background: var(--border);
         }
         .nav-inner {
-            max-width: 1280px;
+            max-width: 1400px;
+            width: 100%;
             margin: 0 auto;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            height: 64px;
         }
         .nav-brand {
-            font-size: 0.85rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 5px;
-            color: var(--text);
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            transition: color 0.25s ease;
+            gap: 0.85rem;
+            color: var(--text);
+            transition: all 0.3s var(--ease);
         }
-        .nav-brand:hover { color: var(--accent); }
-        .nav-brand::before {
-            content: '';
-            display: inline-block;
-            width: 8px;
-            height: 8px;
+        .nav-brand:hover { color: var(--ball); }
+        /* CSS tennis ball */
+        .nav-ball {
+            width: 22px;
+            height: 22px;
             border-radius: 50%;
-            background: var(--accent);
-            box-shadow: 0 0 8px var(--accent-glow-strong), 0 0 20px var(--accent-glow);
-            animation: pulse-dot 3s ease-in-out infinite;
-        }
-        @keyframes pulse-dot {
-            0%, 100% { opacity: 1; box-shadow: 0 0 8px var(--accent-glow-strong), 0 0 20px var(--accent-glow); }
-            50% { opacity: 0.6; box-shadow: 0 0 4px var(--accent-glow); }
-        }
-        .nav-links { display: flex; gap: 2rem; list-style: none; align-items: center; }
-        .nav-links a {
-            color: var(--text-muted);
-            font-size: 0.72rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-weight: 600;
-            transition: color 0.25s ease;
+            background: var(--ball);
             position: relative;
-            padding: 0.25rem 0;
+            flex-shrink: 0;
+            box-shadow: 0 0 12px var(--ball-glow-strong);
         }
-        .nav-links a::after {
+        .nav-ball::before {
             content: '';
             position: absolute;
-            bottom: -2px;
+            inset: 3px;
+            border-radius: 50%;
+            border: 1.5px solid rgba(8,9,15,0.3);
+            clip-path: ellipse(35% 50% at 50% 50%);
+        }
+        .nav-title {
+            font-family: var(--serif);
+            font-size: 1.15rem;
+            font-weight: 700;
+            font-style: italic;
+            letter-spacing: 0.02em;
+        }
+        .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+        .nav-links a {
+            color: var(--text-dim);
+            font-family: var(--mono);
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 0.3rem 0;
+            position: relative;
+        }
+        .nav-links a::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
             left: 0;
-            width: 0;
+            width: 100%;
             height: 1px;
-            background: var(--accent);
-            transition: width 0.3s ease;
+            background: var(--ball);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.4s var(--ease);
         }
         .nav-links a:hover { color: var(--text); }
-        .nav-links a:hover::after { width: 100%; }
+        .nav-links a:hover::before { transform: scaleX(1); transform-origin: left; }
 
         /* === MAIN === */
         main {
             flex: 1;
             width: 100%;
-            max-width: 1280px;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 3rem 2.5rem;
+            padding: 0 clamp(1.5rem, 4vw, 3rem);
         }
 
         /* === FOOTER === */
         footer {
-            background: var(--bg);
-            border-top: 1px solid var(--border);
-            padding: 3rem 2.5rem;
             margin-top: auto;
-            position: relative;
-        }
-        footer::before {
-            content: '';
-            position: absolute;
-            top: -1px;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--accent-dim), transparent);
-            opacity: 0.3;
+            border-top: 1px solid var(--border);
+            padding: 0 clamp(1.5rem, 4vw, 3rem);
         }
         .footer-inner {
-            max-width: 1280px;
+            max-width: 1400px;
             margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr auto 1fr;
-            align-items: center;
-            gap: 2rem;
-        }
-        .footer-brand {
-            font-size: 0.7rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 4px;
-            color: var(--text-muted);
-        }
-        .footer-links {
+            padding: 3rem 0 2rem;
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
+            align-items: flex-start;
             gap: 2rem;
-            list-style: none;
         }
-        .footer-links a {
-            color: var(--text-muted);
-            font-size: 0.72rem;
+        .footer-col h4 {
+            font-family: var(--mono);
+            font-size: 0.6rem;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
-            font-weight: 500;
-            transition: color 0.25s;
+            letter-spacing: 3px;
+            color: var(--text-dim);
+            margin-bottom: 1rem;
         }
-        .footer-links a:hover { color: var(--accent); }
-        .footer-right { text-align: right; }
+        .footer-col a, .footer-col p {
+            display: block;
+            font-size: 0.82rem;
+            color: var(--text-mid);
+            margin-bottom: 0.4rem;
+            line-height: 1.5;
+        }
+        .footer-col a:hover { color: var(--ball); }
         .footer-disclosure {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            max-width: 400px;
-            margin-left: auto;
+            font-size: 0.72rem;
+            color: var(--text-dim);
             line-height: 1.6;
+            max-width: 380px;
+        }
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.5rem 0;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         .footer-copy {
-            font-size: 0.65rem;
-            color: #444;
-            margin-top: 0.5rem;
+            font-family: var(--mono);
+            font-size: 0.62rem;
+            color: var(--text-dim);
+            letter-spacing: 1px;
         }
+        .footer-copy a { color: var(--text-dim); }
+        .footer-copy a:hover { color: var(--ball); }
 
-        /* === SHARED COMPONENTS === */
-        .badge {
+        /* === SHARED === */
+        .tag {
             display: inline-block;
-            font-size: 0.6rem;
-            font-weight: 700;
+            font-family: var(--mono);
+            font-size: 0.58rem;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            padding: 0.3rem 0.8rem;
+            letter-spacing: 2.5px;
+            padding: 0.35rem 0.9rem;
+            border: 1px solid var(--ball-dim);
+            color: var(--ball);
             border-radius: 2px;
-            border: 1px solid var(--accent-dim);
-            color: var(--accent);
-            background: rgba(0, 232, 123, 0.06);
+            transition: all 0.3s var(--ease);
         }
-        .badge--filled {
-            background: var(--accent);
-            color: var(--bg-deep);
-            border-color: var(--accent);
+        .tag:hover, .tag--active {
+            background: var(--ball);
+            color: var(--night);
         }
 
-        /* Decorative court line */
-        .court-line {
-            width: 40px;
-            height: 1px;
-            background: var(--accent);
-            display: inline-block;
-            opacity: 0.5;
+        .overline {
+            font-family: var(--mono);
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--text-dim);
         }
 
-        /* Fade-in animation */
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
+        /* Animations */
+        @keyframes rise {
+            from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
         }
+        @keyframes sweepIn {
+            from { transform: scaleX(0); }
+            to { transform: scaleX(1); }
+        }
 
         /* === RESPONSIVE === */
         @media (max-width: 768px) {
-            nav { padding: 0 1.25rem; }
-            main { padding: 2rem 1.25rem; }
-            footer { padding: 2rem 1.25rem; }
-            .footer-inner { grid-template-columns: 1fr; text-align: center; gap: 1rem; }
-            .footer-right { text-align: center; }
-            .footer-disclosure { margin: 0 auto; }
+            nav { height: 60px; }
+            .nav-title { font-size: 1rem; }
+            .nav-links { gap: 1.5rem; }
+            .footer-inner { flex-direction: column; }
         }
         @media (max-width: 480px) {
-            .nav-inner { height: auto; padding: 0.75rem 0; flex-direction: column; gap: 0.5rem; }
-            .nav-links { gap: 1.25rem; }
+            .nav-inner { flex-wrap: wrap; gap: 0.5rem; }
+            .nav-links a { font-size: 0.6rem; letter-spacing: 1.5px; }
         }
+
         
 /* === ARTICLE HERO === */
-.article-hero {
+.a-hero {
     position: relative;
-    margin: -3rem -2.5rem 0;
-    height: 420px;
+    height: 480px;
     overflow: hidden;
     display: flex;
     align-items: flex-end;
+    margin-bottom: 0;
 }
-.article-hero-img {
+.a-hero-img {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 8s ease;
+    transition: transform 12s linear;
 }
-.article-hero:hover .article-hero-img {
-    transform: scale(1.03);
-}
-.article-hero-overlay {
+.a-hero:hover .a-hero-img { transform: scale(1.04); }
+.a-hero-overlay {
     position: absolute;
     inset: 0;
     background:
-        linear-gradient(to bottom, rgba(5,5,5,0.1) 0%, rgba(5,5,5,0.5) 50%, rgba(5,5,5,0.95) 85%, var(--bg-deep) 100%),
-        linear-gradient(to right, rgba(5,5,5,0.6) 0%, transparent 60%);
+        linear-gradient(180deg, rgba(8,9,15,0) 0%, rgba(8,9,15,0.4) 40%, rgba(8,9,15,0.92) 75%, var(--night) 100%),
+        linear-gradient(90deg, rgba(8,9,15,0.7) 0%, rgba(8,9,15,0) 50%);
 }
-.article-hero-content {
+.a-hero-content {
     position: relative;
     z-index: 1;
-    padding: 3rem 2.5rem;
-    max-width: 1280px;
+    padding: 3rem clamp(1.5rem, 4vw, 3rem);
+    max-width: 1400px;
     margin: 0 auto;
     width: 100%;
-    animation: fadeInUp 0.6s ease both;
+    animation: rise 0.6s var(--ease) both;
 }
-.article-hero-breadcrumb {
-    font-size: 0.65rem;
-    color: var(--text-muted);
-    letter-spacing: 1px;
-    margin-bottom: 1rem;
+.a-hero-breadcrumb {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    color: var(--text-dim);
+    letter-spacing: 1.5px;
+    margin-bottom: 1.25rem;
 }
-.article-hero-breadcrumb a { color: var(--text-muted); }
-.article-hero-breadcrumb a:hover { color: var(--accent); }
-.article-hero-breadcrumb span { color: #444; margin: 0 0.5rem; }
-.article-hero h1 {
-    font-size: clamp(1.6rem, 4vw, 2.4rem);
-    font-weight: 800;
+.a-hero-breadcrumb a { color: var(--text-dim); }
+.a-hero-breadcrumb a:hover { color: var(--ball); }
+.a-hero-breadcrumb span { color: #333; margin: 0 0.6rem; }
+.a-hero h1 {
+    font-family: var(--serif);
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 700;
     line-height: 1.15;
     margin-top: 0.75rem;
-    max-width: 700px;
+    max-width: 720px;
     letter-spacing: -0.02em;
+    animation: rise 0.6s var(--ease) 0.1s both;
+}
+
+/* Diagonal separator */
+.a-separator {
+    height: 50px;
+    background: var(--night);
+    margin-top: -50px;
+    position: relative;
+    z-index: 2;
+    clip-path: polygon(0 0, 100% 100%, 100% 100%, 0 100%);
 }
 
 /* === ARTICLE LAYOUT === */
-.article-layout {
+.a-layout {
     display: grid;
-    grid-template-columns: 1fr 300px;
-    gap: 3rem;
+    grid-template-columns: 1fr 320px;
+    gap: 3.5rem;
     align-items: start;
-    padding-top: 3rem;
+    padding: 3rem 0;
 }
 
-/* === ARTICLE CONTENT === */
-.article-content {
-    font-size: 1.05rem;
-    line-height: 1.85;
-    color: var(--text-secondary);
+/* === ARTICLE PROSE === */
+.a-prose {
+    font-size: 1.08rem;
+    line-height: 1.9;
+    color: var(--text-mid);
     animation: fadeIn 0.6s ease 0.2s both;
 }
-.article-content h2 {
-    font-size: 1.25rem;
+.a-prose h2 {
+    font-family: var(--serif);
+    font-size: 1.35rem;
     font-weight: 700;
+    font-style: italic;
     color: var(--text);
     margin: 3rem 0 1.25rem;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
+    padding-left: 1.25rem;
+    border-left: 3px solid var(--ball);
+    line-height: 1.3;
 }
-.article-content h2::before {
-    content: '';
-    width: 3px;
-    height: 1.25em;
-    background: var(--accent);
-    border-radius: 2px;
-    flex-shrink: 0;
-}
-.article-content h3 {
+.a-prose h3 {
     font-size: 1.05rem;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--text);
-    margin: 2rem 0 0.75rem;
+    margin: 2.25rem 0 0.75rem;
     letter-spacing: 0.02em;
 }
-.article-content p { margin-bottom: 1.25rem; }
-.article-content ul, .article-content ol {
-    margin: 0.75rem 0 1.5rem 1.25rem;
+.a-prose p { margin-bottom: 1.35rem; }
+.a-prose ul, .a-prose ol {
+    margin: 0.5rem 0 1.5rem 1.5rem;
 }
-.article-content li {
-    margin-bottom: 0.5rem;
-    padding-left: 0.5rem;
+.a-prose li {
+    margin-bottom: 0.6rem;
+    padding-left: 0.35rem;
 }
-.article-content strong { color: var(--text); }
-.article-content em { color: var(--accent); font-style: normal; }
+.a-prose li::marker { color: var(--ball-dim); }
+.a-prose strong { color: var(--text); font-weight: 600; }
+.a-prose em { color: var(--ball); font-style: italic; }
+.a-prose a { border-bottom: 1px solid var(--ball-dim); }
+.a-prose a:hover { border-color: var(--ball); }
 
 /* === SIDEBAR === */
-.sidebar {
+.a-sidebar {
     position: sticky;
-    top: 84px;
+    top: 90px;
     animation: fadeIn 0.6s ease 0.3s both;
 }
-.sidebar-section {
-    background: var(--bg-card);
+.a-sidebar-card {
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 1.5rem;
-    margin-bottom: 1.25rem;
-    position: relative;
     overflow: hidden;
+    margin-bottom: 1.5rem;
 }
-.sidebar-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--accent), transparent);
-    opacity: 0.4;
-}
-.sidebar-title {
-    font-size: 0.65rem;
-    font-weight: 700;
+.a-sidebar-header {
+    background: var(--night-card);
+    padding: 1rem 1.25rem;
+    font-family: var(--mono);
+    font-size: 0.58rem;
     text-transform: uppercase;
-    letter-spacing: 2.5px;
-    color: var(--text-muted);
-    margin-bottom: 1.25rem;
-    padding-bottom: 0.75rem;
+    letter-spacing: 3px;
+    color: var(--text-dim);
     border-bottom: 1px solid var(--border);
 }
-.sidebar-link {
+.a-sidebar-body { padding: 0.25rem 0; }
+.a-sidebar-link {
     display: block;
-    padding: 0.6rem 0;
+    padding: 0.8rem 1.25rem;
     font-size: 0.88rem;
-    color: var(--text-secondary);
+    color: var(--text-mid);
     border-bottom: 1px solid var(--border);
-    transition: all 0.25s ease;
+    transition: all 0.3s var(--ease);
     line-height: 1.4;
 }
-.sidebar-link:last-child { border-bottom: none; }
-.sidebar-link:hover {
-    color: var(--accent);
-    padding-left: 0.5rem;
+.a-sidebar-link:last-child { border-bottom: none; }
+.a-sidebar-link:hover {
+    color: var(--ball);
+    background: rgba(212, 247, 63, 0.02);
+    padding-left: 1.5rem;
 }
-.sidebar-detail {
+.a-sidebar-row {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    padding: 0.5rem 0;
+    padding: 0.7rem 1.25rem;
     border-bottom: 1px solid var(--border);
     font-size: 0.82rem;
 }
-.sidebar-detail:last-child { border-bottom: none; }
-.sidebar-detail-label { color: var(--text-muted); }
-.sidebar-detail-value { color: var(--text-secondary); font-weight: 500; }
+.a-sidebar-row:last-child { border-bottom: none; }
+.a-sidebar-row-label { color: var(--text-dim); font-family: var(--mono); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1.5px; }
+.a-sidebar-row-val { color: var(--text-mid); }
 
-/* === AUTHOR BOX === */
-.author-box {
-    background: var(--bg-card);
+/* === AUTHOR === */
+.a-author {
+    margin-top: 3.5rem;
+    padding: 2rem;
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 1.75rem;
-    margin-top: 3rem;
     display: flex;
+    gap: 1.5rem;
     align-items: center;
-    gap: 1.25rem;
+    transition: border-color 0.3s var(--ease);
 }
-.author-icon {
-    width: 48px;
-    height: 48px;
+.a-author:hover { border-color: var(--border-hover); }
+.a-author-avatar {
+    width: 52px;
+    height: 52px;
     border-radius: 50%;
-    background: linear-gradient(135deg, var(--accent-dim), var(--accent));
+    background: var(--ball);
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    font-size: 1.2rem;
-    font-weight: 800;
-    color: var(--bg-deep);
-}
-.author-name {
+    font-family: var(--serif);
+    font-size: 1.1rem;
     font-weight: 700;
-    font-size: 0.95rem;
+    font-style: italic;
+    color: var(--night);
+}
+.a-author-name {
+    font-family: var(--serif);
+    font-size: 1rem;
+    font-weight: 700;
     color: var(--text);
     margin-bottom: 0.2rem;
 }
-.author-desc { font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; }
+.a-author-bio { font-size: 0.82rem; color: var(--text-dim); line-height: 1.5; }
 
-/* === AI DISCLOSURE === */
-.ai-disclosure {
-    background: rgba(0, 232, 123, 0.03);
-    border: 1px solid rgba(0, 232, 123, 0.1);
-    border-radius: var(--radius);
-    padding: 1.25rem 1.5rem;
+/* === DISCLOSURE === */
+.a-disclosure {
     margin-top: 1.25rem;
+    padding: 1.25rem 1.5rem;
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--clay);
+    border-radius: var(--radius);
     font-size: 0.8rem;
-    color: var(--text-muted);
-    line-height: 1.6;
-    display: flex;
-    gap: 0.75rem;
-    align-items: flex-start;
-}
-.ai-disclosure::before {
-    content: 'i';
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    border: 1px solid var(--accent-dim);
-    color: var(--accent);
-    font-size: 0.65rem;
-    font-weight: 700;
-    font-style: italic;
-    flex-shrink: 0;
-    margin-top: 1px;
+    color: var(--text-dim);
+    line-height: 1.65;
 }
 
 /* === RESPONSIVE === */
-@media (max-width: 768px) {
-    .article-hero { margin: -2rem -1.25rem 0; height: 300px; }
-    .article-hero h1 { font-size: 1.4rem; }
-    .article-hero-content { padding: 2rem 1.25rem; }
-    .article-layout { grid-template-columns: 1fr; gap: 2rem; padding-top: 2rem; }
-    .sidebar { position: static; }
+@media (max-width: 900px) {
+    .a-hero { height: 360px; }
+    .a-layout { grid-template-columns: 1fr; gap: 2rem; }
+    .a-sidebar { position: static; }
+}
+@media (max-width: 480px) {
+    .a-hero { height: 280px; }
+    .a-hero-content { padding: 2rem 1.5rem; }
 }
 
     </style>
@@ -544,7 +533,10 @@
 <body>
     <nav>
         <div class="nav-inner">
-            <a href="https://nichtagentur.github.io/tennis-technique-blog/" class="nav-brand">AI Tennis Lab</a>
+            <a href="https://nichtagentur.github.io/tennis-technique-blog/" class="nav-brand">
+                <div class="nav-ball"></div>
+                <span class="nav-title">AI Tennis Lab</span>
+            </a>
             <ul class="nav-links">
                 <li><a href="https://nichtagentur.github.io/tennis-technique-blog/">Startseite</a></li>
                 <li><a href="https://nichtagentur.github.io/tennis-technique-blog/ueber-uns.html">Ueber uns</a></li>
@@ -554,227 +546,269 @@
 
     <main>
         
-<div class="article-hero">
+<div class="a-hero">
     
-    <img class="article-hero-img" src="https://nichtagentur.github.io/tennis-technique-blog/images/vorhand-topspin-technik.jpg" alt="Vorhand Topspin: Technik, Fehlerbilder und Uebungen">
+    <img class="a-hero-img" src="https://nichtagentur.github.io/tennis-technique-blog/images/vorhand-topspin-technik.jpg" alt="Vorhand Topspin: Technik, Fehlerbilder und Uebungen">
     
-    <div class="article-hero-overlay"></div>
-    <div class="article-hero-content">
-        <div class="article-hero-breadcrumb">
+    <div class="a-hero-overlay"></div>
+    <div class="a-hero-content">
+        <div class="a-hero-breadcrumb">
             <a href="https://nichtagentur.github.io/tennis-technique-blog/">Startseite</a>
             <span>/</span>
             <a href="https://nichtagentur.github.io/tennis-technique-blog/">Grundschlaege</a>
         </div>
-        <span class="badge">Grundschlaege</span>
+        <span class="tag">Grundschlaege</span>
         <h1>Vorhand Topspin: Technik, Fehlerbilder und Uebungen</h1>
     </div>
 </div>
 
-<div class="article-layout">
+<div class="a-layout">
     <div>
-        <div class="article-content">
+        <div class="a-prose">
             <h2>Einführung in die Vorhand Topspin</h2>
 
-<p>Die Vorhand Topspin gehört zu den fundamentalsten Grundschlägen im modernen Tennis und bildet die Basis für ein aggressives Spiel vom Grundline. Im Gegensatz zum Slice oder Flat-Drive erzeugt der Topspin durch eine nach oben gerichtete Schlägerbewegung eine Vorwärtsrotation des Balles, die zu einem kontrollierten, hohen Ballbogen mit Sicherheitsreserve führt. Nach der <strong>DTB-Methodik</strong> ist die Topspin-Vorhand bereits bei Anfängern zu unterrichten, da sie die beste Balance zwischen Kraft, Kontrolle und Sicherheit bietet.</p>
+<p>Die Vorhand Topspin ist einer der wichtigsten Grundschläge im modernen Tennis und bildet das Fundament für offensive Spielweise. Sie ermöglicht es dem Spieler, aggressiv zu agieren und gleichzeitig die Kontrolle über den Ball zu bewahren. Durch die Rotation des Balles können höhere Geschwindigkeiten erreicht werden, während die Flugkurve stabil bleibt. Dies macht den Topspin-Schlag sowohl für Anfänger als auch für Fortgeschrittene essentiell.</p>
 
-<p>Der Topspin ermöglicht Spielern, aggressive Schläge zu spielen und gleichzeitig den Ball sicher ins Feld zu bringen. Dies macht ihn zum bevorzugten Schlag bei modernen Profi-Spielern wie Rafa Nadal oder Novak Djokovic, deren Vorhand-Topspin-Geschwindigkeiten von 100+ km/h erreichen.</p>
+<p>Nach den Richtlinien des <strong>Deutschen Tennis Bundes (DTB)</strong> und der <strong>International Tennis Federation (ITF)</strong> ist die Topspin-Vorhand eine Grundtechnik, die früh erlernt und kontinuierlich verbessert werden sollte. Eine korrekte biomechanische Ausführung reduziert das Verletzungsrisiko und maximiert die Effizienz des Schlages.</p>
 
-<h2>Biomechanische Technikbeschreibung</h2>
+<h2>Biomechanische Technikbeschreibung der Vorhand Topspin</h2>
 
-<h3>Die kinematische Kette der Vorhand Topspin</h3>
+<h3>Ausgangsposition und Griffhaltung</h3>
 
-<p>Die Vorhand Topspin folgt dem Prinzip der <em>proximalen-zu-distalen Kraftübertragung</em> – Kraft wird von großen zu kleineren Körpersegmenten übertragen. Die optimale Bewegungssequenz nach ITF-Standard beginnt mit:</p>
+<p>Die korrekte Griffhaltung ist die Grundlage für einen effektiven Topspin. Der <em>Halbtonnengriff</em> oder <em>Ostgriff</em> wird für die klassische Topspin-Vorhand empfohlen. Der Unterarm sollte eine natürliche Extension aufweisen, ohne Überstreckung.</p>
+
+<ul>
+  <li>Standbein leicht breiter als schulterbreit positioniert</li>
+  <li>Knie in leichter Flexion (ca. 20-30°)</li>
+  <li>Körpergewicht auf den Fußballen verteilt</li>
+  <li>Schultern parallel zur Grundlinie ausgerichtet</li>
+</ul>
+
+<h3>Vorbereitungsphase (Preparation und Loading)</h3>
+
+<p>Die Vorbereitungsphase stellt die <strong>kinematische Kette</strong> in Spannung. Hierbei erfolgt eine koordinierte Bewegungsabfolge von proximal nach distal (von den großen Muskeln zum Schlagarm).</p>
+
+<p>Der <em>Unit Turn</em> ist eine essenzielle Bewegung, bei der Schultern und Hüften gemeinsam gegen den Ball rotieren:</p>
+
+<ul>
+  <li>Schulterrotation ca. 45-60° gegen die Bewegungsrichtung</li>
+  <li>Hüftrotation 30-45° in die gleiche Richtung wie Schultern</li>
+  <li>Racket wird auf Schulterhöhe in die Schlägerpräparation gebracht</li>
+  <li>Der Schläger bildet einen Winkel von ca. 90° zum Körper</li>
+</ul>
+
+<h3>Ausholbewegung (Backswing)</h3>
+
+<p>Im Backswing erfolgt die <strong>Pronation der Schulter</strong> (interne Rotation). Die Ellbogenposition sollte zwischen 80-100° liegen, um maximale Kraft aus der kinematischen Kette zu generieren.</p>
+
+<ul>
+  <li>Schlägerkopf wird nach unten und hinten geführt</li>
+  <li>Die sogenannte <em>"Drop and Load"</em>-Position wird erreicht</li>
+  <li>Hüftrotation wird durch die Gewichtsverlagerung auf das äußere Bein gestoppt</li>
+  <li>Schlägerkopf befindet sich unter Ballhöhe (ca. 30-50 cm unterhalb)</li>
+</ul>
+
+<h3>Beschleunigungsphase (Acceleration)</h3>
+
+<p>Die Beschleunigungsphase ist durch eine massive Energieübertragung von unten nach oben charakterisiert:</p>
 
 <ol>
-<li><strong>Standbein-Aktivierung:</strong> Breiter, stabiler Stand mit leicht gebeugten Knien (ca. 20-30° Knieflexion). Die Füße sollten schulterbreit auseinander stehen.</li>
-<li><strong>Rumpfrotation:</strong> Frühe Schulterwendung (Shoulder Turn) mit geschlossener oder neutraler Standfußposition. Die Hüfte bleibt zunächst stabil, folgt dann der Schulter.</li>
-<li><strong>ArmPosition (Preparation):</strong> Der Schläger wird zur Seite und leicht nach hinten-oben gebracht. Der Ellenbogen ist ca. 80-90° gebeugt.</li>
-<li><strong>Übergangsbewegung (Transition):</strong> Mit Gewichtsverlagerung vom hinteren zum vorderen Fuß beginnt die Vorwärtsbewegung des Schlägers.</li>
-<li><strong>Forward Swing und Contact:</strong> Der Schläger folgt einer aufwärts gerichteten Schlagfläche mit proniertem Unterarm.</li>
+  <li><strong>Beinstreckung:</strong> Die Knie werden kraftvoll gestreckt, was eine vertikale Körperbeschleunigung erzeugt</li>
+  <li><strong>Hüftrotation:</strong> Die Hüfte rotiert maximal nach vorne (ca. 90° zur Ausgangsposition)</li>
+  <li><strong>Schulterrotation:</strong> Nun folgt die externe Rotation des Schultergelenks</li>
+  <li><strong>Unterarmrotation:</strong> Die <em>Pronation</em> des Unterarms erzeugt die Topspin-Rotation</li>
+  <li><strong>Handgelenk:</strong> Eine leichte, aber natürliche Bewegung nach oben</li>
 </ol>
 
-<h3>Pronation und Topspin-Erzeugung</h3>
+<h3>Treffpunkt (Point of Contact)</h3>
 
-<p>Die <strong>Unterarmpronation</strong> ist entscheidend für den Topspin. Dies bedeutet die innere Rotation des Unterarms (supine-zu-proniere Bewegung), die durch die Supinator- und Pronatormuskulatur erzeugt wird. Im Kontaktpunkt (Contact Point) befindet sich der Schläger idealerweise <em>vor dem Körper</em> mit einer nach oben gerichteten Ausholbewegung (Low-to-High Trajectory).</p>
+<p>Der ideale Treffpunkt liegt <strong>leicht vor dem Körper</strong> auf der Höhe der Hüfte bis Brust:</p>
 
-<p>Die Kontaktfläche sollte sich am Äquator oder leicht über dem Äquator des Balls befinden, um maximalen Topspin ohne übermäßigen Höhenlauf zu erzeugen. Eine zu hohe Kontaktposition führt zu Netzfehlern, eine zu tiefe Position zu Unterarmspannung.</p>
-
-<h3>Follow-Through</h3>
-
-<p>Nach dem Kontakt setzt sich die Pronationsbewegung fort, der Schläger läuft diagonal über die gegenüberliegende Schulter. Der Schläger endet in einer hohen Position oberhalb der Schulter (Finish Position). Dies ist essentiell für die Verletzungsprävention und die volle Kraftentwicklung.</p>
-
-<h2>Häufige Fehlerbilder und deren Korrektur</h2>
-
-<h3>Fehler 1: Zu steile oder zu flache Schlägerbahn</h3>
-
-<p><strong>Problem:</strong> Wenn der Schläger zu steil (über 45°) oder zu flach (unter 20°) angewinkelt wird, entsteht entweder zu viel oder zu wenig Rotation.</p>
-
-<p><strong>Korrektur:</strong> Die optimale Schlägerbahn sollte ungefähr 30-40° von der Horizontalen aufwärts geneigt sein. Nutze Video-Analyse zur Kontrolle oder lasse den Spieler die Bewegung vor einem Spiegel durchführen.</p>
-
-<h3>Fehler 2: Zu früher oder zu später Kontaktpunkt</h3>
-
-<p><strong>Problem:</strong> Ein kontaktierter Ball hinter dem Körper führt zu weniger Kraft und Kontrollproblemen. Ein Ball, der zu weit vor dem Körper getroffen wird, kann nicht optimal proniert werden.</p>
-
-<p><strong>Korrektion:</strong> Der Kontaktpunkt sollte sich auf Schulterhöhe und ca. 30-40 cm vor dem Körper befinden. Trainiere dies mit „Shadow Strokes" (Schläge ohne Ball).</p>
-
-<h3>Fehler 3: Fehlende Gewichtsverlagerung</h3>
-
-<p><strong>Problem:</strong> Spieler, die statisch bleiben, können die kinematische Kette nicht vollständig nutzen.</p>
-
-<p><strong>Korrektur:</strong> Unterrichte die Gewichtsverlagerung von hinten nach vorne mit einem mini-Sprung (Split Step) vor der Bewegungseinleitung.</p>
-
-<h3>Fehler 4: Mangelnde Schulterwendung (Closed Stance)</h3>
-
-<p><strong>Problem:</strong> Zu offene Standfußposition reduziert die Rumpfrotation und damit die Kraftentwicklung.</p>
-
-<p><strong>Korrektur:</strong> Nach dem Split Step sollte die Schulter mindestens 70-90° zum Netz gedreht sein. Dies ist besonders bei schnellen Bällen entscheidend.</p>
-
-<h2>Strukturierte Trainingsübungen mit Progressionen</h2>
-
-<h3>Übung 1: Grundposition und Preparation (Anfänger)</h3>
-
-<p><strong>Ziel:</strong> Korrekte Ausgangsposition und Schlägerrückhol-Bewegung automatisieren.</p>
-
-<p><strong>Durchführung:</strong></p>
 <ul>
-<li>Spieler steht in Grundposition ohne Ball</li>
-<li>Nach Trainer-Signal: Split Step + Schulterwendung + Schlägerrückhol</li>
-<li>Halten der Position für 1-2 Sekunden</li>
-<li>10 Wiederholungen pro Seite (Forehand rechts/links)</li>
-<li>3 Sätze mit 30 Sekunden Pause</li>
+  <li>Schulterbreite vor dem Körperschwerpunkt</li>
+  <li>Auf der Höhe zwischen Hüfte und Brust</li>
+  <li>Schlägerkopf wird von unten nach oben über den Ball geführt</li>
+  <li>Kontaktwinkel ca. 45-60° zur Ballflugbahn</li>
 </ul>
 
-<p><strong>Progression:</strong> Nach 2 Wochen kann der Trainer leichte Bälle zuwerfen und der Spieler führt nur den Rückhol durch, ohne zu schlagen.</p>
+<h3>Ausholbewegung (Follow-Through)</h3>
 
-<h3>Übung 2: Shadow Strokes mit Rhythmusgebung</h3>
+<p>Der Follow-Through ist kein aktiver Schlag, sondern die Fortsetzung der Bewegungsenergien:</p>
 
-<p><strong>Ziel:</strong> Bewegungsabläufe ohne Ball trainieren und Timing optimieren.</p>
-
-<p><strong>Durchführung:</strong></p>
 <ul>
-<li>Spieler führt komplette Topspin-Bewegung ohne Ball durch</li>
-<li>Trainer zählt: „1 - Rückhol, 2 - Transition, 3 - Forward Swing, 4 - Contact, 5 - Follow-Through"</li>
-<li>15 Wiederholungen mit kontroliertem Tempo</li>
-<li>Danach 15 Wiederholungen in schnellerem Tempo (wie bei echtem Match)</li>
-<li>3 Sätze mit 1 Minute Pause</li>
+  <li>Schläger wird über die Schulter geführt (klassische <em>"Windshield Wiper"</em>-Bewegung)</li>
+  <li>Körpergewicht vollständig auf das vordere Standbein verlagert</li>
+  <li>Hüften und Schultern zeigen vollständig zum Netz</li>
+  <li>Recovery-Position wird eingenommen (kleine Split-Step)</li>
 </ul>
 
-<p><strong>Progression:</strong> Spieler führt die Bewegung mit geschlossenen Augen durch, um propriozeptives Feedback zu verbessern.</p>
+<h2>Häufige Fehlerbilder und deren Korrektionen</h2>
 
-<h3>Übung 3: Topspin vom Tee (Anfänger bis Fortgeschrittene)</h3>
+<h3>Fehler 1: Zu früher Treffpunkt (zu weit hinten)</h3>
 
-<p><strong>Ziel:</strong> Konsistentes Topspin-Spiel mit konstantem Kontaktpunkt entwickeln.</p>
+<p><strong>Symptom:</strong> Der Ball fliegt in das Netz oder zu hoch.</p>
 
-<p><strong>Durchführung:</strong></p>
-<ul>
-<li>Ball wird auf ein Tennis-Tee (ca. 80 cm Höhe) platziert</li>
-<li>Spieler schlägt 20 Bälle in korrekter Technik</li>
-<li>Ziel: Ball sollte über 1-Meter-Netz-Band fliegen und 60% der Grundlinie landen</li>
-<li>5 Sätze à 20 Bälle mit 1 Minute Pause</li>
-</ul>
+<p><strong>Ursache:</strong> Die Pronation des Unterarms findet nicht statt; der Schlag wird zu flach ausgeführt. Die kinematische Kette ist unterbrochen.</p>
 
-<p><strong>Progression:</strong> Nach 3 Wochen erfolgendes Tee-Training erhöhe die Anforderung auf Landen in der letzten 2/3 der Grundlinie (15 von 20 Bälle).</p>
+<p><strong>Korrektur:</strong> Trainer sollte den Spieler anweisen, den Treffpunkt mindestens eine Schulterbreite vor den Körper zu bringen. Videoanalyse hilft bei der Visualisierung.</p>
 
-<h3>Übung 4: Zugeworfene Bälle (Fortgeschrittene)</h3>
+<h3>Fehler 2: Keine Beinstreckung (Passivität in den Beinen)</h3>
 
-<p><strong>Ziel:</strong> Reaktion und Adaption an variable Ballhöhen trainieren.</p>
+<p><strong>Symptom:</strong> Der Schlag wirkt schwach und unkontrolliert; die Ballgeschwindigkeit ist gering.</p>
 
-<p><strong>Durchführung:</strong></p>
-<ul>
-<li>Trainer wirft von der Grundlinie aus 25 Bälle in verschiedenen Höhen zu (hüfthoch, schulterhoch, kopfhoch)</li>
-<li>Spieler schlägt jeden Ball mit Topspin-Technik</li>
-<li>Ziel: 20 von 25 Bälle ins Feld spielen</li>
-<li>3 Sätze à 25 Bälle mit 2 Minuten Pause</li>
-</ul>
+<p><strong>Ursache:</strong> Die Hüft- und Beinmuskulatur wird nicht ausreichend aktiviert. Die Energieübertragung startet nicht bei den größten Muskelgruppen.</p>
 
-<p><strong>Progression:</strong> Trainer wirft schneller zu (Ballgeschwindigkeit erhöhen), um schnellere Reaktionen zu fordern.</p>
+<p><strong>Korrektur:</strong> Gezieltes Training der Beinkraft durch Squats und explosives Strecktraining. Die kinematische Kette muss aktiv durch die Beine eingeleitet werden.</p>
 
-<h3>Übung 5: Rally-Training mit Topspinvorgabe (Fortgeschrittene)</h3>
+<h3>Fehler 3: Zu viel Handgelenkeinsatz</h3>
 
-<p><strong>Ziel:</strong> Topspin im Matchplay anwenden und Konsistenz unter Druck aufbauen.</p>
+<p><strong>Symptom:</strong> Unkontrollierte Schläge mit hoher Fehlerquote; Verletzungsgefahr im Unterarm.</p>
 
-<p><strong>Durchführung:</strong></p>
-<ul>
-<li>Trainer und Spieler spielen gegen einander von der Grundlinie</li>
-<li>Vorgabe: Jeder Schlag MUSS Topspin sein</li>
-<li>Rally solange spielen bis ein Fehler auftritt</li>
-<li>Ziel: 10 erfolgreiche Rallys hintereinander ohne Fehler</li>
-<li>Insgesamt 30 Minuten Training mit variablen Ballgeschwindigkeiten</li>
-</ul>
+<p><strong>Ursache:</strong> Das Handgelenk ist zu aktiv und übernimmt Funktionen, die der Arm ausführen sollte.</p>
 
-<p><strong>Progression:</strong> Trainer spielt aggressive Slice-Bälle, um Spieler zu zwingen, verstärkte Topspin-Technik einzusetzen.</p>
+<p><strong>Korrektion:</strong> Emphasis auf die Pronation des Unterarms legen, nicht des Handgelenks. Der Unterarm rotiert, das Handgelenk folgt dieser Bewegung passiv.</p>
 
-<h3>Übung 6: Zielzonentrianing auf der Grundlinie</h3>
+<h3>Fehler 4: Fehlende Hüftrotation (Upper Body Only)</h3>
 
-<p><strong>Ziel:</strong> Präzision und Kontrolle des Topspins entwickeln.</p>
+<p><strong>Symptom:</strong> Zu viel Einsatz von Schultern und Armen; Belastung auf dem Ellbogen und der Schulter.</p>
+
+<p><strong>Ursache:</strong> Die Hüfte wird nicht aktiv in die Bewegung eingebunden.</p>
+
+<p><strong>Korrektur:</strong> Drillübungen spezifisch für die Hip Initiation durchführen. Die Hüfte sollte die Schulterdrehung initiieren, nicht umgekehrt.</p>
+
+<h2>Trainingsübungen für die Vorhand Topspin</h2>
+
+<h3>Übung 1: Grundschlag aus dem Korb (Basket Drills)</h3>
+
+<p><strong>Ziel:</strong> Technikverbesserung in kontrollierten Bedingungen</p>
 
 <p><strong>Durchführung:</strong></p>
+<ol>
+  <li>Trainer oder Ballmaschine wirft Bälle aus einem Korb auf die Höhe der Hüfte</li>
+  <li>Spieler führt kompletten Topspin-Schlag aus</li>
+  <li>Ball wird in eine Zielzone auf der gegenüberliegenden Seite gespielt</li>
+</ol>
+
+<p><strong>Empfohlene Wiederholungen:</strong></p>
 <ul>
-<li>Markiere drei Zielzonen auf der gegnerischen Grundlinie (tiefe Zone, mittlere Zone, kurze Zone)</li>
-<li>Spieler schlägt 30 Bälle mit Fokus auf die tiefe Zone (20 Bälle)</li>
-<li>Dann 10 Bälle in die mittlere Zone mit mehr Risiko</li>
-<li>Ziel: Mindestens 15/20 Bälle in der Zielzone</li>
-<li>3 Durchgänge mit 2 Minuten Pause</li>
+  <li>Anfänger: 2 Sätze à 15 Wiederholungen mit Fokus auf Technik</li>
+  <li>Fortgeschrittene: 3 Sätze à 20 Wiederholungen mit variierenden Ballhöhen</li>
+  <li>Progression: Ballhöhen variieren (Hüfte, Brust, Schulter)</li>
 </ul>
 
-<h2>Sicherheits- und Präventionstipps</h2>
+<h3>Übung 2: Cross-Court Rallies (Diagonal Trainingsspiele)</h3>
+
+<p><strong>Ziel:</strong> Automatisierung unter Spielbedingungen</p>
+
+<p><strong>Durchführung:</strong></p>
+<ol>
+  <li>Beide Spieler spielen diagonal (Cross-Court)</li>
+  <li>Focus auf konsistente Topsin-Schläge</li>
+  <li>Ziel ist, eine Rally von mindestens 5-10 Schlägen zu halten</li>
+</ol>
+
+<p><strong>Empfohlene Wiederholungen:</strong></p>
+<ul>
+  <li>Anfänger: 4-5 Sätze à 5 Minuten Rallys</li>
+  <li>Fortgeschrittene: 6-8 Sätze à 8 Minuten Rallys mit progressiv höherer Intensität</li>
+</ul>
+
+<h3>Übung 3: Hip Rotation Drill (Spezifisches Hüft-Training)</h3>
+
+<p><strong>Ziel:</strong> Verbesserung der Hip Initiation und kinematischen Kette</p>
+
+<p><strong>Durchführung:</strong></p>
+<ol>
+  <li>Spieler steht im 45°-Winkel zur Grundlinie</li>
+  <li>Ohne Schlag: Explosive Hüftrotation durchführen (Knees bent, Hüfte rotiert)</li>
+  <li>Mit Schlag: Vorhand-Topspin mit Maximum Hip Drive</li>
+</ol>
+
+<p><strong>Empfohlene Wiederholungen:</strong></p>
+<ul>
+  <li>Anfänger: 3 Sätze à 12 Wiederholungen ohne Ball, dann 2 Sätze à 10 mit Ball</li>
+  <li>Fortgeschrittene: 3 Sätze à 20 Wiederholungen ohne Ball, dann 3 Sätze à 15 mit Ball</li>
+</ul>
+
+<h3>Übung 4: Pronation-Isolation (Unterarm-Training)</h3>
+
+<p><strong>Ziel:</strong> Isolierte Verbesserung der Unterarm-Pronation</p>
+
+<p><strong>Durchführung:</strong></p>
+<ol>
+  <li>Spieler hält den Schläger mit ausgestrecktem Arm auf Brusthöhe</li>
+  <li>Von unten nach oben wird der Schläger geführt mit maximaler Pronation</li>
+  <li>Arm bleibt gestreckt; nur der Unterarm rotiert</li>
+</ol>
+
+<p><strong>Empfohlene Wiederholungen:</strong></p>
+<ul>
+  <li>Anfänger: 2 Sätze à 15 Wiederholungen</li>
+  <li>Fortgeschrittene: 3 Sätze à 20 Wiederholungen mit leichter Zusatzbelastung (leichter Ball oder Gewicht)</li>
+</ul>
+
+<h3>Übung 5: Progression Balls (Ballmaschinen-Training)</h3>
+
+<p><strong>Ziel:</strong> Anpassung an variable Bedingungen mit progressiver Intensität</p>
+
+<p><strong>Durchführung:</strong></p>
+<ol>
+  <li>Phase 1: Langsame Bälle (40-60 km/h) von der Ballmaschine</li>
+  <li>Phase 2: Mittlere Geschwindigkeit (60-80 km/h)</li>
+  <li>Phase 3: Hohe Geschwindigkeit (80-100 km/h)</li>
+  <li>Phase 4: Variable Höhen und Positionen</li>
+</ol>
+
+<p><strong>Empfohlene Wiederholungen:</strong></p>
+<ul>
+  <li>Anfänger: 2 Sätze je Phase à 10 Wiederholungen</li>
+  <li>Fortgeschrittene: 3 Sätze je Phase à 15 Wiederholungen</li>
+</ul>
+
+<h2>Sicherheitstipps und Prävention</h2>
 
 <h3>Verletzungsprävention</h3>
 
-<p>Die wiederholte Pronationsbewegung belastet besonders:</p>
+<p>Die Vorhand Topspin ist mit hohen biomechanischen Belastungen verbunden. Zur Vermeidung von Verletzungen sollten folgende Maßnahmen beachtet werden:</p>
 
 <ul>
-<li><strong>Ellenbogengelenk:</strong> Risiko für Tennisellenbogen (Lateral Epicondylitis). Regelmäßiges Dehnen der Unterarmflexoren und -extensoren ist essentiell.</li>
-<li><strong>Rotatorenmanschette:</strong> Die innere Schulterrotation beim Topspin kann zu Überlasten führen. Aufwärm-Übungen mit Theraband sind empfohlen.</li>
-<li><strong>Lumbalwirbelsäule:</strong> Die Rumpfrotation setzt die Lendenwirbel unter Stress. Korrekte Technik mit stabiler Rumpfmuskulatur ist notwendig.</li>
-</ul>
-
-<h3>Aufwärm-Empfehlungen vor dem Training</h3>
-
-<ul>
-<li>5-10 Minuten leichtes Cardio-Training (Joggen, Springseil)</li>
-<li>Dynamische Dehnübungen: Armkreise, Torso-Rotation, Bein-Swings (10 Wiederholungen pro Seite)</li>
-<li>Aktivierungsübungen mit Theraband für Rotatorenmanschette (3 Sätze à 15 Wiederholungen)</li>
-<li>Langsame Technik-Durchläufe ohne Ball (10 x auf jeder Seite)</li>
-</ul>
-
-<h3>Regeln für altersgerechtes Training</h3>
-
-<p>Bei jungen Spielern (unter 14 Jahren) sollte das Trainingsvolumen begrenzt werden. Die DTB empfiehlt maximal 3 Stunden intensives Grundschlag-Training pro Woche, um Überlastungsverletzungen zu vermeiden.</p>
-
-<h2>Fazit</h2>
-
-<p>Die Vorhand Topspin ist ein erlernbarer, technisch komplexer Grundschlag, der mit systematischem Training und biomechanischem Verständnis deutlich verbessert werden kann. Die Progression von Shadow Strokes über Tee-Training zu Rally-Drills ermöglicht es Trainern, Spieler aller Niveaus effektiv zu unterrichten. Durch die Beachtung häufiger Fehlerbilder und regelmäßige Verletzungsprävention kann ein nachhaltiger Trainingsfortschritt erreicht werden.</p>
+  <li><strong>Aufwärmen:</strong> Mindestens 10-15 Minuten dynamisches Aufwärmen vor dem Training mit Fokus auf Schulter und Unterarm</li>
+  <li><strong>Progression:</strong> Trainingsintensität graduell steigern; nicht mehr als 10% pro Woche intensivieren</li>
+  <li><strong>Regeneration:</strong> Mindestens einen Tag Pause zwischen intensiven Trainingseinheiten</li>
+  <li><strong>Technik vor Kraft:</strong> Korrekte Technik hat Vorrang vor Geschwindigkeit und Power</li>
+  <li><strong>Schlägergewicht:</strong> Für Anfänger sollten leichtere Schläger (270-290g) verwendet werden</li>
         </div>
 
-        <div class="author-box">
-            <div class="author-icon">TL</div>
+        <div class="a-author">
+            <div class="a-author-avatar">TL</div>
             <div>
-                <div class="author-name">AI Tennis Lab</div>
-                <div class="author-desc">KI-gestuetzte Analyse -- Biomechanisch fundiert, praxisnah aufbereitet fuer Tennistrainer.</div>
+                <div class="a-author-name">AI Tennis Lab</div>
+                <div class="a-author-bio">KI-gestuetzte Analyse -- Biomechanisch fundiert, praxisnah aufbereitet fuer Tennistrainer.</div>
             </div>
         </div>
 
-        <div class="ai-disclosure">
-            <span>Dieser Inhalt wurde mit KI erstellt und dient als Trainingsressource. Fuer individuelles Training wenden Sie sich an einen zertifizierten Tennistrainer.</span>
+        <div class="a-disclosure">
+            Dieser Inhalt wurde mit KI erstellt und dient als Trainingsressource. Fuer individuelles Training wenden Sie sich an einen zertifizierten Tennistrainer.
         </div>
     </div>
 
-    <aside class="sidebar">
+    <aside class="a-sidebar">
         
-        <div class="sidebar-section">
-            <div class="sidebar-title">Details</div>
-            <div class="sidebar-detail">
-                <span class="sidebar-detail-label">Kategorie</span>
-                <span class="sidebar-detail-value">Grundschlaege</span>
-            </div>
-            <div class="sidebar-detail">
-                <span class="sidebar-detail-label">Niveau</span>
-                <span class="sidebar-detail-value">Anfaenger bis Fortgeschrittene</span>
-            </div>
-            <div class="sidebar-detail">
-                <span class="sidebar-detail-label">Datum</span>
-                <span class="sidebar-detail-value">26.02.2026</span>
+        <div class="a-sidebar-card">
+            <div class="a-sidebar-header">Details</div>
+            <div class="a-sidebar-body">
+                <div class="a-sidebar-row">
+                    <span class="a-sidebar-row-label">Kategorie</span>
+                    <span class="a-sidebar-row-val">Grundschlaege</span>
+                </div>
+                <div class="a-sidebar-row">
+                    <span class="a-sidebar-row-label">Niveau</span>
+                    <span class="a-sidebar-row-val">Anfaenger bis Fortgeschrittene</span>
+                </div>
+                <div class="a-sidebar-row">
+                    <span class="a-sidebar-row-label">Datum</span>
+                    <span class="a-sidebar-row-val">26.02.2026</span>
+                </div>
             </div>
         </div>
     </aside>
@@ -784,16 +818,20 @@
 
     <footer>
         <div class="footer-inner">
-            <div class="footer-brand">AI Tennis Lab</div>
-            <ul class="footer-links">
-                <li><a href="https://nichtagentur.github.io/tennis-technique-blog/">Startseite</a></li>
-                <li><a href="https://nichtagentur.github.io/tennis-technique-blog/ueber-uns.html">Ueber uns</a></li>
-                <li><a href="https://nichtagentur.github.io/tennis-technique-blog/sitemap.xml">Sitemap</a></li>
-            </ul>
-            <div class="footer-right">
-                <p class="footer-disclosure">Dieser Inhalt wurde mit KI erstellt und dient als Trainingsressource. Fuer individuelles Training wenden Sie sich an einen zertifizierten Tennistrainer.</p>
-                <p class="footer-copy">&copy; 2026 AI Tennis Lab | <a href="https://cybertime.at">cybertime</a></p>
+            <div class="footer-col">
+                <h4>Navigation</h4>
+                <a href="https://nichtagentur.github.io/tennis-technique-blog/">Startseite</a>
+                <a href="https://nichtagentur.github.io/tennis-technique-blog/ueber-uns.html">Ueber uns</a>
+                <a href="https://nichtagentur.github.io/tennis-technique-blog/sitemap.xml">Sitemap</a>
             </div>
+            <div class="footer-col">
+                <h4>Hinweis</h4>
+                <p class="footer-disclosure">Dieser Inhalt wurde mit KI erstellt und dient als Trainingsressource. Fuer individuelles Training wenden Sie sich an einen zertifizierten Tennistrainer.</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span class="footer-copy">&copy; 2026 AI Tennis Lab</span>
+            <span class="footer-copy">Ein Projekt von <a href="https://cybertime.at">cybertime</a></span>
         </div>
     </footer>
 </body>

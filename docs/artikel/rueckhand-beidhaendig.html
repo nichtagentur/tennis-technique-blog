@@ -43,500 +43,489 @@
 
 
     <style>
-        /* === RESET & VARIABLES === */
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
         :root {
-            --bg-deep: #050505;
-            --bg: #0a0a0a;
-            --bg-elevated: #111113;
-            --bg-card: #141416;
-            --bg-card-hover: #1a1a1e;
-            --surface: #1e1e22;
-            --border: #222225;
-            --border-light: #2a2a2e;
-            --accent: #00e87b;
-            --accent-bright: #00ff88;
-            --accent-dim: #00b862;
-            --accent-glow: rgba(0, 232, 123, 0.15);
-            --accent-glow-strong: rgba(0, 232, 123, 0.3);
-            --warm: #f0c040;
-            --text: #eaeaea;
-            --text-secondary: #b0b0b4;
-            --text-muted: #6e6e74;
-            --radius: 12px;
-            --radius-sm: 6px;
-            --radius-lg: 20px;
+            --night: #08090f;
+            --night-up: #0e1018;
+            --night-card: #12141e;
+            --night-surface: #181a26;
+            --border: #1f2233;
+            --border-hover: #2a2d42;
+
+            --ball: #d4f73f;
+            --ball-dim: #b0cc2e;
+            --ball-glow: rgba(212, 247, 63, 0.12);
+            --ball-glow-strong: rgba(212, 247, 63, 0.25);
+            --clay: #c94a3a;
+            --court-line: rgba(212, 247, 63, 0.04);
+
+            --text: #e8eaed;
+            --text-mid: #9da1b0;
+            --text-dim: #5c6078;
+
+            --serif: Georgia, 'Times New Roman', 'Noto Serif', serif;
+            --sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --mono: 'SF Mono', SFMono-Regular, ui-monospace, 'Cascadia Code', Menlo, monospace;
+
+            --radius: 4px;
+            --ease: cubic-bezier(0.23, 1, 0.32, 1);
         }
 
-        /* === BASE === */
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-            background: var(--bg-deep);
+            font-family: var(--sans);
+            background: var(--night);
             color: var(--text);
-            line-height: 1.65;
+            line-height: 1.6;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
         }
 
-        /* Grain overlay on body */
-        body::before {
+        /* Court-line texture overlay */
+        body::after {
             content: '';
             position: fixed;
             inset: 0;
             z-index: 9999;
             pointer-events: none;
-            opacity: 0.025;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-            background-repeat: repeat;
-            background-size: 256px 256px;
+            background:
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 120px,
+                    var(--court-line) 120px,
+                    var(--court-line) 121px
+                );
+            opacity: 0.5;
         }
 
-        a { color: var(--accent); text-decoration: none; transition: color 0.25s ease; }
-        a:hover { color: var(--accent-bright); }
+        a { color: var(--ball); text-decoration: none; transition: all 0.3s var(--ease); }
+        a:hover { color: #e6ff6b; }
 
-        /* === NAVIGATION === */
+        /* === NAV === */
         nav {
-            background: rgba(10, 10, 10, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            padding: 0 2.5rem;
+            background: var(--night);
+            padding: 0 clamp(1.5rem, 4vw, 3rem);
             position: sticky;
             top: 0;
             z-index: 100;
-            border-bottom: 1px solid var(--border);
+            height: 72px;
+            display: flex;
+            align-items: center;
         }
         nav::after {
             content: '';
             position: absolute;
-            bottom: -1px;
+            bottom: 0;
             left: 0;
             right: 0;
             height: 1px;
-            background: linear-gradient(90deg, transparent 0%, var(--accent) 20%, var(--accent-bright) 50%, var(--accent) 80%, transparent 100%);
-            opacity: 0.6;
+            background: var(--border);
         }
         .nav-inner {
-            max-width: 1280px;
+            max-width: 1400px;
+            width: 100%;
             margin: 0 auto;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            height: 64px;
         }
         .nav-brand {
-            font-size: 0.85rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 5px;
-            color: var(--text);
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            transition: color 0.25s ease;
+            gap: 0.85rem;
+            color: var(--text);
+            transition: all 0.3s var(--ease);
         }
-        .nav-brand:hover { color: var(--accent); }
-        .nav-brand::before {
-            content: '';
-            display: inline-block;
-            width: 8px;
-            height: 8px;
+        .nav-brand:hover { color: var(--ball); }
+        /* CSS tennis ball */
+        .nav-ball {
+            width: 22px;
+            height: 22px;
             border-radius: 50%;
-            background: var(--accent);
-            box-shadow: 0 0 8px var(--accent-glow-strong), 0 0 20px var(--accent-glow);
-            animation: pulse-dot 3s ease-in-out infinite;
-        }
-        @keyframes pulse-dot {
-            0%, 100% { opacity: 1; box-shadow: 0 0 8px var(--accent-glow-strong), 0 0 20px var(--accent-glow); }
-            50% { opacity: 0.6; box-shadow: 0 0 4px var(--accent-glow); }
-        }
-        .nav-links { display: flex; gap: 2rem; list-style: none; align-items: center; }
-        .nav-links a {
-            color: var(--text-muted);
-            font-size: 0.72rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-weight: 600;
-            transition: color 0.25s ease;
+            background: var(--ball);
             position: relative;
-            padding: 0.25rem 0;
+            flex-shrink: 0;
+            box-shadow: 0 0 12px var(--ball-glow-strong);
         }
-        .nav-links a::after {
+        .nav-ball::before {
             content: '';
             position: absolute;
-            bottom: -2px;
+            inset: 3px;
+            border-radius: 50%;
+            border: 1.5px solid rgba(8,9,15,0.3);
+            clip-path: ellipse(35% 50% at 50% 50%);
+        }
+        .nav-title {
+            font-family: var(--serif);
+            font-size: 1.15rem;
+            font-weight: 700;
+            font-style: italic;
+            letter-spacing: 0.02em;
+        }
+        .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+        .nav-links a {
+            color: var(--text-dim);
+            font-family: var(--mono);
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 0.3rem 0;
+            position: relative;
+        }
+        .nav-links a::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
             left: 0;
-            width: 0;
+            width: 100%;
             height: 1px;
-            background: var(--accent);
-            transition: width 0.3s ease;
+            background: var(--ball);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.4s var(--ease);
         }
         .nav-links a:hover { color: var(--text); }
-        .nav-links a:hover::after { width: 100%; }
+        .nav-links a:hover::before { transform: scaleX(1); transform-origin: left; }
 
         /* === MAIN === */
         main {
             flex: 1;
             width: 100%;
-            max-width: 1280px;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 3rem 2.5rem;
+            padding: 0 clamp(1.5rem, 4vw, 3rem);
         }
 
         /* === FOOTER === */
         footer {
-            background: var(--bg);
-            border-top: 1px solid var(--border);
-            padding: 3rem 2.5rem;
             margin-top: auto;
-            position: relative;
-        }
-        footer::before {
-            content: '';
-            position: absolute;
-            top: -1px;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--accent-dim), transparent);
-            opacity: 0.3;
+            border-top: 1px solid var(--border);
+            padding: 0 clamp(1.5rem, 4vw, 3rem);
         }
         .footer-inner {
-            max-width: 1280px;
+            max-width: 1400px;
             margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr auto 1fr;
-            align-items: center;
-            gap: 2rem;
-        }
-        .footer-brand {
-            font-size: 0.7rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 4px;
-            color: var(--text-muted);
-        }
-        .footer-links {
+            padding: 3rem 0 2rem;
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
+            align-items: flex-start;
             gap: 2rem;
-            list-style: none;
         }
-        .footer-links a {
-            color: var(--text-muted);
-            font-size: 0.72rem;
+        .footer-col h4 {
+            font-family: var(--mono);
+            font-size: 0.6rem;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
-            font-weight: 500;
-            transition: color 0.25s;
+            letter-spacing: 3px;
+            color: var(--text-dim);
+            margin-bottom: 1rem;
         }
-        .footer-links a:hover { color: var(--accent); }
-        .footer-right { text-align: right; }
+        .footer-col a, .footer-col p {
+            display: block;
+            font-size: 0.82rem;
+            color: var(--text-mid);
+            margin-bottom: 0.4rem;
+            line-height: 1.5;
+        }
+        .footer-col a:hover { color: var(--ball); }
         .footer-disclosure {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            max-width: 400px;
-            margin-left: auto;
+            font-size: 0.72rem;
+            color: var(--text-dim);
             line-height: 1.6;
+            max-width: 380px;
+        }
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.5rem 0;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         .footer-copy {
-            font-size: 0.65rem;
-            color: #444;
-            margin-top: 0.5rem;
+            font-family: var(--mono);
+            font-size: 0.62rem;
+            color: var(--text-dim);
+            letter-spacing: 1px;
         }
+        .footer-copy a { color: var(--text-dim); }
+        .footer-copy a:hover { color: var(--ball); }
 
-        /* === SHARED COMPONENTS === */
-        .badge {
+        /* === SHARED === */
+        .tag {
             display: inline-block;
-            font-size: 0.6rem;
-            font-weight: 700;
+            font-family: var(--mono);
+            font-size: 0.58rem;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            padding: 0.3rem 0.8rem;
+            letter-spacing: 2.5px;
+            padding: 0.35rem 0.9rem;
+            border: 1px solid var(--ball-dim);
+            color: var(--ball);
             border-radius: 2px;
-            border: 1px solid var(--accent-dim);
-            color: var(--accent);
-            background: rgba(0, 232, 123, 0.06);
+            transition: all 0.3s var(--ease);
         }
-        .badge--filled {
-            background: var(--accent);
-            color: var(--bg-deep);
-            border-color: var(--accent);
+        .tag:hover, .tag--active {
+            background: var(--ball);
+            color: var(--night);
         }
 
-        /* Decorative court line */
-        .court-line {
-            width: 40px;
-            height: 1px;
-            background: var(--accent);
-            display: inline-block;
-            opacity: 0.5;
+        .overline {
+            font-family: var(--mono);
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--text-dim);
         }
 
-        /* Fade-in animation */
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
+        /* Animations */
+        @keyframes rise {
+            from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
         }
+        @keyframes sweepIn {
+            from { transform: scaleX(0); }
+            to { transform: scaleX(1); }
+        }
 
         /* === RESPONSIVE === */
         @media (max-width: 768px) {
-            nav { padding: 0 1.25rem; }
-            main { padding: 2rem 1.25rem; }
-            footer { padding: 2rem 1.25rem; }
-            .footer-inner { grid-template-columns: 1fr; text-align: center; gap: 1rem; }
-            .footer-right { text-align: center; }
-            .footer-disclosure { margin: 0 auto; }
+            nav { height: 60px; }
+            .nav-title { font-size: 1rem; }
+            .nav-links { gap: 1.5rem; }
+            .footer-inner { flex-direction: column; }
         }
         @media (max-width: 480px) {
-            .nav-inner { height: auto; padding: 0.75rem 0; flex-direction: column; gap: 0.5rem; }
-            .nav-links { gap: 1.25rem; }
+            .nav-inner { flex-wrap: wrap; gap: 0.5rem; }
+            .nav-links a { font-size: 0.6rem; letter-spacing: 1.5px; }
         }
+
         
 /* === ARTICLE HERO === */
-.article-hero {
+.a-hero {
     position: relative;
-    margin: -3rem -2.5rem 0;
-    height: 420px;
+    height: 480px;
     overflow: hidden;
     display: flex;
     align-items: flex-end;
+    margin-bottom: 0;
 }
-.article-hero-img {
+.a-hero-img {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 8s ease;
+    transition: transform 12s linear;
 }
-.article-hero:hover .article-hero-img {
-    transform: scale(1.03);
-}
-.article-hero-overlay {
+.a-hero:hover .a-hero-img { transform: scale(1.04); }
+.a-hero-overlay {
     position: absolute;
     inset: 0;
     background:
-        linear-gradient(to bottom, rgba(5,5,5,0.1) 0%, rgba(5,5,5,0.5) 50%, rgba(5,5,5,0.95) 85%, var(--bg-deep) 100%),
-        linear-gradient(to right, rgba(5,5,5,0.6) 0%, transparent 60%);
+        linear-gradient(180deg, rgba(8,9,15,0) 0%, rgba(8,9,15,0.4) 40%, rgba(8,9,15,0.92) 75%, var(--night) 100%),
+        linear-gradient(90deg, rgba(8,9,15,0.7) 0%, rgba(8,9,15,0) 50%);
 }
-.article-hero-content {
+.a-hero-content {
     position: relative;
     z-index: 1;
-    padding: 3rem 2.5rem;
-    max-width: 1280px;
+    padding: 3rem clamp(1.5rem, 4vw, 3rem);
+    max-width: 1400px;
     margin: 0 auto;
     width: 100%;
-    animation: fadeInUp 0.6s ease both;
+    animation: rise 0.6s var(--ease) both;
 }
-.article-hero-breadcrumb {
-    font-size: 0.65rem;
-    color: var(--text-muted);
-    letter-spacing: 1px;
-    margin-bottom: 1rem;
+.a-hero-breadcrumb {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    color: var(--text-dim);
+    letter-spacing: 1.5px;
+    margin-bottom: 1.25rem;
 }
-.article-hero-breadcrumb a { color: var(--text-muted); }
-.article-hero-breadcrumb a:hover { color: var(--accent); }
-.article-hero-breadcrumb span { color: #444; margin: 0 0.5rem; }
-.article-hero h1 {
-    font-size: clamp(1.6rem, 4vw, 2.4rem);
-    font-weight: 800;
+.a-hero-breadcrumb a { color: var(--text-dim); }
+.a-hero-breadcrumb a:hover { color: var(--ball); }
+.a-hero-breadcrumb span { color: #333; margin: 0 0.6rem; }
+.a-hero h1 {
+    font-family: var(--serif);
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 700;
     line-height: 1.15;
     margin-top: 0.75rem;
-    max-width: 700px;
+    max-width: 720px;
     letter-spacing: -0.02em;
+    animation: rise 0.6s var(--ease) 0.1s both;
+}
+
+/* Diagonal separator */
+.a-separator {
+    height: 50px;
+    background: var(--night);
+    margin-top: -50px;
+    position: relative;
+    z-index: 2;
+    clip-path: polygon(0 0, 100% 100%, 100% 100%, 0 100%);
 }
 
 /* === ARTICLE LAYOUT === */
-.article-layout {
+.a-layout {
     display: grid;
-    grid-template-columns: 1fr 300px;
-    gap: 3rem;
+    grid-template-columns: 1fr 320px;
+    gap: 3.5rem;
     align-items: start;
-    padding-top: 3rem;
+    padding: 3rem 0;
 }
 
-/* === ARTICLE CONTENT === */
-.article-content {
-    font-size: 1.05rem;
-    line-height: 1.85;
-    color: var(--text-secondary);
+/* === ARTICLE PROSE === */
+.a-prose {
+    font-size: 1.08rem;
+    line-height: 1.9;
+    color: var(--text-mid);
     animation: fadeIn 0.6s ease 0.2s both;
 }
-.article-content h2 {
-    font-size: 1.25rem;
+.a-prose h2 {
+    font-family: var(--serif);
+    font-size: 1.35rem;
     font-weight: 700;
+    font-style: italic;
     color: var(--text);
     margin: 3rem 0 1.25rem;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
+    padding-left: 1.25rem;
+    border-left: 3px solid var(--ball);
+    line-height: 1.3;
 }
-.article-content h2::before {
-    content: '';
-    width: 3px;
-    height: 1.25em;
-    background: var(--accent);
-    border-radius: 2px;
-    flex-shrink: 0;
-}
-.article-content h3 {
+.a-prose h3 {
     font-size: 1.05rem;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--text);
-    margin: 2rem 0 0.75rem;
+    margin: 2.25rem 0 0.75rem;
     letter-spacing: 0.02em;
 }
-.article-content p { margin-bottom: 1.25rem; }
-.article-content ul, .article-content ol {
-    margin: 0.75rem 0 1.5rem 1.25rem;
+.a-prose p { margin-bottom: 1.35rem; }
+.a-prose ul, .a-prose ol {
+    margin: 0.5rem 0 1.5rem 1.5rem;
 }
-.article-content li {
-    margin-bottom: 0.5rem;
-    padding-left: 0.5rem;
+.a-prose li {
+    margin-bottom: 0.6rem;
+    padding-left: 0.35rem;
 }
-.article-content strong { color: var(--text); }
-.article-content em { color: var(--accent); font-style: normal; }
+.a-prose li::marker { color: var(--ball-dim); }
+.a-prose strong { color: var(--text); font-weight: 600; }
+.a-prose em { color: var(--ball); font-style: italic; }
+.a-prose a { border-bottom: 1px solid var(--ball-dim); }
+.a-prose a:hover { border-color: var(--ball); }
 
 /* === SIDEBAR === */
-.sidebar {
+.a-sidebar {
     position: sticky;
-    top: 84px;
+    top: 90px;
     animation: fadeIn 0.6s ease 0.3s both;
 }
-.sidebar-section {
-    background: var(--bg-card);
+.a-sidebar-card {
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 1.5rem;
-    margin-bottom: 1.25rem;
-    position: relative;
     overflow: hidden;
+    margin-bottom: 1.5rem;
 }
-.sidebar-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--accent), transparent);
-    opacity: 0.4;
-}
-.sidebar-title {
-    font-size: 0.65rem;
-    font-weight: 700;
+.a-sidebar-header {
+    background: var(--night-card);
+    padding: 1rem 1.25rem;
+    font-family: var(--mono);
+    font-size: 0.58rem;
     text-transform: uppercase;
-    letter-spacing: 2.5px;
-    color: var(--text-muted);
-    margin-bottom: 1.25rem;
-    padding-bottom: 0.75rem;
+    letter-spacing: 3px;
+    color: var(--text-dim);
     border-bottom: 1px solid var(--border);
 }
-.sidebar-link {
+.a-sidebar-body { padding: 0.25rem 0; }
+.a-sidebar-link {
     display: block;
-    padding: 0.6rem 0;
+    padding: 0.8rem 1.25rem;
     font-size: 0.88rem;
-    color: var(--text-secondary);
+    color: var(--text-mid);
     border-bottom: 1px solid var(--border);
-    transition: all 0.25s ease;
+    transition: all 0.3s var(--ease);
     line-height: 1.4;
 }
-.sidebar-link:last-child { border-bottom: none; }
-.sidebar-link:hover {
-    color: var(--accent);
-    padding-left: 0.5rem;
+.a-sidebar-link:last-child { border-bottom: none; }
+.a-sidebar-link:hover {
+    color: var(--ball);
+    background: rgba(212, 247, 63, 0.02);
+    padding-left: 1.5rem;
 }
-.sidebar-detail {
+.a-sidebar-row {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    padding: 0.5rem 0;
+    padding: 0.7rem 1.25rem;
     border-bottom: 1px solid var(--border);
     font-size: 0.82rem;
 }
-.sidebar-detail:last-child { border-bottom: none; }
-.sidebar-detail-label { color: var(--text-muted); }
-.sidebar-detail-value { color: var(--text-secondary); font-weight: 500; }
+.a-sidebar-row:last-child { border-bottom: none; }
+.a-sidebar-row-label { color: var(--text-dim); font-family: var(--mono); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1.5px; }
+.a-sidebar-row-val { color: var(--text-mid); }
 
-/* === AUTHOR BOX === */
-.author-box {
-    background: var(--bg-card);
+/* === AUTHOR === */
+.a-author {
+    margin-top: 3.5rem;
+    padding: 2rem;
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 1.75rem;
-    margin-top: 3rem;
     display: flex;
+    gap: 1.5rem;
     align-items: center;
-    gap: 1.25rem;
+    transition: border-color 0.3s var(--ease);
 }
-.author-icon {
-    width: 48px;
-    height: 48px;
+.a-author:hover { border-color: var(--border-hover); }
+.a-author-avatar {
+    width: 52px;
+    height: 52px;
     border-radius: 50%;
-    background: linear-gradient(135deg, var(--accent-dim), var(--accent));
+    background: var(--ball);
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    font-size: 1.2rem;
-    font-weight: 800;
-    color: var(--bg-deep);
-}
-.author-name {
+    font-family: var(--serif);
+    font-size: 1.1rem;
     font-weight: 700;
-    font-size: 0.95rem;
+    font-style: italic;
+    color: var(--night);
+}
+.a-author-name {
+    font-family: var(--serif);
+    font-size: 1rem;
+    font-weight: 700;
     color: var(--text);
     margin-bottom: 0.2rem;
 }
-.author-desc { font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; }
+.a-author-bio { font-size: 0.82rem; color: var(--text-dim); line-height: 1.5; }
 
-/* === AI DISCLOSURE === */
-.ai-disclosure {
-    background: rgba(0, 232, 123, 0.03);
-    border: 1px solid rgba(0, 232, 123, 0.1);
-    border-radius: var(--radius);
-    padding: 1.25rem 1.5rem;
+/* === DISCLOSURE === */
+.a-disclosure {
     margin-top: 1.25rem;
+    padding: 1.25rem 1.5rem;
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--clay);
+    border-radius: var(--radius);
     font-size: 0.8rem;
-    color: var(--text-muted);
-    line-height: 1.6;
-    display: flex;
-    gap: 0.75rem;
-    align-items: flex-start;
-}
-.ai-disclosure::before {
-    content: 'i';
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    border: 1px solid var(--accent-dim);
-    color: var(--accent);
-    font-size: 0.65rem;
-    font-weight: 700;
-    font-style: italic;
-    flex-shrink: 0;
-    margin-top: 1px;
+    color: var(--text-dim);
+    line-height: 1.65;
 }
 
 /* === RESPONSIVE === */
-@media (max-width: 768px) {
-    .article-hero { margin: -2rem -1.25rem 0; height: 300px; }
-    .article-hero h1 { font-size: 1.4rem; }
-    .article-hero-content { padding: 2rem 1.25rem; }
-    .article-layout { grid-template-columns: 1fr; gap: 2rem; padding-top: 2rem; }
-    .sidebar { position: static; }
+@media (max-width: 900px) {
+    .a-hero { height: 360px; }
+    .a-layout { grid-template-columns: 1fr; gap: 2rem; }
+    .a-sidebar { position: static; }
+}
+@media (max-width: 480px) {
+    .a-hero { height: 280px; }
+    .a-hero-content { padding: 2rem 1.5rem; }
 }
 
     </style>
@@ -544,7 +533,10 @@
 <body>
     <nav>
         <div class="nav-inner">
-            <a href="https://nichtagentur.github.io/tennis-technique-blog/" class="nav-brand">AI Tennis Lab</a>
+            <a href="https://nichtagentur.github.io/tennis-technique-blog/" class="nav-brand">
+                <div class="nav-ball"></div>
+                <span class="nav-title">AI Tennis Lab</span>
+            </a>
             <ul class="nav-links">
                 <li><a href="https://nichtagentur.github.io/tennis-technique-blog/">Startseite</a></li>
                 <li><a href="https://nichtagentur.github.io/tennis-technique-blog/ueber-uns.html">Ueber uns</a></li>
@@ -554,241 +546,270 @@
 
     <main>
         
-<div class="article-hero">
+<div class="a-hero">
     
-    <img class="article-hero-img" src="https://nichtagentur.github.io/tennis-technique-blog/images/rueckhand-beidhaendig.jpg" alt="Beidhaendige Rueckhand: Griffhaltung, Schwungbahn und Drills">
+    <img class="a-hero-img" src="https://nichtagentur.github.io/tennis-technique-blog/images/rueckhand-beidhaendig.jpg" alt="Beidhaendige Rueckhand: Griffhaltung, Schwungbahn und Drills">
     
-    <div class="article-hero-overlay"></div>
-    <div class="article-hero-content">
-        <div class="article-hero-breadcrumb">
+    <div class="a-hero-overlay"></div>
+    <div class="a-hero-content">
+        <div class="a-hero-breadcrumb">
             <a href="https://nichtagentur.github.io/tennis-technique-blog/">Startseite</a>
             <span>/</span>
             <a href="https://nichtagentur.github.io/tennis-technique-blog/">Grundschlaege</a>
         </div>
-        <span class="badge">Grundschlaege</span>
+        <span class="tag">Grundschlaege</span>
         <h1>Beidhaendige Rueckhand: Griffhaltung, Schwungbahn und Drills</h1>
     </div>
 </div>
 
-<div class="article-layout">
+<div class="a-layout">
     <div>
-        <div class="article-content">
-            <h2>Einführung in die beidh&auml;ndige R&uuml;ckhand</h2>
+        <div class="a-prose">
+            <h2>Einführung in die beidhandige Rückhand</h2>
 
-<p>Die beidh&auml;ndige R&uuml;ckhand z&auml;hlt zu den modernen Grundschl&auml;gen im Tennissport und hat sich seit den 1980er Jahren als Standard etabliert. Nach <strong>DTB-Methodik</strong> bietet diese Schlagtechnik zahlreiche Vorteile f&uuml;r Anf&auml;nger und Fortgeschrittene: erh&ouml;hte Stabilit&auml;t in der kinematischen Kette, verbesserte Kraftentwicklung durch synergistische Muskelaktivierung und pr&auml;ventive Effekte gegen &Uuml;berlastungsverletzungen an Schulter und Ellenbogen. Etwa 80 Prozent der Profispieler nutzen heute die beidh&auml;ndige Variante, was ihre biomechanische Effizienz unterstreicht.</p>
+<p>Die beidhandige Rückhand ist einer der Grundschläge des modernen Tennis und wird von über 80% der Profispieler verwendet. Im Gegensatz zur einhandigen Rückhand bietet sie mehr Stabilität, höhere Schlagkraft und bessere Kontrolle – besonders für jüngere Spieler und Anfänger. Die Technik basiert auf einer effizienten <strong>kinematischen Kette</strong>, die vom unteren Körper über die Rotation des Rumpfes bis zu den Armen verläuft.</p>
 
-<p>Dieser Artikel richtet sich an Trainer und ambitionierte Spieler, die die technischen Grundlagen sowie praktische Trainingsmethoden verstehen m&ouml;chten. Wir behandeln Griffhaltung, Schwungbahn und spezifische Trainingsdr&uuml;cke basierend auf aktuellen biomechanischen Erkenntnissen.</p>
+<p>Nach <strong>DTB-Methodik</strong> und <strong>ITF-Standards</strong> ist die beidhandige Rückhand ein essentieller Grundschlag, der systematisch aufgebaut werden sollte. Dieser Artikel behandelt die korrekte Griffhaltung, die biomechanische Schwungbahn und effektive Trainingsdrills für Trainer und ihre Spieler.</p>
 
-<h2>Biomechanische Grundlagen der beidh&auml;ndigen R&uuml;ckhand</h2>
+<h2>Biomechanische Grundlagen der beidhandigen Rückhand</h2>
 
-<h3>Funktionelle Anatomie der kinematischen Kette</h3>
+<h3>Griffhaltung und Handpositionierung</h3>
 
-<p>Die beidh&auml;ndige R&uuml;ckhand aktiviert eine koordinierte Bewegungsabfolge vom Boden &uuml;ber Beine, H&uuml;fte, Rumpf bis zu den Armen. Nach <strong>ITF-Biomechanik-Standards</strong> initiiert die Bewegung in der unteren Extremit&auml;t mit einer lateralen Verschiebung des K&ouml;rpergewichts. Die Plantarflexion und Inversion der Fu&szlig;gelenke erm&ouml;glichen eine stabile Grundposition. &Uuml;ber die H&uuml;ftexorotation und das Thorax-Segment wird die Kraft progressiv auf den Oberk&ouml;rper &uuml;bertragen, bevor sie schlussendlich in den Armen distal weitergeleitet wird.</p>
-
-<p>Das zweite Arm-System bietet dabei folgende biomechanische Vorteile:</p>
+<p>Die Griffhaltung ist das Fundament einer stabilen beidhandigen Rückhand. Die <strong>dominante Hand</strong> (beispielsweise rechts bei Rechtshändern) wird in einem <strong>Eastern-Griff oder Semi-Western-Griff</strong> positioniert. Die <strong>nicht-dominante Hand</strong> (links) unterstützt durch einen <strong>Continental- oder Eastern-Griff</strong>.</p>
 
 <ul>
-<li><strong>Erh&ouml;hte Schulterstabilit&auml;t:</strong> Die nicht-dominante Hand unterst&uuml;tzt den Schlag und reduziert R&ouml;tationsspannungen</li>
-<li><strong>Verbesserte Kraft&uuml;bertragung:</strong> Synergistische Kontraktion beider Arm-Muskulaturen erh&ouml;ht die Schlaggereschwindigkeit</li>
-<li><strong>Stabilisierung des Schl&auml;gers:</strong> Beide H&auml;nde erm&ouml;glichen ein Ausr&auml;umen &uuml;ber tiefer fliegende B&auml;lle</li>
+<li><strong>Dominante Hand:</strong> Eastern-Griff mit leicht nach oben geneigter Schlagfläche (ca. 90° zum Boden)</li>
+<li><strong>Nicht-dominante Hand:</strong> Liegt oberhalb oder gleichauf mit der dominanten Hand auf dem Griff</li>
+<li><strong>Griffdruck:</strong> Beide Hände üben gleichmäßigen, moderaten Druck aus – nicht verkrampft</li>
+<li><strong>Griffdicke:</strong> Der Griff sollte für beide Hände komfortabel sein (Standard oder leicht überwickelt)</li>
 </ul>
 
-<h2>Griffhaltung f&uuml;r die beidh&auml;ndige R&uuml;ckhand</h2>
+<p>Die beiden Hände arbeiten als <strong>funktionelle Einheit</strong>. Die nicht-dominante Hand verstärkt die Kontrolle und reduziert Pronationsmomente am Handgelenk, was zu besserer Ballkontrolle und reduzierten Verletzungsrisiken führt.</p>
 
-<h3>Die ideale Griffkombination</h3>
+<h3>Ausgangsstellung und Bereitschaftsposition</h3>
 
-<p>F&uuml;r die beidh&auml;ndige R&uuml;ckhand ben&ouml;tigen Sie eine spezifische Griffkombination beider H&auml;nde. Die <strong>dominante Hand</strong> (h&auml;ufig rechts bei Rechtsh&auml;ndern) positioniert sich in einem <em>Semi-Western-Grip</em> oder <em>Western-Grip</em> auf dem Griff. Der Daumen und Zeigefinger bilden dabei ein V-Muster, das zur Schulter des Spielers zeigt.</p>
-
-<p>Die <strong>nicht-dominante Hand</strong> (linke Hand bei Rechtsh&auml;ndern) platziert sich direkt vor der dominanten Hand in einem <em>Continental-Grip</em> oder <em>Eastern-Grip</em>. Diese Hand tr&auml;gt maßgeblich zur Stabilisierung und Kraftentwicklung bei. Der Abstand zwischen beiden H&auml;nden sollte etwa zwei bis drei Fingerbreit betragen, um optimale Kontrolle zu gew&auml;hrleisten.</p>
-
-<h3>Griffpr&uuml;fung und Anpassung</h3>
-
-<p>F&uuml;hren Sie folgende Kontrolltechniken durch:</p>
+<p>Die Bereitschaftsposition nach <strong>ITF-Coaching-Richtlinien</strong> ist entscheidend für schnelle Reaktionen und effiziente Bewegungsabläufe:</p>
 
 <ol>
-<li>Halten Sie den Schläger senkrecht vor sich. Der V-Griff sollte nach oben-außen zeigen</li>
-<li>Überprüfen Sie, dass beide Handfl&auml;chen seitlich zum Griff orientiert sind, nicht von oben drückend</li>
-<li>Testen Sie die Grifffestigkeit: Der Griff sollte fest, aber nicht verkrampft sein (Druck etwa 5-6 von 10)</li>
+<li>Schulterbreiter Stand mit leicht gebeugten Knien (ca. 20-30° Flexion)</li>
+<li>Gewicht gleichmäßig auf beiden Füßen verteilt</li>
+<li>Schläger auf Brusthöhe mit beiden Händen gehalten</li>
+<li>Ellbogen nah am Körper (ca. 15-20cm Abstand)</li>
+<li>Blick auf den gegnerischen Schläger gerichtet</li>
 </ol>
 
-<h2>Die korrekte Schwungbahn (Kinematik)</h2>
+<h2>Technische Ausführung und Schwungbahn</h2>
 
-<h3>Phasenmodell der R&uuml;ckhandbewegung</h3>
+<h3>Phase 1: Ausholbewegung (Backswing)</h3>
 
-<p>Die beidh&auml;ndige R&uuml;ckhand folgt einem dreiteiligen Bewegungsmodel nach <strong>DTB-Technik-Standard</strong>:</p>
-
-<p><strong>1. Ausholphase (Preparation Phase)</strong><br>
-Die Schulterdrehung initiiert die Bewegung. Der Schläger wird zur Seite geführt, wodurch die Schultern eine 90-Grad-Rotation zur Ballflugrichtung erreichen. Das Schlägerblatt zeigt leicht nach vorne-oben. Die Beine sind gebeugt, das Körpergewicht ruht auf dem hinteren Fuß. Diese Phase sollte etwa 0,3-0,4 Sekunden dauern.</p>
-
-<p><strong>2. Beschleunigungsphase (Acceleration Phase)</strong><br>
-Das Körpergewicht wird vom hinteren zum vorderen Fuß transferiert. Die Hüftrotation leitet die Kraft initiativ ein, gefolgt von der Trunk-Extension und schließlich der Arm-Pronation. Der Schläger bewegt sich in einem konkaven Bogen von unten-hinten nach oben-vorne. Diese Phase ist biomechanisch die intensive Phase und sollte etwa 0,1-0,2 Sekunden andauern.</p>
-
-<p><strong>3. Auslaufphase (Follow-Through)</strong><br>
-Nach dem Ballkontakt führt die Dezeleration des Schlägers zu einer kontrollierten Bewegung über die Schulter. Der Schläger endet auf der gegenüberliegenden Schulterseite. Diese Phase ist für die Verletzungsprävention essenziell.</p>
-
-<h3>Schwungbahn-Charakteristiken</h3>
-
-<p>Im Vergleich zur einhändigen R&uuml;ckhand zeigt die beidh&auml;ndige Variante folgende Unterschiede:</p>
+<p>Die Ausholbewegung ist eine <strong>koordinierte Rotation der proximalen Segmente</strong> (Rumpf und Schultern) kombiniert mit einer Schläger-Rückwärtsbewegung:</p>
 
 <ul>
-<li><strong>Größere Flexion des nicht-dominanten Ellenbogens:</strong> Dies ermöglicht eine tiefere Schlagposition</li>
-<li><strong>Reduzierte externe Schulterrotation:</strong> Die zweite Hand limitiert das Rotationsausmaß schützend</li>
-<li><strong>Vertikalere Schlaggerichtung:</strong> Besonders bei Topspin-Varianten ist ein steiler Anstiegswinkel typisch</li>
+<li><strong>Schulterrotation:</strong> Mindestens 45-60° Rotation der Schulterachse zur Grundlinie</li>
+<li><strong>Hüftrotation:</strong> Leichte Hüftdrehung von ca. 30° zur Rückseite</li>
+<li><strong>Schlägerposition:</strong> Der Schläger wird auf Schulterhöhe oder leicht darunter nach hinten geführt</li>
+<li><strong>Gewichtsverlagerung:</strong> Gewicht verlagert sich auf den hinteren Fuß (ca. 60-70% Gewichtsverlagerung)</li>
+<li><strong>Timing:</strong> Die Ausholbewegung beginnt mit Ballflug und ist abgeschlossen, wenn der Ball den Scheitel erreicht</li>
 </ul>
 
-<h2>H&auml;ufige Fehlerbilder und ihre Korrektionen</h2>
+<p>Der <strong>lag-Winkel</strong> (Winkel zwischen Unterarm und Schläger) sollte ca. 90° betragen. Dies ermöglicht maximale Kraftentwicklung durch elastische Speicherung.</p>
 
-<h3>Fehler 1: Zu lockerer Griffhalt</h3>
+<h3>Phase 2: Beschleunigungsphase (Forward Swing)</h3>
 
-<p><em>Symptom:</em> Der Ball verlässt den Schläger impräzise, Kontrollverlust bei höherer Ballgeschwindigkeit.</p>
-
-<p><em>Ursache:</em> Beide Hände greifen zu schwach, insbesondere die nicht-dominante Hand.</p>
-
-<p><em>Korrektur:</em> Grifffestigkeit trainieren durch statische Griffübungen. Der Spieler sollte 30 Sekunden lang den Schläger mit firmem Griff halten, ohne zu ermüden.</p>
-
-<h3>Fehler 2: Zu hohe Schulterdrehung</h3>
-
-<p><em>Symptom:</em> Überrotation führt zu Dysbalance und ineffiziente Kraftentwicklung.</p>
-
-<p><em>Ursache:</em> Zu aggressive Ausholbewegung ohne Körperstabilisierung.</p>
-
-<p><em>Korrektion:</em> Beine aktivieren! Trainieren Sie mit kleineren Ausholbewegungen. Der Schläger sollte maximal auf Schulterhöhe positioniert sein.</p>
-
-<h3>Fehler 3: Dominante Hand dominiert zu stark</h3>
-
-<p><em>Symptom:</em> Die nicht-dominante Hand verliert ihren Kontakt zum Schläger zu früh, instabile Schlagabläufe.</p>
-
-<p><em>Ursache:</em> Unzureichende Koordination und Kraft der nicht-dominanten Hand.</p>
-
-<p><em>Korrektur:</em> Spezifische Übungen zur Stärkung der nicht-dominanten Seite durchführen (siehe Drills unten).</p>
-
-<h2>Praktische Trainingsdr&uuml;cke und &Uuml;bungen</h2>
-
-<h3>Drill 1: Grundposition-Stabilisierung (Anfänger)</h3>
-
-<p><strong>Ziel:</strong> Korrekte Griffhaltung und Körperposition etablieren.</p>
-
-<p><strong>Durchführung:</strong></p>
+<p>Die Beschleunigungsphase basiert auf der Prinzip der <strong>proximalen-zu-distalen Kraftübertragung</strong>:</p>
 
 <ol>
-<li>Spieler steht in der Ausgangsposition mit leicht gespreizten Beinen</li>
-<li>Schläger wird in die Ausholposition gebracht</li>
-<li>Haltung wird 3-5 Sekunden statisch gehalten</li>
-<li>Trainer kontrolliert: Schulterrotation 90 Grad, beide Hände greifen fest, Knie gebeugt</li>
+<li><strong>Initiale Kraftentwicklung:</strong> Beine und Hüfte initiieren die Bewegung (Hüftrotation ca. 80-90° in 0,1-0,15 Sekunden)</li>
+<li><strong>Rumpfrotation:</strong> Der Rumpf folgt der Hüfte mit leichtem Verzug (Scherwinklung)</li>
+<li><strong>Schulterbeschleunigung:</strong> Die Schultern beschleunigen durch Innenrotation</li>
+<li><strong>Ellbogenposition:</strong> Der Ellbogen bleibt gebeugt und bewegt sich nach vorne-oben</li>
+<li><strong>Handgelenk:</strong> Leichte Pronation und Extension unterstützen den Schlussakkord</li>
 </ol>
 
-<p><strong>Wiederholungen:</strong> 3 Sätze à 10 Wiederholungen pro Seite</p>
+<p>Die Schlaggeschwindigkeit wird in dieser Phase um das 3-5 fache erhöht. Bei Anfängern sollte die Betonung auf <strong>koordinierter Bewegung</strong> liegen, nicht auf Maximalgeschwindigkeit.</p>
 
-<p><strong>Progression:</strong> Schläger wird dynamisch nach oben und unten bewegt, dabei bleibt die Position stabil.</p>
+<h3>Phase 3: Treffpunkt und Follow-Through</h3>
 
-<h3>Drill 2: Kurze Schläge an der Grundlinie (Anfänger)</h3>
-
-<p><strong>Ziel:</strong> Ballkontakt und Schwungrhythmus entwickeln.</p>
-
-<p><strong>Durchführung:</strong></p>
-
-<ol>
-<li>Trainer wirft oder spielt langsame Bälle auf die Rückhand (etwa 30 km/h)</li>
-<li>Spieler schlägt mit gedrosseltem Schwung zurück (50 Prozent maximale Kraft)</li>
-<li>Fokus liegt auf flüssiger Bewegung und genauem Ballkontakt</li>
-</ol>
-
-<p><strong>Wiederholungen:</strong> 5 Sätze à 15 Schläge</p>
-
-<p><strong>Progression:</strong> Ballgeschwindigkeit erhöhen (50-70 km/h), Schlagtempo verschieben (tiefe und hohe Bälle)</p>
-
-<h3>Drill 3: Nicht-dominante Hand-Aktivierung (Anfänger bis Fortgeschrittene)</h3>
-
-<p><strong>Ziel:</strong> Kraft und Stabilität der nicht-dominanten Hand verbessern.</p>
-
-<p><strong>Durchführung:</strong></p>
-
-<ol>
-<li>Spieler hält einen leichten Tennisball oder Gewicht (500g) in der nicht-dominanten Hand</li>
-<li>Mit geschlossenen Augen wird der Arm abwechselnd flektiert und extendiert</li>
-<li>Kontraktion wird 2 Sekunden gehalten, dann Entspannung</li>
-</ol>
-
-<p><strong>Wiederholungen:</strong> 3 Sätze à 20 Wiederholungen, 3x pro Woche</p>
-
-<p><strong>Progression:</strong> Gewicht erhöhen (bis 1,5 kg), Bewegungsgeschwindigkeit steigern</p>
-
-<h3>Drill 4: Schwungbahn-Grooming (Fortgeschrittene)</h3>
-
-<p><strong>Ziel:</strong> Optimale Schwungbahn-Geometrie etablieren.</p>
-
-<p><strong>Durchführung:</strong></p>
-
-<ol>
-<li>Trainer spielt Bälle aus 8-10 Metern Entfernung</li>
-<li>Spieler führt vollständigen Schwung durch: Ausholung → Beschleunigung → Follow-Through</li>
-<li>Trainer beobachtet und korrigiert Schulterdrehung, Gewichtsverlagerung und Schlägerposition</li>
-</ol>
-
-<p><strong>Wiederholungen:</strong> 6 Sätze à 20 Schläge, wöchentlich 2x trainieren</p>
-
-<p><strong>Progression:</strong> Variabilität erhöhen durch unterschiedliche Ballpositionen (kurz, lang, hoch, tief)</p>
-
-<h3>Drill 5: Spielsimulation unter Druck (Fortgeschrittene)</h3>
-
-<p><strong>Ziel:</strong> Technik unter matchartigen Bedingungen automatisieren.</p>
-
-<p><strong>Durchführung:</strong></p>
-
-<ol>
-<li>Cross-Court-Grundlinienserie: Trainer und Spieler spielen sich beidseits auf der Rückhand zu</li>
-<li>Bälle werden mit progressiv höherer Geschwindigkeit gespielt (60-100 km/h)</li>
-<li>Nach 10 Schlägen: Schwierigkeitserhöhung durch Winkelveränderung</li>
-</ol>
-
-<p><strong>Wiederholungen:</strong> 10 Sätze à 20 Schläge</p>
-
-<p><strong>Progression:</strong> Match-Spielform: 3 Punkte als Trainingsblock, dann Positionswechsel</p>
-
-<h2>Sicherheits- und Pr&auml;ventionsaspekte</h2>
-
-<p><strong>Verletzungsprävention durch korrekte Technik:</strong></p>
+<p>Der optimale Treffpunkt befindet sich:</p>
 
 <ul>
-<li><strong>Schulterschutz:</strong> Durch die zweite Hand wird die externe Rotation begrenzt. Dies reduziert das Risiko von Rotatorenmanschetten-Verletzungen um etwa 30 Prozent</li>
-<li><strong>Ellenbogen-Gesundheit:</strong>
+<li><strong>Seitlich vor dem Körper</strong> (ca. 30-45cm vor der Hüfte)</li>
+<li><strong>Auf Hüfthöhe oder leicht darunter</strong> (abhängig von Ballflug)</li>
+<li><strong>Mit gestrecktem Schlag-Arm</strong> (leichte Ellbogenbeugung erlaubt)</li>
+<li><strong>Mit maximaler Schlagflächen-Stabilität</strong> (beide Hände sichern den Schlägerkopf)</li>
+</ul>
+
+<p>Das Follow-Through ist ein natürlicher Fortsatz der Bewegung und keine kraftproduzierende Phase. Der Schläger wird nach oben-vorne über die nicht-dominante Schulter geführt.</p>
+
+<h2>Häufige Fehlerbilder und Korrektionen</h2>
+
+<h3>Fehler 1: Unzureichende Schulterrotation</h3>
+
+<p><strong>Symptom:</strong> Kurzer, kraftloser Schlag mit wenig Ballkontrolle</p>
+
+<p><strong>Ursache:</strong> Mangelnde Rumpfrotation, zu wenig Ausholbewegung</p>
+
+<p><strong>Korrektur:</strong> Übung "Schulterdrehung ohne Schläger" – Spieler führt Ausholbewegung nur mit Körper durch, 20 Wiederholungen pro Seite</p>
+
+<h3>Fehler 2: Falsche Griffhaltung</h3>
+
+<p><strong>Symptom:</strong> Schläger dreht weg, Ball fliegt seitwärts ab</p>
+
+<p><strong>Ursache:</strong> Zu schwacher Griff oder inkorrekte Griffposition</p>
+
+<p><strong>Korrektion:</strong> Griffkalibrierung mit gezielten Griffdruckübungen, täglich 10 Minuten</p>
+
+<h3>Fehler 3: Frühe Ellbogenstreckung</h3>
+
+<p><strong>Symptom:</strong> Schlag wirkt steif, Ballkontrolle leidet</strong>
+
+<p><strong>Ursache:</strong> Zu frühes Strecken des Ellbogens in der Ausholbewegung</p>
+
+<p><strong>Korrektur:</strong> "Loop-Drill" mit Fokus auf Ellbogenbeugewinkel (siehe Trainingsdrills)</p>
+
+<h3>Fehler 4: Gewichtsverlagerung nach vorne</h3>
+
+<p><strong>Symptom:</strong> Spieler steht zu dicht am Ball, weniger Kraftentwicklung</p>
+
+<p><strong>Ursache:</strong> Unzureichende Gewichtsverlagerung nach hinten in der Ausholbewegung</p>
+
+<p><strong>Korrektion:</strong> Split-Step und Bewegungsdrills mit Fokus auf Gewichtsverteilung</p>
+
+<h2>Systematisches Trainingskonzept</h2>
+
+<h3>Drill 1: Grifftechnische Grundlagen (Anfänger)</h3>
+
+<p><strong>Ziel:</strong> Automatisierung der korrekten Griffhaltung</p>
+
+<p><strong>Durchführung:</strong></p>
+
+<ol>
+<li>Spieler hält Schläger ohne Ball in Ausgangsstellung</li>
+<li>Trainer überprüft Griffposition und macht ggf. Korrektionen</li>
+<li>Spieler führt 10 langsame Ausholbewegungen durch</li>
+<li>Spieler führt 10 Schwünge mit Tempo durch</li>
+<li>Wiederholung: 3 Sätze à 10 Wiederholungen</li>
+</ol>
+
+<p><strong>Progression:</strong> Mit einem leichten Ball trainieren, dann mit normalem Ball</p>
+
+<h3>Drill 2: Loop-Technik mit Ballmaschine (Anfänger bis Fortgeschrittene)</h3>
+
+<p><strong>Ziel:</strong> Entwicklung einer flüssigen, kraftvollen Schwungbahn</p>
+
+<p><strong>Durchführung:</strong></p>
+
+<ol>
+<li>Ballmaschine stellt mittlere Bälle zur Rückhand ein (ca. 15-20 Bälle/Minute)</li>
+<li>Spieler führt Loop-Schwung durch: Ausholbewegung mit Ellbogenbeugewinkel 90°</li>
+<li>Beschleunigung mit Hüft- und Schulterrotation</li>
+<li>Follow-Through über die nicht-dominante Schulter</li>
+<li>20 Wiederholungen</li>
+<li>Pause (30 Sekunden)</li>
+<li>Wiederholung: 5 Serien à 20 Bälle</li>
+</ol>
+
+<p><strong>Progression:</strong> Erhöhung der Ballgeschwindigkeit von 20 auf 25-30 km/h, schnellere Ballfolge</p>
+
+<h3>Drill 3: Gewichtsverlagerung und Timing (Anfänger bis Fortgeschrittene)</h3>
+
+<p><strong>Ziel:</strong> Verbesserung der kinematischen Kettenbeschleunigung</p>
+
+<p><strong>Durchführung:</strong></p>
+
+<ol>
+<li>Spieler in Ausgangsstellung, Split-Step mit Ballflug</li>
+<li>Beine und Hüfte initiieren Bewegung ZUERST</li>
+<li>Oberkörper folgt mit Verzug</li>
+<li>Arme folgen in kinematischer Reihenfolge</li>
+<li>Trainer zählt vor: "Eins (Hüfte) – Zwei (Oberkörper) – Drei (Arme)"</li>
+<li>15 Wiederholungen ohne Ball</li>
+<li>15 Wiederholungen mit Ball von der Ballmaschine</li>
+<li>3 Sätze à 15 Wiederholungen</li>
+</ol>
+
+<p><strong>Progression:</strong> Reduzierung des Tempos der Zählweise, schnellere Ballfolge</p>
+
+<h3>Drill 4: Pressure-Training (Fortgeschrittene)</h3>
+
+<p><strong>Ziel:</strong> Technik unter Belastung stabilisieren</p>
+
+<p><strong>Durchführung:</strong></p>
+
+<ol>
+<li>Cross-Court-Rallies mit Rückhandvorgabe</li>
+<li>Spieler muss 10 aufeinanderfolgende Bälle cross-court spielen</li>
+<li>Trainer erhöht Tempo und Platzierung progressiv</li>
+<li>5 Serien à 10 Wiederholungen</li>
+<li>Pause zwischen den Serien: 1 Minute</li>
+</ol>
+
+<p><strong>Progression:</strong> Down-the-Line-Variante, Match-Play-Situationen</p>
+
+<h3>Drill 5: Bewegungskoordination (Alle Niveaus)</h3>
+
+<p><strong>Ziel:</strong> Integration der Rückhands-Technik in komplexe Bewegungsmuster</p>
+
+<p><strong>Durchführung:</strong></p>
+
+<ol>
+<li>Trainer spielt abwechselnd Vorhand- und Rückhands-Bälle</li>
+<li>Spieler muss sich schnell repositionieren</li>
+<li>Jeder Ball wird mit voller Technik gespielt</li>
+<li>20 Wiederholungen mit variablem Tempo</li>
+<li>3 Sätze à 20 Wiederholungen</li>
+<li>Intensität: Progressive Steigerung von langsam zu match-ähnlicher Geschwindigkeit</li>
+</ol>
+
+<h2>Sicherheitsaspekte und Verletzungsprävention</h2>
+
+<p>Die beidhandige Rückhand ist <strong>biomechanisch sicherer</strong> als die einhandige Variante, birgt aber dennoch Risiken:</p>
+
+<ul>
+<li><strong>Überlastungsverletzungen:</strong> Zu intensive Trainingsbelastung erhöht Verletzungsrisiko um 40%. Empfehlung: Maximale Trainingsbelastung von 60 Schlägen pro Training für Anfänger, 100-150 für Fortgeschrittene</li>
+<li><strong>Handgelenksbelastung:</strong> Korrekte Griffhaltung reduziert Handgelenksstress. Schwache Griffe führen zu UE-Syndrome (Ulnar-Sided-Epicondylitis)</li>
+<li><strong>Rotatorische Überlastung:</strong> Maximale Schulterrotation nicht über 90° hinaus. Übermäßige Rotation führt zu Impingement-
         </div>
 
-        <div class="author-box">
-            <div class="author-icon">TL</div>
+        <div class="a-author">
+            <div class="a-author-avatar">TL</div>
             <div>
-                <div class="author-name">AI Tennis Lab</div>
-                <div class="author-desc">KI-gestuetzte Analyse -- Biomechanisch fundiert, praxisnah aufbereitet fuer Tennistrainer.</div>
+                <div class="a-author-name">AI Tennis Lab</div>
+                <div class="a-author-bio">KI-gestuetzte Analyse -- Biomechanisch fundiert, praxisnah aufbereitet fuer Tennistrainer.</div>
             </div>
         </div>
 
-        <div class="ai-disclosure">
-            <span>Dieser Inhalt wurde mit KI erstellt und dient als Trainingsressource. Fuer individuelles Training wenden Sie sich an einen zertifizierten Tennistrainer.</span>
+        <div class="a-disclosure">
+            Dieser Inhalt wurde mit KI erstellt und dient als Trainingsressource. Fuer individuelles Training wenden Sie sich an einen zertifizierten Tennistrainer.
         </div>
     </div>
 
-    <aside class="sidebar">
+    <aside class="a-sidebar">
         
-        <div class="sidebar-section">
-            <div class="sidebar-title">Verwandte Artikel</div>
-            
-            <a class="sidebar-link" href="https://nichtagentur.github.io/tennis-technique-blog/artikel/vorhand-topspin-technik.html">Vorhand Topspin: Technik, Fehlerbilder und Uebungen</a>
-            
+        <div class="a-sidebar-card">
+            <div class="a-sidebar-header">Verwandte Artikel</div>
+            <div class="a-sidebar-body">
+                
+                <a class="a-sidebar-link" href="https://nichtagentur.github.io/tennis-technique-blog/artikel/vorhand-topspin-technik.html">Vorhand Topspin: Technik, Fehlerbilder und Uebungen</a>
+                
+            </div>
         </div>
         
-        <div class="sidebar-section">
-            <div class="sidebar-title">Details</div>
-            <div class="sidebar-detail">
-                <span class="sidebar-detail-label">Kategorie</span>
-                <span class="sidebar-detail-value">Grundschlaege</span>
-            </div>
-            <div class="sidebar-detail">
-                <span class="sidebar-detail-label">Niveau</span>
-                <span class="sidebar-detail-value">Anfaenger bis Fortgeschrittene</span>
-            </div>
-            <div class="sidebar-detail">
-                <span class="sidebar-detail-label">Datum</span>
-                <span class="sidebar-detail-value">26.02.2026</span>
+        <div class="a-sidebar-card">
+            <div class="a-sidebar-header">Details</div>
+            <div class="a-sidebar-body">
+                <div class="a-sidebar-row">
+                    <span class="a-sidebar-row-label">Kategorie</span>
+                    <span class="a-sidebar-row-val">Grundschlaege</span>
+                </div>
+                <div class="a-sidebar-row">
+                    <span class="a-sidebar-row-label">Niveau</span>
+                    <span class="a-sidebar-row-val">Anfaenger bis Fortgeschrittene</span>
+                </div>
+                <div class="a-sidebar-row">
+                    <span class="a-sidebar-row-label">Datum</span>
+                    <span class="a-sidebar-row-val">26.02.2026</span>
+                </div>
             </div>
         </div>
     </aside>
@@ -798,16 +819,20 @@ Nach dem Ballkontakt führt die Dezeleration des Schlägers zu einer kontrollier
 
     <footer>
         <div class="footer-inner">
-            <div class="footer-brand">AI Tennis Lab</div>
-            <ul class="footer-links">
-                <li><a href="https://nichtagentur.github.io/tennis-technique-blog/">Startseite</a></li>
-                <li><a href="https://nichtagentur.github.io/tennis-technique-blog/ueber-uns.html">Ueber uns</a></li>
-                <li><a href="https://nichtagentur.github.io/tennis-technique-blog/sitemap.xml">Sitemap</a></li>
-            </ul>
-            <div class="footer-right">
-                <p class="footer-disclosure">Dieser Inhalt wurde mit KI erstellt und dient als Trainingsressource. Fuer individuelles Training wenden Sie sich an einen zertifizierten Tennistrainer.</p>
-                <p class="footer-copy">&copy; 2026 AI Tennis Lab | <a href="https://cybertime.at">cybertime</a></p>
+            <div class="footer-col">
+                <h4>Navigation</h4>
+                <a href="https://nichtagentur.github.io/tennis-technique-blog/">Startseite</a>
+                <a href="https://nichtagentur.github.io/tennis-technique-blog/ueber-uns.html">Ueber uns</a>
+                <a href="https://nichtagentur.github.io/tennis-technique-blog/sitemap.xml">Sitemap</a>
             </div>
+            <div class="footer-col">
+                <h4>Hinweis</h4>
+                <p class="footer-disclosure">Dieser Inhalt wurde mit KI erstellt und dient als Trainingsressource. Fuer individuelles Training wenden Sie sich an einen zertifizierten Tennistrainer.</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span class="footer-copy">&copy; 2026 AI Tennis Lab</span>
+            <span class="footer-copy">Ein Projekt von <a href="https://cybertime.at">cybertime</a></span>
         </div>
     </footer>
 </body>

@@ -59,304 +59,289 @@
 
 {% block extra_css %}
 /* === ARTICLE HERO === */
-.article-hero {
+.a-hero {
     position: relative;
-    margin: -3rem -2.5rem 0;
-    height: 420px;
+    height: 480px;
     overflow: hidden;
     display: flex;
     align-items: flex-end;
+    margin-bottom: 0;
 }
-.article-hero-img {
+.a-hero-img {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    transition: transform 8s ease;
+    transition: transform 12s linear;
 }
-.article-hero:hover .article-hero-img {
-    transform: scale(1.03);
-}
-.article-hero-overlay {
+.a-hero:hover .a-hero-img { transform: scale(1.04); }
+.a-hero-overlay {
     position: absolute;
     inset: 0;
     background:
-        linear-gradient(to bottom, rgba(5,5,5,0.1) 0%, rgba(5,5,5,0.5) 50%, rgba(5,5,5,0.95) 85%, var(--bg-deep) 100%),
-        linear-gradient(to right, rgba(5,5,5,0.6) 0%, transparent 60%);
+        linear-gradient(180deg, rgba(8,9,15,0) 0%, rgba(8,9,15,0.4) 40%, rgba(8,9,15,0.92) 75%, var(--night) 100%),
+        linear-gradient(90deg, rgba(8,9,15,0.7) 0%, rgba(8,9,15,0) 50%);
 }
-.article-hero-content {
+.a-hero-content {
     position: relative;
     z-index: 1;
-    padding: 3rem 2.5rem;
-    max-width: 1280px;
+    padding: 3rem clamp(1.5rem, 4vw, 3rem);
+    max-width: 1400px;
     margin: 0 auto;
     width: 100%;
-    animation: fadeInUp 0.6s ease both;
+    animation: rise 0.6s var(--ease) both;
 }
-.article-hero-breadcrumb {
-    font-size: 0.65rem;
-    color: var(--text-muted);
-    letter-spacing: 1px;
-    margin-bottom: 1rem;
+.a-hero-breadcrumb {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    color: var(--text-dim);
+    letter-spacing: 1.5px;
+    margin-bottom: 1.25rem;
 }
-.article-hero-breadcrumb a { color: var(--text-muted); }
-.article-hero-breadcrumb a:hover { color: var(--accent); }
-.article-hero-breadcrumb span { color: #444; margin: 0 0.5rem; }
-.article-hero h1 {
-    font-size: clamp(1.6rem, 4vw, 2.4rem);
-    font-weight: 800;
+.a-hero-breadcrumb a { color: var(--text-dim); }
+.a-hero-breadcrumb a:hover { color: var(--ball); }
+.a-hero-breadcrumb span { color: #333; margin: 0 0.6rem; }
+.a-hero h1 {
+    font-family: var(--serif);
+    font-size: clamp(1.8rem, 4vw, 2.6rem);
+    font-weight: 700;
     line-height: 1.15;
     margin-top: 0.75rem;
-    max-width: 700px;
+    max-width: 720px;
     letter-spacing: -0.02em;
+    animation: rise 0.6s var(--ease) 0.1s both;
+}
+
+/* Diagonal separator */
+.a-separator {
+    height: 50px;
+    background: var(--night);
+    margin-top: -50px;
+    position: relative;
+    z-index: 2;
+    clip-path: polygon(0 0, 100% 100%, 100% 100%, 0 100%);
 }
 
 /* === ARTICLE LAYOUT === */
-.article-layout {
+.a-layout {
     display: grid;
-    grid-template-columns: 1fr 300px;
-    gap: 3rem;
+    grid-template-columns: 1fr 320px;
+    gap: 3.5rem;
     align-items: start;
-    padding-top: 3rem;
+    padding: 3rem 0;
 }
 
-/* === ARTICLE CONTENT === */
-.article-content {
-    font-size: 1.05rem;
-    line-height: 1.85;
-    color: var(--text-secondary);
+/* === ARTICLE PROSE === */
+.a-prose {
+    font-size: 1.08rem;
+    line-height: 1.9;
+    color: var(--text-mid);
     animation: fadeIn 0.6s ease 0.2s both;
 }
-.article-content h2 {
-    font-size: 1.25rem;
+.a-prose h2 {
+    font-family: var(--serif);
+    font-size: 1.35rem;
     font-weight: 700;
+    font-style: italic;
     color: var(--text);
     margin: 3rem 0 1.25rem;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
+    padding-left: 1.25rem;
+    border-left: 3px solid var(--ball);
+    line-height: 1.3;
 }
-.article-content h2::before {
-    content: '';
-    width: 3px;
-    height: 1.25em;
-    background: var(--accent);
-    border-radius: 2px;
-    flex-shrink: 0;
-}
-.article-content h3 {
+.a-prose h3 {
     font-size: 1.05rem;
-    font-weight: 600;
+    font-weight: 700;
     color: var(--text);
-    margin: 2rem 0 0.75rem;
+    margin: 2.25rem 0 0.75rem;
     letter-spacing: 0.02em;
 }
-.article-content p { margin-bottom: 1.25rem; }
-.article-content ul, .article-content ol {
-    margin: 0.75rem 0 1.5rem 1.25rem;
+.a-prose p { margin-bottom: 1.35rem; }
+.a-prose ul, .a-prose ol {
+    margin: 0.5rem 0 1.5rem 1.5rem;
 }
-.article-content li {
-    margin-bottom: 0.5rem;
-    padding-left: 0.5rem;
+.a-prose li {
+    margin-bottom: 0.6rem;
+    padding-left: 0.35rem;
 }
-.article-content strong { color: var(--text); }
-.article-content em { color: var(--accent); font-style: normal; }
+.a-prose li::marker { color: var(--ball-dim); }
+.a-prose strong { color: var(--text); font-weight: 600; }
+.a-prose em { color: var(--ball); font-style: italic; }
+.a-prose a { border-bottom: 1px solid var(--ball-dim); }
+.a-prose a:hover { border-color: var(--ball); }
 
 /* === SIDEBAR === */
-.sidebar {
+.a-sidebar {
     position: sticky;
-    top: 84px;
+    top: 90px;
     animation: fadeIn 0.6s ease 0.3s both;
 }
-.sidebar-section {
-    background: var(--bg-card);
+.a-sidebar-card {
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 1.5rem;
-    margin-bottom: 1.25rem;
-    position: relative;
     overflow: hidden;
+    margin-bottom: 1.5rem;
 }
-.sidebar-section::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--accent), transparent);
-    opacity: 0.4;
-}
-.sidebar-title {
-    font-size: 0.65rem;
-    font-weight: 700;
+.a-sidebar-header {
+    background: var(--night-card);
+    padding: 1rem 1.25rem;
+    font-family: var(--mono);
+    font-size: 0.58rem;
     text-transform: uppercase;
-    letter-spacing: 2.5px;
-    color: var(--text-muted);
-    margin-bottom: 1.25rem;
-    padding-bottom: 0.75rem;
+    letter-spacing: 3px;
+    color: var(--text-dim);
     border-bottom: 1px solid var(--border);
 }
-.sidebar-link {
+.a-sidebar-body { padding: 0.25rem 0; }
+.a-sidebar-link {
     display: block;
-    padding: 0.6rem 0;
+    padding: 0.8rem 1.25rem;
     font-size: 0.88rem;
-    color: var(--text-secondary);
+    color: var(--text-mid);
     border-bottom: 1px solid var(--border);
-    transition: all 0.25s ease;
+    transition: all 0.3s var(--ease);
     line-height: 1.4;
 }
-.sidebar-link:last-child { border-bottom: none; }
-.sidebar-link:hover {
-    color: var(--accent);
-    padding-left: 0.5rem;
+.a-sidebar-link:last-child { border-bottom: none; }
+.a-sidebar-link:hover {
+    color: var(--ball);
+    background: rgba(212, 247, 63, 0.02);
+    padding-left: 1.5rem;
 }
-.sidebar-detail {
+.a-sidebar-row {
     display: flex;
     justify-content: space-between;
-    align-items: center;
-    padding: 0.5rem 0;
+    padding: 0.7rem 1.25rem;
     border-bottom: 1px solid var(--border);
     font-size: 0.82rem;
 }
-.sidebar-detail:last-child { border-bottom: none; }
-.sidebar-detail-label { color: var(--text-muted); }
-.sidebar-detail-value { color: var(--text-secondary); font-weight: 500; }
+.a-sidebar-row:last-child { border-bottom: none; }
+.a-sidebar-row-label { color: var(--text-dim); font-family: var(--mono); font-size: 0.65rem; text-transform: uppercase; letter-spacing: 1.5px; }
+.a-sidebar-row-val { color: var(--text-mid); }
 
-/* === AUTHOR BOX === */
-.author-box {
-    background: var(--bg-card);
+/* === AUTHOR === */
+.a-author {
+    margin-top: 3.5rem;
+    padding: 2rem;
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 1.75rem;
-    margin-top: 3rem;
     display: flex;
+    gap: 1.5rem;
     align-items: center;
-    gap: 1.25rem;
+    transition: border-color 0.3s var(--ease);
 }
-.author-icon {
-    width: 48px;
-    height: 48px;
+.a-author:hover { border-color: var(--border-hover); }
+.a-author-avatar {
+    width: 52px;
+    height: 52px;
     border-radius: 50%;
-    background: linear-gradient(135deg, var(--accent-dim), var(--accent));
+    background: var(--ball);
     display: flex;
     align-items: center;
     justify-content: center;
     flex-shrink: 0;
-    font-size: 1.2rem;
-    font-weight: 800;
-    color: var(--bg-deep);
-}
-.author-name {
+    font-family: var(--serif);
+    font-size: 1.1rem;
     font-weight: 700;
-    font-size: 0.95rem;
+    font-style: italic;
+    color: var(--night);
+}
+.a-author-name {
+    font-family: var(--serif);
+    font-size: 1rem;
+    font-weight: 700;
     color: var(--text);
     margin-bottom: 0.2rem;
 }
-.author-desc { font-size: 0.82rem; color: var(--text-muted); line-height: 1.5; }
+.a-author-bio { font-size: 0.82rem; color: var(--text-dim); line-height: 1.5; }
 
-/* === AI DISCLOSURE === */
-.ai-disclosure {
-    background: rgba(0, 232, 123, 0.03);
-    border: 1px solid rgba(0, 232, 123, 0.1);
-    border-radius: var(--radius);
-    padding: 1.25rem 1.5rem;
+/* === DISCLOSURE === */
+.a-disclosure {
     margin-top: 1.25rem;
+    padding: 1.25rem 1.5rem;
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--clay);
+    border-radius: var(--radius);
     font-size: 0.8rem;
-    color: var(--text-muted);
-    line-height: 1.6;
-    display: flex;
-    gap: 0.75rem;
-    align-items: flex-start;
-}
-.ai-disclosure::before {
-    content: 'i';
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    min-width: 20px;
-    height: 20px;
-    border-radius: 50%;
-    border: 1px solid var(--accent-dim);
-    color: var(--accent);
-    font-size: 0.65rem;
-    font-weight: 700;
-    font-style: italic;
-    flex-shrink: 0;
-    margin-top: 1px;
+    color: var(--text-dim);
+    line-height: 1.65;
 }
 
 /* === RESPONSIVE === */
-@media (max-width: 768px) {
-    .article-hero { margin: -2rem -1.25rem 0; height: 300px; }
-    .article-hero h1 { font-size: 1.4rem; }
-    .article-hero-content { padding: 2rem 1.25rem; }
-    .article-layout { grid-template-columns: 1fr; gap: 2rem; padding-top: 2rem; }
-    .sidebar { position: static; }
+@media (max-width: 900px) {
+    .a-hero { height: 360px; }
+    .a-layout { grid-template-columns: 1fr; gap: 2rem; }
+    .a-sidebar { position: static; }
+}
+@media (max-width: 480px) {
+    .a-hero { height: 280px; }
+    .a-hero-content { padding: 2rem 1.5rem; }
 }
 {% endblock %}
 
 {% block content %}
-<div class="article-hero">
+<div class="a-hero">
     {% if article.image %}
-    <img class="article-hero-img" src="{{ site.base_url }}/images/{{ article.image }}" alt="{{ article.title }}">
+    <img class="a-hero-img" src="{{ site.base_url }}/images/{{ article.image }}" alt="{{ article.title }}">
     {% endif %}
-    <div class="article-hero-overlay"></div>
-    <div class="article-hero-content">
-        <div class="article-hero-breadcrumb">
+    <div class="a-hero-overlay"></div>
+    <div class="a-hero-content">
+        <div class="a-hero-breadcrumb">
             <a href="{{ site.base_url }}/">Startseite</a>
             <span>/</span>
             <a href="{{ site.base_url }}/">{{ article.category }}</a>
         </div>
-        <span class="badge">{{ article.category }}</span>
+        <span class="tag">{{ article.category }}</span>
         <h1>{{ article.title }}</h1>
     </div>
 </div>
 
-<div class="article-layout">
+<div class="a-layout">
     <div>
-        <div class="article-content">
+        <div class="a-prose">
             {{ article.content_html | safe }}
         </div>
 
-        <div class="author-box">
-            <div class="author-icon">TL</div>
+        <div class="a-author">
+            <div class="a-author-avatar">TL</div>
             <div>
-                <div class="author-name">{{ site.title }}</div>
-                <div class="author-desc">KI-gestuetzte Analyse -- Biomechanisch fundiert, praxisnah aufbereitet fuer Tennistrainer.</div>
+                <div class="a-author-name">{{ site.title }}</div>
+                <div class="a-author-bio">KI-gestuetzte Analyse -- Biomechanisch fundiert, praxisnah aufbereitet fuer Tennistrainer.</div>
             </div>
         </div>
 
-        <div class="ai-disclosure">
-            <span>{{ site.ai_disclosure }}</span>
+        <div class="a-disclosure">
+            {{ site.ai_disclosure }}
         </div>
     </div>
 
-    <aside class="sidebar">
+    <aside class="a-sidebar">
         {% if article.related %}
-        <div class="sidebar-section">
-            <div class="sidebar-title">Verwandte Artikel</div>
-            {% for related in article.related %}
-            <a class="sidebar-link" href="{{ site.base_url }}/artikel/{{ related.slug }}.html">{{ related.title }}</a>
-            {% endfor %}
+        <div class="a-sidebar-card">
+            <div class="a-sidebar-header">Verwandte Artikel</div>
+            <div class="a-sidebar-body">
+                {% for related in article.related %}
+                <a class="a-sidebar-link" href="{{ site.base_url }}/artikel/{{ related.slug }}.html">{{ related.title }}</a>
+                {% endfor %}
+            </div>
         </div>
         {% endif %}
-        <div class="sidebar-section">
-            <div class="sidebar-title">Details</div>
-            <div class="sidebar-detail">
-                <span class="sidebar-detail-label">Kategorie</span>
-                <span class="sidebar-detail-value">{{ article.category }}</span>
-            </div>
-            <div class="sidebar-detail">
-                <span class="sidebar-detail-label">Niveau</span>
-                <span class="sidebar-detail-value">{{ article.difficulty }}</span>
-            </div>
-            <div class="sidebar-detail">
-                <span class="sidebar-detail-label">Datum</span>
-                <span class="sidebar-detail-value">{{ article.date }}</span>
+        <div class="a-sidebar-card">
+            <div class="a-sidebar-header">Details</div>
+            <div class="a-sidebar-body">
+                <div class="a-sidebar-row">
+                    <span class="a-sidebar-row-label">Kategorie</span>
+                    <span class="a-sidebar-row-val">{{ article.category }}</span>
+                </div>
+                <div class="a-sidebar-row">
+                    <span class="a-sidebar-row-label">Niveau</span>
+                    <span class="a-sidebar-row-val">{{ article.difficulty }}</span>
+                </div>
+                <div class="a-sidebar-row">
+                    <span class="a-sidebar-row-label">Datum</span>
+                    <span class="a-sidebar-row-val">{{ article.date }}</span>
+                </div>
             </div>
         </div>
     </aside>

@@ -16,466 +16,457 @@
     <link rel="alternate" hreflang="de" href="https://nichtagentur.github.io/tennis-technique-blog/ueber-uns.html">
     
     <style>
-        /* === RESET & VARIABLES === */
         *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
+
         :root {
-            --bg-deep: #050505;
-            --bg: #0a0a0a;
-            --bg-elevated: #111113;
-            --bg-card: #141416;
-            --bg-card-hover: #1a1a1e;
-            --surface: #1e1e22;
-            --border: #222225;
-            --border-light: #2a2a2e;
-            --accent: #00e87b;
-            --accent-bright: #00ff88;
-            --accent-dim: #00b862;
-            --accent-glow: rgba(0, 232, 123, 0.15);
-            --accent-glow-strong: rgba(0, 232, 123, 0.3);
-            --warm: #f0c040;
-            --text: #eaeaea;
-            --text-secondary: #b0b0b4;
-            --text-muted: #6e6e74;
-            --radius: 12px;
-            --radius-sm: 6px;
-            --radius-lg: 20px;
+            --night: #08090f;
+            --night-up: #0e1018;
+            --night-card: #12141e;
+            --night-surface: #181a26;
+            --border: #1f2233;
+            --border-hover: #2a2d42;
+
+            --ball: #d4f73f;
+            --ball-dim: #b0cc2e;
+            --ball-glow: rgba(212, 247, 63, 0.12);
+            --ball-glow-strong: rgba(212, 247, 63, 0.25);
+            --clay: #c94a3a;
+            --court-line: rgba(212, 247, 63, 0.04);
+
+            --text: #e8eaed;
+            --text-mid: #9da1b0;
+            --text-dim: #5c6078;
+
+            --serif: Georgia, 'Times New Roman', 'Noto Serif', serif;
+            --sans: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            --mono: 'SF Mono', SFMono-Regular, ui-monospace, 'Cascadia Code', Menlo, monospace;
+
+            --radius: 4px;
+            --ease: cubic-bezier(0.23, 1, 0.32, 1);
         }
 
-        /* === BASE === */
         body {
-            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
-            background: var(--bg-deep);
+            font-family: var(--sans);
+            background: var(--night);
             color: var(--text);
-            line-height: 1.65;
+            line-height: 1.6;
             min-height: 100vh;
             display: flex;
             flex-direction: column;
             -webkit-font-smoothing: antialiased;
-            -moz-osx-font-smoothing: grayscale;
         }
 
-        /* Grain overlay on body */
-        body::before {
+        /* Court-line texture overlay */
+        body::after {
             content: '';
             position: fixed;
             inset: 0;
             z-index: 9999;
             pointer-events: none;
-            opacity: 0.025;
-            background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");
-            background-repeat: repeat;
-            background-size: 256px 256px;
+            background:
+                repeating-linear-gradient(
+                    0deg,
+                    transparent,
+                    transparent 120px,
+                    var(--court-line) 120px,
+                    var(--court-line) 121px
+                );
+            opacity: 0.5;
         }
 
-        a { color: var(--accent); text-decoration: none; transition: color 0.25s ease; }
-        a:hover { color: var(--accent-bright); }
+        a { color: var(--ball); text-decoration: none; transition: all 0.3s var(--ease); }
+        a:hover { color: #e6ff6b; }
 
-        /* === NAVIGATION === */
+        /* === NAV === */
         nav {
-            background: rgba(10, 10, 10, 0.85);
-            backdrop-filter: blur(20px);
-            -webkit-backdrop-filter: blur(20px);
-            padding: 0 2.5rem;
+            background: var(--night);
+            padding: 0 clamp(1.5rem, 4vw, 3rem);
             position: sticky;
             top: 0;
             z-index: 100;
-            border-bottom: 1px solid var(--border);
+            height: 72px;
+            display: flex;
+            align-items: center;
         }
         nav::after {
             content: '';
             position: absolute;
-            bottom: -1px;
+            bottom: 0;
             left: 0;
             right: 0;
             height: 1px;
-            background: linear-gradient(90deg, transparent 0%, var(--accent) 20%, var(--accent-bright) 50%, var(--accent) 80%, transparent 100%);
-            opacity: 0.6;
+            background: var(--border);
         }
         .nav-inner {
-            max-width: 1280px;
+            max-width: 1400px;
+            width: 100%;
             margin: 0 auto;
             display: flex;
             align-items: center;
             justify-content: space-between;
-            height: 64px;
         }
         .nav-brand {
-            font-size: 0.85rem;
-            font-weight: 800;
-            text-transform: uppercase;
-            letter-spacing: 5px;
-            color: var(--text);
             display: flex;
             align-items: center;
-            gap: 0.75rem;
-            transition: color 0.25s ease;
+            gap: 0.85rem;
+            color: var(--text);
+            transition: all 0.3s var(--ease);
         }
-        .nav-brand:hover { color: var(--accent); }
-        .nav-brand::before {
-            content: '';
-            display: inline-block;
-            width: 8px;
-            height: 8px;
+        .nav-brand:hover { color: var(--ball); }
+        /* CSS tennis ball */
+        .nav-ball {
+            width: 22px;
+            height: 22px;
             border-radius: 50%;
-            background: var(--accent);
-            box-shadow: 0 0 8px var(--accent-glow-strong), 0 0 20px var(--accent-glow);
-            animation: pulse-dot 3s ease-in-out infinite;
-        }
-        @keyframes pulse-dot {
-            0%, 100% { opacity: 1; box-shadow: 0 0 8px var(--accent-glow-strong), 0 0 20px var(--accent-glow); }
-            50% { opacity: 0.6; box-shadow: 0 0 4px var(--accent-glow); }
-        }
-        .nav-links { display: flex; gap: 2rem; list-style: none; align-items: center; }
-        .nav-links a {
-            color: var(--text-muted);
-            font-size: 0.72rem;
-            text-transform: uppercase;
-            letter-spacing: 2px;
-            font-weight: 600;
-            transition: color 0.25s ease;
+            background: var(--ball);
             position: relative;
-            padding: 0.25rem 0;
+            flex-shrink: 0;
+            box-shadow: 0 0 12px var(--ball-glow-strong);
         }
-        .nav-links a::after {
+        .nav-ball::before {
             content: '';
             position: absolute;
-            bottom: -2px;
+            inset: 3px;
+            border-radius: 50%;
+            border: 1.5px solid rgba(8,9,15,0.3);
+            clip-path: ellipse(35% 50% at 50% 50%);
+        }
+        .nav-title {
+            font-family: var(--serif);
+            font-size: 1.15rem;
+            font-weight: 700;
+            font-style: italic;
+            letter-spacing: 0.02em;
+        }
+        .nav-links { display: flex; gap: 2.5rem; list-style: none; }
+        .nav-links a {
+            color: var(--text-dim);
+            font-family: var(--mono);
+            font-size: 0.68rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 0.3rem 0;
+            position: relative;
+        }
+        .nav-links a::before {
+            content: '';
+            position: absolute;
+            bottom: 0;
             left: 0;
-            width: 0;
+            width: 100%;
             height: 1px;
-            background: var(--accent);
-            transition: width 0.3s ease;
+            background: var(--ball);
+            transform: scaleX(0);
+            transform-origin: right;
+            transition: transform 0.4s var(--ease);
         }
         .nav-links a:hover { color: var(--text); }
-        .nav-links a:hover::after { width: 100%; }
+        .nav-links a:hover::before { transform: scaleX(1); transform-origin: left; }
 
         /* === MAIN === */
         main {
             flex: 1;
             width: 100%;
-            max-width: 1280px;
+            max-width: 1400px;
             margin: 0 auto;
-            padding: 3rem 2.5rem;
+            padding: 0 clamp(1.5rem, 4vw, 3rem);
         }
 
         /* === FOOTER === */
         footer {
-            background: var(--bg);
-            border-top: 1px solid var(--border);
-            padding: 3rem 2.5rem;
             margin-top: auto;
-            position: relative;
-        }
-        footer::before {
-            content: '';
-            position: absolute;
-            top: -1px;
-            left: 0;
-            right: 0;
-            height: 1px;
-            background: linear-gradient(90deg, transparent, var(--accent-dim), transparent);
-            opacity: 0.3;
+            border-top: 1px solid var(--border);
+            padding: 0 clamp(1.5rem, 4vw, 3rem);
         }
         .footer-inner {
-            max-width: 1280px;
+            max-width: 1400px;
             margin: 0 auto;
-            display: grid;
-            grid-template-columns: 1fr auto 1fr;
-            align-items: center;
-            gap: 2rem;
-        }
-        .footer-brand {
-            font-size: 0.7rem;
-            font-weight: 700;
-            text-transform: uppercase;
-            letter-spacing: 4px;
-            color: var(--text-muted);
-        }
-        .footer-links {
+            padding: 3rem 0 2rem;
             display: flex;
-            justify-content: center;
+            justify-content: space-between;
+            align-items: flex-start;
             gap: 2rem;
-            list-style: none;
         }
-        .footer-links a {
-            color: var(--text-muted);
-            font-size: 0.72rem;
+        .footer-col h4 {
+            font-family: var(--mono);
+            font-size: 0.6rem;
             text-transform: uppercase;
-            letter-spacing: 1.5px;
-            font-weight: 500;
-            transition: color 0.25s;
+            letter-spacing: 3px;
+            color: var(--text-dim);
+            margin-bottom: 1rem;
         }
-        .footer-links a:hover { color: var(--accent); }
-        .footer-right { text-align: right; }
+        .footer-col a, .footer-col p {
+            display: block;
+            font-size: 0.82rem;
+            color: var(--text-mid);
+            margin-bottom: 0.4rem;
+            line-height: 1.5;
+        }
+        .footer-col a:hover { color: var(--ball); }
         .footer-disclosure {
-            font-size: 0.7rem;
-            color: var(--text-muted);
-            max-width: 400px;
-            margin-left: auto;
+            font-size: 0.72rem;
+            color: var(--text-dim);
             line-height: 1.6;
+            max-width: 380px;
+        }
+        .footer-bottom {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1.5rem 0;
+            border-top: 1px solid var(--border);
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
         .footer-copy {
-            font-size: 0.65rem;
-            color: #444;
-            margin-top: 0.5rem;
+            font-family: var(--mono);
+            font-size: 0.62rem;
+            color: var(--text-dim);
+            letter-spacing: 1px;
         }
+        .footer-copy a { color: var(--text-dim); }
+        .footer-copy a:hover { color: var(--ball); }
 
-        /* === SHARED COMPONENTS === */
-        .badge {
+        /* === SHARED === */
+        .tag {
             display: inline-block;
-            font-size: 0.6rem;
-            font-weight: 700;
+            font-family: var(--mono);
+            font-size: 0.58rem;
             text-transform: uppercase;
-            letter-spacing: 2px;
-            padding: 0.3rem 0.8rem;
+            letter-spacing: 2.5px;
+            padding: 0.35rem 0.9rem;
+            border: 1px solid var(--ball-dim);
+            color: var(--ball);
             border-radius: 2px;
-            border: 1px solid var(--accent-dim);
-            color: var(--accent);
-            background: rgba(0, 232, 123, 0.06);
+            transition: all 0.3s var(--ease);
         }
-        .badge--filled {
-            background: var(--accent);
-            color: var(--bg-deep);
-            border-color: var(--accent);
+        .tag:hover, .tag--active {
+            background: var(--ball);
+            color: var(--night);
         }
 
-        /* Decorative court line */
-        .court-line {
-            width: 40px;
-            height: 1px;
-            background: var(--accent);
-            display: inline-block;
-            opacity: 0.5;
+        .overline {
+            font-family: var(--mono);
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 3px;
+            color: var(--text-dim);
         }
 
-        /* Fade-in animation */
-        @keyframes fadeInUp {
-            from { opacity: 0; transform: translateY(20px); }
+        /* Animations */
+        @keyframes rise {
+            from { opacity: 0; transform: translateY(30px); }
             to { opacity: 1; transform: translateY(0); }
         }
         @keyframes fadeIn {
             from { opacity: 0; }
             to { opacity: 1; }
         }
+        @keyframes sweepIn {
+            from { transform: scaleX(0); }
+            to { transform: scaleX(1); }
+        }
 
         /* === RESPONSIVE === */
         @media (max-width: 768px) {
-            nav { padding: 0 1.25rem; }
-            main { padding: 2rem 1.25rem; }
-            footer { padding: 2rem 1.25rem; }
-            .footer-inner { grid-template-columns: 1fr; text-align: center; gap: 1rem; }
-            .footer-right { text-align: center; }
-            .footer-disclosure { margin: 0 auto; }
+            nav { height: 60px; }
+            .nav-title { font-size: 1rem; }
+            .nav-links { gap: 1.5rem; }
+            .footer-inner { flex-direction: column; }
         }
         @media (max-width: 480px) {
-            .nav-inner { height: auto; padding: 0.75rem 0; flex-direction: column; gap: 0.5rem; }
-            .nav-links { gap: 1.25rem; }
+            .nav-inner { flex-wrap: wrap; gap: 0.5rem; }
+            .nav-links a { font-size: 0.6rem; letter-spacing: 1.5px; }
         }
+
         
 /* === ABOUT HERO === */
-.about-hero {
-    margin: -3rem -2.5rem 0;
-    padding: 5rem 2.5rem 4rem;
+.ab-hero {
+    padding: 5rem 0 3.5rem;
     position: relative;
-    overflow: hidden;
-    background: var(--bg-deep);
+    border-bottom: 1px solid var(--border);
 }
-.about-hero::before {
+.ab-hero::before {
     content: '';
     position: absolute;
-    inset: 0;
-    background:
-        radial-gradient(ellipse 60% 80% at 80% 30%, rgba(0,232,123,0.05) 0%, transparent 60%),
-        linear-gradient(160deg, var(--bg-deep) 0%, #080c09 50%, var(--bg-deep) 100%);
-}
-.about-hero-inner {
-    position: relative;
-    z-index: 1;
-    max-width: 1280px;
-    margin: 0 auto;
-}
-.about-hero-eyebrow {
-    font-size: 0.65rem;
-    font-weight: 600;
-    text-transform: uppercase;
-    letter-spacing: 4px;
-    color: var(--accent);
-    margin-bottom: 1.5rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
-    animation: fadeInUp 0.6s ease both;
-}
-.about-hero-eyebrow::before {
-    content: '';
-    width: 40px;
-    height: 1px;
-    background: var(--accent);
+    top: 20%;
+    left: -10%;
+    width: 400px;
+    height: 400px;
+    border-radius: 50%;
+    background: radial-gradient(circle, var(--ball-glow) 0%, transparent 70%);
+    filter: blur(80px);
     opacity: 0.5;
 }
-.about-hero h1 {
-    font-size: clamp(2rem, 5vw, 3.5rem);
-    font-weight: 800;
-    text-transform: uppercase;
-    letter-spacing: -0.5px;
-    color: var(--text);
-    line-height: 1;
-    animation: fadeInUp 0.6s ease 0.1s both;
+.ab-hero-inner {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4rem;
+    align-items: end;
 }
-.about-hero h1 span {
-    color: var(--accent);
+.ab-hero-overline {
+    font-family: var(--mono);
+    font-size: 0.6rem;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+    color: var(--ball);
+    margin-bottom: 1.5rem;
+    animation: rise 0.6s var(--ease) both;
+}
+.ab-hero h1 {
+    font-family: var(--serif);
+    font-size: clamp(2.4rem, 5vw, 3.5rem);
+    font-weight: 700;
+    line-height: 1;
+    letter-spacing: -0.02em;
+    color: var(--text);
+    animation: rise 0.6s var(--ease) 0.1s both;
+}
+.ab-hero h1 em {
+    font-style: italic;
+    color: var(--ball);
+}
+.ab-hero-intro {
+    font-size: 1.05rem;
+    color: var(--text-mid);
+    line-height: 1.8;
+    animation: rise 0.6s var(--ease) 0.2s both;
 }
 
-/* === ABOUT LAYOUT === */
-.about-layout {
+/* === ABOUT GRID === */
+.ab-grid {
     display: grid;
-    grid-template-columns: 1fr 320px;
+    grid-template-columns: 1fr 340px;
     gap: 4rem;
     align-items: start;
-    padding-top: 3rem;
+    padding: 3.5rem 0;
 }
 
 /* === ABOUT CONTENT === */
-.about-content {
+.ab-content {
     animation: fadeIn 0.6s ease 0.2s both;
 }
-.about-content h2 {
-    font-size: 0.75rem;
+.ab-content h2 {
+    font-family: var(--serif);
+    font-size: 1.25rem;
     font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 3px;
+    font-style: italic;
     color: var(--text);
-    margin: 3.5rem 0 1.25rem;
-    display: flex;
-    align-items: center;
-    gap: 1rem;
+    margin: 3rem 0 1rem;
+    padding-left: 1.25rem;
+    border-left: 3px solid var(--ball);
+    line-height: 1.3;
 }
-.about-content h2::before {
-    content: '';
-    width: 3px;
-    height: 1em;
-    background: var(--accent);
-    border-radius: 2px;
-}
-.about-content h2:first-child { margin-top: 0; }
-.about-content p {
+.ab-content h2:first-child { margin-top: 0; }
+.ab-content p {
     margin-bottom: 1.25rem;
     line-height: 1.85;
-    color: var(--text-secondary);
+    color: var(--text-mid);
     font-size: 1rem;
 }
-.about-content ul {
-    margin: 0.75rem 0 1.5rem 0;
+.ab-content ul {
+    margin: 0.75rem 0 1.5rem 1.5rem;
     list-style: none;
 }
-.about-content li {
-    margin-bottom: 0.6rem;
-    padding-left: 1.75rem;
+.ab-content li {
+    margin-bottom: 0.65rem;
+    padding-left: 1.5rem;
     position: relative;
-    line-height: 1.7;
-    color: var(--text-secondary);
+    line-height: 1.75;
+    color: var(--text-mid);
 }
-.about-content li::before {
+.ab-content li::before {
     content: '';
     position: absolute;
     left: 0;
-    top: 0.65em;
-    width: 6px;
-    height: 6px;
-    border: 1px solid var(--accent-dim);
-    border-radius: 1px;
-    transform: rotate(45deg);
+    top: 0.6em;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--ball);
+    opacity: 0.4;
 }
-.about-content strong { color: var(--text); }
+.ab-content strong { color: var(--text); }
 
-/* === TRANSPARENCY BOX === */
-.transparency-box {
-    background: rgba(0, 232, 123, 0.03);
-    border: 1px solid rgba(0, 232, 123, 0.1);
-    border-radius: var(--radius);
-    padding: 2rem;
+/* === CALLOUT === */
+.ab-callout {
     margin: 2.5rem 0;
-    position: relative;
+    padding: 2rem;
+    border: 1px solid var(--border);
+    border-left: 3px solid var(--clay);
+    border-radius: var(--radius);
+    background: var(--night-up);
 }
-.transparency-box::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--accent), transparent 70%);
-    border-radius: var(--radius) var(--radius) 0 0;
-    opacity: 0.5;
-}
-.transparency-box h3 {
-    color: var(--accent);
-    font-size: 0.7rem;
-    font-weight: 700;
+.ab-callout h3 {
+    font-family: var(--mono);
+    font-size: 0.6rem;
     text-transform: uppercase;
-    letter-spacing: 2.5px;
+    letter-spacing: 3px;
+    color: var(--clay);
     margin-bottom: 1rem;
 }
-.transparency-box p {
-    color: var(--text-secondary);
-    font-size: 0.92rem;
+.ab-callout p {
+    color: var(--text-mid);
+    font-size: 0.95rem;
+    line-height: 1.75;
+    margin-bottom: 0.75rem;
 }
+.ab-callout p:last-child { margin-bottom: 0; }
 
-/* === SIDEBAR INFO CARDS === */
-.about-sidebar {
+/* === SIDEBAR CARDS === */
+.ab-sidebar {
     animation: fadeIn 0.6s ease 0.3s both;
 }
-.info-card {
-    background: var(--bg-card);
+.ab-card {
     border: 1px solid var(--border);
     border-radius: var(--radius);
-    padding: 1.5rem;
-    margin-bottom: 1.25rem;
-    position: relative;
     overflow: hidden;
+    margin-bottom: 1.5rem;
+    transition: border-color 0.3s var(--ease);
 }
-.info-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    height: 2px;
-    background: linear-gradient(90deg, var(--accent), transparent);
-    opacity: 0.3;
-}
-.info-card-title {
-    font-size: 0.65rem;
-    font-weight: 700;
+.ab-card:hover { border-color: var(--border-hover); }
+.ab-card-header {
+    background: var(--night-card);
+    padding: 1rem 1.25rem;
+    font-family: var(--mono);
+    font-size: 0.58rem;
     text-transform: uppercase;
-    letter-spacing: 2.5px;
-    color: var(--text-muted);
-    margin-bottom: 1rem;
-    padding-bottom: 0.75rem;
+    letter-spacing: 3px;
+    color: var(--text-dim);
     border-bottom: 1px solid var(--border);
 }
-.info-card-item {
+.ab-card-body { padding: 0.25rem 0; }
+.ab-card-row {
     display: flex;
     justify-content: space-between;
-    padding: 0.5rem 0;
+    padding: 0.7rem 1.25rem;
     border-bottom: 1px solid var(--border);
     font-size: 0.82rem;
 }
-.info-card-item:last-child { border-bottom: none; }
-.info-card-item-label { color: var(--text-muted); }
-.info-card-item-value { color: var(--text-secondary); font-weight: 500; }
-.info-card p {
-    font-size: 0.85rem;
-    color: var(--text-secondary);
-    line-height: 1.7;
-    margin-bottom: 0.5rem;
+.ab-card-row:last-child { border-bottom: none; }
+.ab-card-row-label {
+    color: var(--text-dim);
+    font-family: var(--mono);
+    font-size: 0.62rem;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
 }
-.info-card p:last-child { margin-bottom: 0; }
+.ab-card-row-val { color: var(--text-mid); }
+.ab-card-text {
+    padding: 0.8rem 1.25rem;
+    font-size: 0.85rem;
+    color: var(--text-mid);
+    line-height: 1.6;
+    border-bottom: 1px solid var(--border);
+}
+.ab-card-text:last-child { border-bottom: none; }
 
 /* === RESPONSIVE === */
-@media (max-width: 768px) {
-    .about-hero { padding: 3rem 1.25rem 2.5rem; margin: -2rem -1.25rem 0; }
-    .about-layout { grid-template-columns: 1fr; gap: 2rem; }
+@media (max-width: 900px) {
+    .ab-hero-inner { grid-template-columns: 1fr; gap: 2rem; }
+    .ab-grid { grid-template-columns: 1fr; gap: 2rem; }
 }
 
     </style>
@@ -483,7 +474,10 @@
 <body>
     <nav>
         <div class="nav-inner">
-            <a href="https://nichtagentur.github.io/tennis-technique-blog/" class="nav-brand">AI Tennis Lab</a>
+            <a href="https://nichtagentur.github.io/tennis-technique-blog/" class="nav-brand">
+                <div class="nav-ball"></div>
+                <span class="nav-title">AI Tennis Lab</span>
+            </a>
             <ul class="nav-links">
                 <li><a href="https://nichtagentur.github.io/tennis-technique-blog/">Startseite</a></li>
                 <li><a href="https://nichtagentur.github.io/tennis-technique-blog/ueber-uns.html">Ueber uns</a></li>
@@ -493,24 +487,26 @@
 
     <main>
         
-<div class="about-hero">
-    <div class="about-hero-inner">
-        <div class="about-hero-eyebrow">Transparenz & Methodik</div>
-        <h1>Ueber <span>AI Tennis Lab</span></h1>
+<section class="ab-hero">
+    <div class="ab-hero-inner">
+        <div>
+            <div class="ab-hero-overline">Transparenz &amp; Methodik</div>
+            <h1>Ueber<br><em>AI Tennis Lab</em></h1>
+        </div>
+        <p class="ab-hero-intro">
+            Wir kombinieren aktuelle sportwissenschaftliche Erkenntnisse mit KI-Technologie,
+            um praxisnahe Ressourcen fuer den Trainingsalltag zu schaffen -- vollstaendig transparent.
+        </p>
     </div>
-</div>
+</section>
 
-<div class="about-layout">
-    <div class="about-content">
+<div class="ab-grid">
+    <div class="ab-content">
         <h2>Was ist AI Tennis Lab?</h2>
         <p>
             AI Tennis Lab ist ein KI-gestuetztes Analysetool, das Tennistrainern biomechanisch fundierte
             Technikanalysen, Uebungen und Trainingsmethoden bereitstellt. Unsere Inhalte werden automatisch
             generiert und taeglich aktualisiert.
-        </p>
-        <p>
-            Wir kombinieren aktuelle sportwissenschaftliche Erkenntnisse mit KI-Technologie, um praxisnahe
-            Ressourcen fuer den Trainingsalltag zu schaffen.
         </p>
 
         <h2>Unsere Methodik</h2>
@@ -522,14 +518,14 @@
             <li>Einbindung von Uebungen mit konkreten Wiederholungszahlen und Progressionen</li>
         </ul>
 
-        <div class="transparency-box">
+        <div class="ab-callout">
             <h3>Transparenz-Hinweis</h3>
             <p>
                 Alle Inhalte auf AI Tennis Lab werden vollstaendig durch kuenstliche Intelligenz erstellt.
                 Wir verwenden Claude (Anthropic) fuer die Texterstellung und Gemini (Google) fuer die
                 Bilderstellung. Die Artikel werden automatisch generiert und veroeffentlicht.
             </p>
-            <p style="margin-bottom:0;">
+            <p>
                 <strong>Wichtig:</strong> Diese Inhalte ersetzen kein professionelles Tennistraining.
                 Fuer individuelles Coaching wenden Sie sich bitte an einen zertifizierten Tennistrainer
                 (DTB-Lizenz oder vergleichbar).
@@ -552,37 +548,43 @@
         </p>
     </div>
 
-    <aside class="about-sidebar">
-        <div class="info-card">
-            <div class="info-card-title">KI-Modelle</div>
-            <div class="info-card-item">
-                <span class="info-card-item-label">Text</span>
-                <span class="info-card-item-value">Claude (Anthropic)</span>
-            </div>
-            <div class="info-card-item">
-                <span class="info-card-item-label">Bilder</span>
-                <span class="info-card-item-value">Imagen (Google)</span>
-            </div>
-            <div class="info-card-item">
-                <span class="info-card-item-label">Pipeline</span>
-                <span class="info-card-item-value">GitHub Actions</span>
+    <aside class="ab-sidebar">
+        <div class="ab-card">
+            <div class="ab-card-header">KI-Modelle</div>
+            <div class="ab-card-body">
+                <div class="ab-card-row">
+                    <span class="ab-card-row-label">Text</span>
+                    <span class="ab-card-row-val">Claude (Anthropic)</span>
+                </div>
+                <div class="ab-card-row">
+                    <span class="ab-card-row-label">Bilder</span>
+                    <span class="ab-card-row-val">Imagen (Google)</span>
+                </div>
+                <div class="ab-card-row">
+                    <span class="ab-card-row-label">Pipeline</span>
+                    <span class="ab-card-row-val">GitHub Actions</span>
+                </div>
             </div>
         </div>
-        <div class="info-card">
-            <div class="info-card-title">Quellen & Frameworks</div>
-            <p>DTB -- Deutscher Tennis Bund</p>
-            <p>ITF -- International Tennis Federation</p>
-            <p>Aktuelle sportwissenschaftliche Forschung</p>
-        </div>
-        <div class="info-card">
-            <div class="info-card-title">Frequenz</div>
-            <div class="info-card-item">
-                <span class="info-card-item-label">Neue Artikel</span>
-                <span class="info-card-item-value">Taeglich</span>
+        <div class="ab-card">
+            <div class="ab-card-header">Quellen &amp; Frameworks</div>
+            <div class="ab-card-body">
+                <div class="ab-card-text">DTB -- Deutscher Tennis Bund</div>
+                <div class="ab-card-text">ITF -- International Tennis Federation</div>
+                <div class="ab-card-text">Aktuelle sportwissenschaftliche Forschung</div>
             </div>
-            <div class="info-card-item">
-                <span class="info-card-item-label">Automatisiert</span>
-                <span class="info-card-item-value">100%</span>
+        </div>
+        <div class="ab-card">
+            <div class="ab-card-header">Frequenz</div>
+            <div class="ab-card-body">
+                <div class="ab-card-row">
+                    <span class="ab-card-row-label">Neue Artikel</span>
+                    <span class="ab-card-row-val">Taeglich</span>
+                </div>
+                <div class="ab-card-row">
+                    <span class="ab-card-row-label">Automatisiert</span>
+                    <span class="ab-card-row-val">100%</span>
+                </div>
             </div>
         </div>
     </aside>
@@ -592,16 +594,20 @@
 
     <footer>
         <div class="footer-inner">
-            <div class="footer-brand">AI Tennis Lab</div>
-            <ul class="footer-links">
-                <li><a href="https://nichtagentur.github.io/tennis-technique-blog/">Startseite</a></li>
-                <li><a href="https://nichtagentur.github.io/tennis-technique-blog/ueber-uns.html">Ueber uns</a></li>
-                <li><a href="https://nichtagentur.github.io/tennis-technique-blog/sitemap.xml">Sitemap</a></li>
-            </ul>
-            <div class="footer-right">
-                <p class="footer-disclosure">Dieser Inhalt wurde mit KI erstellt und dient als Trainingsressource. Fuer individuelles Training wenden Sie sich an einen zertifizierten Tennistrainer.</p>
-                <p class="footer-copy">&copy; 2026 AI Tennis Lab | <a href="https://cybertime.at">cybertime</a></p>
+            <div class="footer-col">
+                <h4>Navigation</h4>
+                <a href="https://nichtagentur.github.io/tennis-technique-blog/">Startseite</a>
+                <a href="https://nichtagentur.github.io/tennis-technique-blog/ueber-uns.html">Ueber uns</a>
+                <a href="https://nichtagentur.github.io/tennis-technique-blog/sitemap.xml">Sitemap</a>
             </div>
+            <div class="footer-col">
+                <h4>Hinweis</h4>
+                <p class="footer-disclosure">Dieser Inhalt wurde mit KI erstellt und dient als Trainingsressource. Fuer individuelles Training wenden Sie sich an einen zertifizierten Tennistrainer.</p>
+            </div>
+        </div>
+        <div class="footer-bottom">
+            <span class="footer-copy">&copy; 2026 AI Tennis Lab</span>
+            <span class="footer-copy">Ein Projekt von <a href="https://cybertime.at">cybertime</a></span>
         </div>
     </footer>
 </body>
