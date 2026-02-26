@@ -49,6 +49,7 @@ EMAIL_ADDR = "i-am-a-user@nichtagentur.at"
 EMAIL_PASS = "i_am_an_AI_password_2026"
 ALLOWED_SENDER = "r.leb@cybertime.at"
 POLL_INTERVAL = 30  # seconds
+AUTO_GENERATE_INTERVAL = 1800  # 30 minutes in seconds
 
 
 # ── IMAP helpers ────────────────────────────────────────────────────
@@ -502,6 +503,71 @@ def poll_once():
             pass
 
 
+def auto_generate_next():
+    """Automatically generate the next unwritten article from the topic list."""
+    site, topics = load_config()
+    existing = {p.stem for p in ARTIKEL_DIR.glob("*.html")}
+    remaining = [t for t in topics if t["slug"] not in existing]
+
+    if not remaining:
+        print("\n[AUTO] Alle Artikel bereits generiert. Nichts zu tun.")
+        return
+
+    topic = remaining[0]
+    print(f"\n[AUTO] Generiere naechsten Artikel: {topic['title']}")
+
+    try:
+        # Research
+        research_notes = research_topic(topic)
+        time.sleep(1)
+
+        # Generate with quality loop
+        feedback = ""
+        quality_score = 0
+        for attempt in range(2):
+            print(f"  Writing{'  (retry)' if attempt > 0 else ''}...")
+            article_data = generate_article(topic, research_notes=research_notes, feedback=feedback)
+            time.sleep(1)
+
+            passed, quality_score, feedback = check_quality(topic, article_data["content_html"])
+            if passed:
+                break
+            time.sleep(1)
+
+        # Image
+        print("  Generating image...")
+        image_file = generate_image(topic)
+        time.sleep(1)
+
+        # Render + rebuild
+        render_article(topic, article_data, image_file, site, topics)
+        build_site(site, topics)
+
+        # Git
+        git_push(f"Neuer Artikel (auto): {topic['title']}")
+
+        remaining_count = len(remaining) - 1
+        print(f"[AUTO] Fertig: {topic['title']} (Qualitaet: {quality_score}/10, noch {remaining_count} offen)")
+
+        # Notify Raffael
+        url = f"{site['base_url']}/artikel/{topic['slug']}.html"
+        send_reply(
+            ALLOWED_SENDER,
+            f"Neuer Artikel: {topic['title']}",
+            f"Automatisch generiert!\n\n"
+            f"Titel: {topic['title']}\n"
+            f"Qualitaet: {quality_score}/10\n"
+            f"Bild: {'Ja' if image_file else 'Nein'}\n"
+            f"URL: {url}\n"
+            f"Noch {remaining_count} Artikel offen.\n\n"
+            f"Naechster Artikel in 30 Minuten.",
+        )
+
+    except Exception as e:
+        print(f"[AUTO] FEHLER: {e}")
+        traceback.print_exc()
+
+
 def main():
     parser = argparse.ArgumentParser(description="AI Tennis Lab Email Assistant")
     parser.add_argument("--test", action="store_true", help="Check IMAP once and exit")
@@ -548,8 +614,12 @@ def main():
     # Polling loop
     print("=== AI Tennis Lab Email Assistant ===")
     print(f"Polling {EMAIL_ADDR} every {POLL_INTERVAL}s")
+    print(f"Auto-generating next article every {AUTO_GENERATE_INTERVAL // 60} min")
     print(f"Only processing emails from {ALLOWED_SENDER}")
     print("Press Ctrl+C to stop\n")
+
+    # Generate first article immediately on start
+    last_auto_generate = time.time() - AUTO_GENERATE_INTERVAL
 
     while True:
         try:
@@ -559,6 +629,17 @@ def main():
             break
         except Exception as e:
             print(f"Error in poll cycle: {e}")
+
+        # Auto-generate next article every 30 minutes
+        if time.time() - last_auto_generate >= AUTO_GENERATE_INTERVAL:
+            last_auto_generate = time.time()
+            try:
+                auto_generate_next()
+            except KeyboardInterrupt:
+                print("\nStopped.")
+                break
+            except Exception as e:
+                print(f"[AUTO] Error: {e}")
 
         time.sleep(POLL_INTERVAL)
 
