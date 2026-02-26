@@ -214,7 +214,7 @@ def build_site(site, topics):
 
     # Index
     tpl = env.get_template("index.html")
-    html = tpl.render(**base_ctx, categories=categories)
+    html = tpl.render(**base_ctx, categories=categories, total_articles=len(generated), total_categories=len(categories))
     (DOCS_DIR / "index.html").write_text(html, encoding="utf-8")
     print("  index.html aktualisiert")
 
